@@ -248,8 +248,10 @@ echo "{\n\
   \"webp\": \"${VERSION_WEBP}\",\n\
   \"xml\": \"${VERSION_XML2}\",\n\
   \"zlib\": \"${VERSION_ZLIB}\"\n\
-}" >lib/versions.json
+}" >versions.json
+
+echo "\"${PLATFORM}\"" >platform.json
 
 # Create .tar.gz
-tar czf /packaging/libvips-${VERSION_VIPS}-${PLATFORM}.tar.gz include lib
+tar czf /packaging/libvips-${VERSION_VIPS}-${PLATFORM}.tar.gz include lib *.json
 advdef --recompress --shrink-insane /packaging/libvips-${VERSION_VIPS}-${PLATFORM}.tar.gz
