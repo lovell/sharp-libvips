@@ -18,26 +18,26 @@ export CXXFLAGS="${FLAGS}"
 # Dependency version numbers
 VERSION_ZLIB=1.2.11
 VERSION_FFI=3.2.1
-VERSION_GLIB=2.54.2
+VERSION_GLIB=2.55.0
 VERSION_XML2=2.9.7
 VERSION_GSF=1.14.42
 VERSION_EXIF=0.6.21
 VERSION_LCMS2=2.9
 VERSION_JPEG=1.5.2
 VERSION_PNG16=1.6.34
-VERSION_WEBP=0.6.0
-VERSION_TIFF=4.0.8
-VERSION_ORC=0.4.27
+VERSION_WEBP=0.6.1
+VERSION_TIFF=4.0.9
+VERSION_ORC=0.4.28
 VERSION_GDKPIXBUF=2.36.11
 VERSION_FREETYPE=2.8.1
 VERSION_EXPAT=2.2.5
 VERSION_FONTCONFIG=2.12.6
-VERSION_HARFBUZZ=1.7.1
+VERSION_HARFBUZZ=1.7.2
 VERSION_PIXMAN=0.34.0
-VERSION_CAIRO=1.14.10
-VERSION_PANGO=1.40.13
+VERSION_CAIRO=1.14.12
+VERSION_PANGO=1.40.14
 VERSION_CROCO=0.6.12
-VERSION_SVG=2.40.18
+VERSION_SVG=2.40.19
 VERSION_GIF=5.1.4
 
 # Least out-of-sync Sourceforge mirror
@@ -221,7 +221,7 @@ make install-strip
 mkdir ${DEPS}/pango
 curl -Ls https://download.gnome.org/sources/pango/$(without_patch $VERSION_PANGO)/pango-${VERSION_PANGO}.tar.xz | tar xJC ${DEPS}/pango --strip-components=1
 cd ${DEPS}/pango
-./autogen.sh
+autoreconf -fiv
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking
 make install-strip
 
@@ -244,7 +244,7 @@ cd ${DEPS}/gif
 make install-strip
 
 mkdir ${DEPS}/vips
-curl -Ls https://github.com/jcupitt/libvips/releases/download/v${VERSION_VIPS}-alpha5/vips-${VERSION_VIPS}-4.tar.gz | tar xzC ${DEPS}/vips --strip-components=1
+curl -Ls https://github.com/jcupitt/libvips/releases/download/v${VERSION_VIPS}/vips-${VERSION_VIPS}.tar.gz | tar xzC ${DEPS}/vips --strip-components=1
 cd ${DEPS}/vips
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking \
   --disable-debug --disable-introspection --without-python --without-fftw \
