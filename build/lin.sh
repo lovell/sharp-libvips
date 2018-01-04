@@ -23,7 +23,7 @@ VERSION_XML2=2.9.7
 VERSION_GSF=1.14.42
 VERSION_EXIF=0.6.21
 VERSION_LCMS2=2.9
-VERSION_JPEG=1.5.2
+VERSION_JPEG=1.5.3
 VERSION_PNG16=1.6.34
 VERSION_WEBP=0.6.1
 VERSION_TIFF=4.0.9
@@ -32,12 +32,12 @@ VERSION_GDKPIXBUF=2.36.11
 VERSION_FREETYPE=2.8.1
 VERSION_EXPAT=2.2.5
 VERSION_FONTCONFIG=2.12.6
-VERSION_HARFBUZZ=1.7.2
+VERSION_HARFBUZZ=1.7.4
 VERSION_PIXMAN=0.34.0
 VERSION_CAIRO=1.14.12
 VERSION_PANGO=1.40.14
 VERSION_CROCO=0.6.12
-VERSION_SVG=2.40.19
+VERSION_SVG=2.40.20
 VERSION_GIF=5.1.4
 
 # Least out-of-sync Sourceforge mirror
@@ -72,7 +72,7 @@ version_latest "orc" "$VERSION_ORC" "2573"
 version_latest "gdkpixbuf" "$VERSION_GDKPIXBUF" "9533"
 version_latest "freetype" "$VERSION_FREETYPE" "854"
 version_latest "expat" "$VERSION_EXPAT" "770"
-version_latest "fontconfig" "$VERSION_FONTCONFIG" "827"
+#version_latest "fontconfig" "$VERSION_FONTCONFIG" "827" # latest version is pre-release and has uuid dependency
 version_latest "harfbuzz" "$VERSION_HARFBUZZ" "1299"
 version_latest "pixman" "$VERSION_PIXMAN" "3648"
 #version_latest "cairo" "$VERSION_CAIRO" "247" # latest version in release monitoring does not exist
@@ -98,7 +98,7 @@ cd ${DEPS}/ffi
 make install-strip
 
 mkdir ${DEPS}/glib
-curl -Ls https://download.gnome.org/sources/glib/$(without_patch $VERSION_GLIB)/glib-${VERSION_GLIB}.tar.xz | tar xJC ${DEPS}/glib --strip-components=1
+curl -Lks https://download.gnome.org/sources/glib/$(without_patch $VERSION_GLIB)/glib-${VERSION_GLIB}.tar.xz | tar xJC ${DEPS}/glib --strip-components=1
 cd ${DEPS}/glib
 echo glib_cv_stack_grows=no >>glib.cache
 echo glib_cv_uscore=no >>glib.cache
@@ -115,7 +115,7 @@ cd ${DEPS}/xml2
 make install-strip
 
 mkdir ${DEPS}/gsf
-curl -Ls https://download.gnome.org/sources/libgsf/$(without_patch $VERSION_GSF)/libgsf-${VERSION_GSF}.tar.xz | tar xJC ${DEPS}/gsf --strip-components=1
+curl -Lks https://download.gnome.org/sources/libgsf/$(without_patch $VERSION_GSF)/libgsf-${VERSION_GSF}.tar.xz | tar xJC ${DEPS}/gsf --strip-components=1
 cd ${DEPS}/gsf
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking
 make install-strip
@@ -170,7 +170,7 @@ cd ${TARGET}/lib
 rm -rf liborc-test-*
 
 mkdir ${DEPS}/gdkpixbuf
-curl -Ls https://download.gnome.org/sources/gdk-pixbuf/$(without_patch $VERSION_GDKPIXBUF)/gdk-pixbuf-${VERSION_GDKPIXBUF}.tar.xz | tar xJC ${DEPS}/gdkpixbuf --strip-components=1
+curl -Lks https://download.gnome.org/sources/gdk-pixbuf/$(without_patch $VERSION_GDKPIXBUF)/gdk-pixbuf-${VERSION_GDKPIXBUF}.tar.xz | tar xJC ${DEPS}/gdkpixbuf --strip-components=1
 cd ${DEPS}/gdkpixbuf
 touch gdk-pixbuf/loaders.cache
 LD_LIBRARY_PATH=${TARGET}/lib \
@@ -219,20 +219,20 @@ cd ${DEPS}/cairo
 make install-strip
 
 mkdir ${DEPS}/pango
-curl -Ls https://download.gnome.org/sources/pango/$(without_patch $VERSION_PANGO)/pango-${VERSION_PANGO}.tar.xz | tar xJC ${DEPS}/pango --strip-components=1
+curl -Lks https://download.gnome.org/sources/pango/$(without_patch $VERSION_PANGO)/pango-${VERSION_PANGO}.tar.xz | tar xJC ${DEPS}/pango --strip-components=1
 cd ${DEPS}/pango
-autoreconf -fiv
-./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking
+./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking \
+  --without-gtk-doc
 make install-strip
 
 mkdir ${DEPS}/croco
-curl -Ls https://download.gnome.org/sources/libcroco/$(without_patch $VERSION_CROCO)/libcroco-${VERSION_CROCO}.tar.xz | tar xJC ${DEPS}/croco --strip-components=1
+curl -Lks https://download.gnome.org/sources/libcroco/$(without_patch $VERSION_CROCO)/libcroco-${VERSION_CROCO}.tar.xz | tar xJC ${DEPS}/croco --strip-components=1
 cd ${DEPS}/croco
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking
 make install-strip
 
 mkdir ${DEPS}/svg
-curl -Ls https://download.gnome.org/sources/librsvg/$(without_patch $VERSION_SVG)/librsvg-${VERSION_SVG}.tar.xz | tar xJC ${DEPS}/svg --strip-components=1
+curl -Lks https://download.gnome.org/sources/librsvg/$(without_patch $VERSION_SVG)/librsvg-${VERSION_SVG}.tar.xz | tar xJC ${DEPS}/svg --strip-components=1
 cd ${DEPS}/svg
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking --disable-introspection --disable-tools --disable-pixbuf-loader
 make install-strip
