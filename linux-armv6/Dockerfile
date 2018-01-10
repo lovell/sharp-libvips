@@ -7,9 +7,11 @@ MAINTAINER Lovell Fuller <npm@lovell.info>
 # Build dependencies
 RUN \
   apt-get update && \
-  apt-get install -y build-essential curl autoconf libtool nasm gtk-doc-tools texinfo gperf advancecomp libglib2.0-dev jq
+  apt-get install -y build-essential curl autoconf libtool nasm gtk-doc-tools texinfo gperf advancecomp libglib2.0-dev jq gettext intltool autopoint && \
+  curl https://sh.rustup.rs -sSf | sh -s -- -y
 
 # Compiler settings
 ENV \
-  PLATFORM=linux-armv6 \
+  PATH="/root/.cargo/bin:$PATH" \
+  PLATFORM="linux-armv6" \
   FLAGS="-Os"

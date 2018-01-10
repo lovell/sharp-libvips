@@ -18,7 +18,7 @@ export CXXFLAGS="${FLAGS}"
 # Dependency version numbers
 VERSION_ZLIB=1.2.11
 VERSION_FFI=3.2.1
-VERSION_GLIB=2.55.0
+VERSION_GLIB=2.55.1
 VERSION_XML2=2.9.7
 VERSION_GSF=1.14.42
 VERSION_EXIF=0.6.21
@@ -29,15 +29,15 @@ VERSION_WEBP=0.6.1
 VERSION_TIFF=4.0.9
 VERSION_ORC=0.4.28
 VERSION_GDKPIXBUF=2.36.11
-VERSION_FREETYPE=2.8.1
+VERSION_FREETYPE=2.9
 VERSION_EXPAT=2.2.5
 VERSION_FONTCONFIG=2.12.6
 VERSION_HARFBUZZ=1.7.4
 VERSION_PIXMAN=0.34.0
 VERSION_CAIRO=1.14.12
-VERSION_PANGO=1.40.14
+VERSION_PANGO=1.41.0
 VERSION_CROCO=0.6.12
-VERSION_SVG=2.40.20
+VERSION_SVG=2.42.0
 VERSION_GIF=5.1.4
 
 # Least out-of-sync Sourceforge mirror
@@ -78,7 +78,7 @@ version_latest "pixman" "$VERSION_PIXMAN" "3648"
 #version_latest "cairo" "$VERSION_CAIRO" "247" # latest version in release monitoring does not exist
 version_latest "pango" "$VERSION_PANGO" "11783"
 version_latest "croco" "$VERSION_CROCO" "11787"
-#version_latest "svg" "$VERSION_SVG" "5420" # latest version requires rust toolchain
+version_latest "svg" "$VERSION_SVG" "5420"
 version_latest "gif" "$VERSION_GIF" "1158"
 if [ "$ALL_AT_VERSION_LATEST" = "false" ]; then exit 1; fi
 
@@ -175,7 +175,7 @@ cd ${DEPS}/gdkpixbuf
 touch gdk-pixbuf/loaders.cache
 LD_LIBRARY_PATH=${TARGET}/lib \
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking \
-  --disable-introspection --disable-modules --disable-gio-sniffing \
+  --disable-introspection --disable-modules \
   --without-libtiff --without-gdiplus --with-included-loaders=png,jpeg
 make install-strip
 

@@ -5,4 +5,4 @@ MAINTAINER Lovell Fuller <npm@lovell.info>
 
 RUN apt-get update && apt-get install -y curl zip advancecomp
 
-ENV PLATFORM=win32-x64
+ENV PLATFORM="win32-x64"

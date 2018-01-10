@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM debian:stretch
 MAINTAINER Lovell Fuller <npm@lovell.info>
 
 # Create Debian-based container suitable for cross-compiling Linux ARMv7-A binaries
@@ -7,14 +7,15 @@ MAINTAINER Lovell Fuller <npm@lovell.info>
 RUN \
   apt-get update && \
   apt-get install -y curl && \
-  echo "deb http://emdebian.org/tools/debian/ jessie main" | tee /etc/apt/sources.list.d/crosstools.list && \
-  curl http://emdebian.org/tools/debian/emdebian-toolchain-archive.key | apt-key add - && \
   dpkg --add-architecture armhf && \
   apt-get update && \
-  apt-get install -y crossbuild-essential-armhf autoconf libtool nasm gtk-doc-tools texinfo gperf advancecomp libglib2.0-dev jq
+  apt-get install -y crossbuild-essential-armhf autoconf libtool nasm gtk-doc-tools texinfo gperf advancecomp libglib2.0-dev jq gettext intltool autopoint && \
+  curl https://sh.rustup.rs -sSf | sh -s -- -y && \
+  ~/.cargo/bin/rustup target add arm-unknown-linux-gnueabihf
 
 # Compiler settings
 ENV \
-  PLATFORM=linux-armv7 \
-  CHOST=arm-linux-gnueabihf \
+  PATH="/root/.cargo/bin:$PATH" \
+  PLATFORM="linux-armv7" \
+  CHOST="arm-linux-gnueabihf" \
   FLAGS="-marm -march=armv7-a -mfpu=neon-vfpv4 -mfloat-abi=hard -Os"
