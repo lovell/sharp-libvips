@@ -18,26 +18,27 @@ export CXXFLAGS="${FLAGS}"
 # Dependency version numbers
 VERSION_ZLIB=1.2.11
 VERSION_FFI=3.2.1
-VERSION_GLIB=2.55.1
-VERSION_XML2=2.9.7
-VERSION_GSF=1.14.42
+VERSION_GLIB=2.56.1
+VERSION_XML2=2.9.8
+VERSION_GSF=1.14.44
 VERSION_EXIF=0.6.21
 VERSION_LCMS2=2.9
 VERSION_JPEG=1.5.3
 VERSION_PNG16=1.6.34
-VERSION_WEBP=0.6.1
+VERSION_WEBP=1.0.0
 VERSION_TIFF=4.0.9
 VERSION_ORC=0.4.28
-VERSION_GDKPIXBUF=2.36.11
-VERSION_FREETYPE=2.9
-VERSION_EXPAT=2.2.5
+VERSION_GDKPIXBUF=2.36.12
+VERSION_FREETYPE=2.9.1
+VERSION_EXPAT=2.2.6
 VERSION_FONTCONFIG=2.12.6
-VERSION_HARFBUZZ=1.7.4
+VERSION_HARFBUZZ=1.8.7
 VERSION_PIXMAN=0.34.0
-VERSION_CAIRO=1.14.12
-VERSION_PANGO=1.41.0
+VERSION_CAIRO=1.15.12
+VERSION_FRIBIDI=1.0.5
+VERSION_PANGO=1.42.3
 VERSION_CROCO=0.6.12
-VERSION_SVG=2.42.0
+VERSION_SVG=2.43.4
 VERSION_GIF=5.1.4
 
 # Least out-of-sync Sourceforge mirror
@@ -51,7 +52,7 @@ without_patch() {
 # Check for newer versions
 ALL_AT_VERSION_LATEST=true
 version_latest() {
-  VERSION_LATEST=$(curl -s https://release-monitoring.org/api/project/$3 | jq -r '.version')
+  VERSION_LATEST=$(curl -s https://release-monitoring.org/api/project/$3 | jq -r '.version' | tr -d v)
   if [ "$VERSION_LATEST" != "$2" ]; then
     ALL_AT_VERSION_LATEST=false
     echo "$1 version $2 has been superseded by $VERSION_LATEST"
@@ -59,23 +60,24 @@ version_latest() {
 }
 version_latest "zlib" "$VERSION_ZLIB" "5303"
 version_latest "ffi" "$VERSION_FFI" "1611"
-version_latest "glib" "$VERSION_GLIB" "10024"
+#version_latest "glib" "$VERSION_GLIB" "10024" # latest requires automake 1.13.3 (Debian Wheezy provides 1.11.6)
 version_latest "xml2" "$VERSION_XML2" "1783"
 version_latest "gsf" "$VERSION_GSF" "1980"
 version_latest "exif" "$VERSION_EXIF" "1607"
 version_latest "lcms2" "$VERSION_LCMS2" "9815"
-version_latest "jpeg" "$VERSION_JPEG" "1648"
+#version_latest "jpeg" "$VERSION_JPEG" "1648" # latest version requires cmake
 version_latest "png" "$VERSION_PNG16" "15294"
 version_latest "webp" "$VERSION_WEBP" "1761"
 version_latest "tiff" "$VERSION_TIFF" "13521"
 version_latest "orc" "$VERSION_ORC" "2573"
-version_latest "gdkpixbuf" "$VERSION_GDKPIXBUF" "9533"
+#version_latest "gdkpixbuf" "$VERSION_GDKPIXBUF" "9533" # latest version requires meson instead of autotools
 version_latest "freetype" "$VERSION_FREETYPE" "854"
 version_latest "expat" "$VERSION_EXPAT" "770"
-#version_latest "fontconfig" "$VERSION_FONTCONFIG" "827" # latest version is pre-release and has uuid dependency
+#version_latest "fontconfig" "$VERSION_FONTCONFIG" "827" # latest version has libuuid dependency but this is part of util-linux
 version_latest "harfbuzz" "$VERSION_HARFBUZZ" "1299"
 version_latest "pixman" "$VERSION_PIXMAN" "3648"
 #version_latest "cairo" "$VERSION_CAIRO" "247" # latest version in release monitoring does not exist
+version_latest "fribidi" "$VERSION_FRIBIDI" "857"
 version_latest "pango" "$VERSION_PANGO" "11783"
 version_latest "croco" "$VERSION_CROCO" "11787"
 version_latest "svg" "$VERSION_SVG" "5420"
@@ -154,8 +156,7 @@ cd ${DEPS}/webp
 make install-strip
 
 mkdir ${DEPS}/tiff
-VERSION_TIFF_GIT_MASTER_SHA=$(curl -Ls https://api.github.com/repos/vadz/libtiff/git/refs/heads/master | jq -r '.object.sha' | head -c7)
-curl -Ls https://github.com/vadz/libtiff/archive/${VERSION_TIFF_GIT_MASTER_SHA}.tar.gz | tar xzC ${DEPS}/tiff --strip-components=1
+curl -Ls http://download.osgeo.org/libtiff/tiff-${VERSION_TIFF}.tar.gz | tar xzC ${DEPS}/tiff --strip-components=1
 cd ${DEPS}/tiff
 if [ -n "${CHOST}" ]; then autoreconf -fiv; fi
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking --disable-mdi --disable-pixarlog --disable-cxx
@@ -211,11 +212,18 @@ cd ${DEPS}/pixman
 make install-strip
 
 mkdir ${DEPS}/cairo
-curl -Ls http://cairographics.org/releases/cairo-${VERSION_CAIRO}.tar.xz | tar xJC ${DEPS}/cairo --strip-components=1
+curl -Ls http://cairographics.org/snapshots/cairo-${VERSION_CAIRO}.tar.xz | tar xJC ${DEPS}/cairo --strip-components=1
 cd ${DEPS}/cairo
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking \
   --disable-xlib --disable-xcb --disable-quartz --disable-win32 --disable-egl --disable-glx --disable-wgl \
   --disable-script --disable-ps --disable-gobject --disable-trace --disable-interpreter
+make install-strip
+
+mkdir ${DEPS}/fribidi
+curl -Ls https://github.com/fribidi/fribidi/releases/download/v${VERSION_FRIBIDI}/fribidi-${VERSION_FRIBIDI}.tar.bz2 | tar xjC ${DEPS}/fribidi --strip-components=1
+cd ${DEPS}/fribidi
+autoreconf -fiv
+./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking
 make install-strip
 
 mkdir ${DEPS}/pango
@@ -234,8 +242,13 @@ make install-strip
 mkdir ${DEPS}/svg
 curl -Lks https://download.gnome.org/sources/librsvg/$(without_patch $VERSION_SVG)/librsvg-${VERSION_SVG}.tar.xz | tar xJC ${DEPS}/svg --strip-components=1
 cd ${DEPS}/svg
-./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking --disable-introspection --disable-tools --disable-pixbuf-loader
+# Optimise Rust code for binary size
+sed -i 's/debug = true/debug = false\ncodegen-units = 1\nincremental = false\npanic = "abort"\nopt-level = "z"/' Cargo.toml
+./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking \
+  --disable-introspection --disable-tools --disable-pixbuf-loader
 make install-strip
+# Clear executable bit from librsvg shared library for WSL support
+execstack -c ${TARGET}/lib/librsvg-2.so || true
 
 mkdir ${DEPS}/gif
 curl -Ls ${SOURCEFORGE_BASE_URL}giflib/giflib-${VERSION_GIF}.tar.gz | tar xzC ${DEPS}/gif --strip-components=1
@@ -244,7 +257,7 @@ cd ${DEPS}/gif
 make install-strip
 
 mkdir ${DEPS}/vips
-curl -Ls https://github.com/jcupitt/libvips/releases/download/v${VERSION_VIPS}/vips-${VERSION_VIPS}.tar.gz | tar xzC ${DEPS}/vips --strip-components=1
+curl -Ls https://github.com/jcupitt/libvips/releases/download/v${VERSION_VIPS}-rc1/vips-${VERSION_VIPS}.tar.gz | tar xzC ${DEPS}/vips --strip-components=1
 cd ${DEPS}/vips
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking \
   --disable-debug --disable-introspection --without-python --without-fftw \
@@ -269,19 +282,20 @@ echo "{\n\
   \"ffi\": \"${VERSION_FFI}\",\n\
   \"fontconfig\": \"${VERSION_FONTCONFIG}\",\n\
   \"freetype\": \"${VERSION_FREETYPE}\",\n\
+  \"fribidi\": \"${VERSION_FRIBIDI}\",\n\
   \"gdkpixbuf\": \"${VERSION_GDKPIXBUF}\",\n\
   \"gif\": \"${VERSION_GIF}\",\n\
   \"glib\": \"${VERSION_GLIB}\",\n\
   \"gsf\": \"${VERSION_GSF}\",\n\
   \"harfbuzz\": \"${VERSION_HARFBUZZ}\",\n\
   \"jpeg\": \"${VERSION_JPEG}\",\n\
-  \"lcms\": \"${VERSION_LCMS2}-${VERSION_LCMS2_GIT_MASTER_SHA}\",\n\
+  \"lcms\": \"${VERSION_LCMS2}\",\n\
   \"orc\": \"${VERSION_ORC}\",\n\
   \"pango\": \"${VERSION_PANGO}\",\n\
   \"pixman\": \"${VERSION_PIXMAN}\",\n\
   \"png\": \"${VERSION_PNG16}\",\n\
   \"svg\": \"${VERSION_SVG}\",\n\
-  \"tiff\": \"${VERSION_TIFF}-${VERSION_TIFF_GIT_MASTER_SHA}\",\n\
+  \"tiff\": \"${VERSION_TIFF}\",\n\
   \"vips\": \"${VERSION_VIPS}\",\n\
   \"webp\": \"${VERSION_WEBP}\",\n\
   \"xml\": \"${VERSION_XML2}\",\n\

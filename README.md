@@ -59,6 +59,7 @@ Use of libraries under the terms of the LGPLv3 is via the
 | expat         | MIT Licence                                                                                              |
 | fontconfig    | [fontconfig Licence](https://cgit.freedesktop.org/fontconfig/tree/COPYING) (BSD-like)                    |
 | freetype      | [freetype Licence](http://git.savannah.gnu.org/cgit/freetype/freetype2.git/tree/docs/FTL.TXT) (BSD-like) |
+| fribidi       | LGPLv3
 | giflib        | MIT Licence                                                                                              |
 | glib          | LGPLv3                                                                                                   |
 | harfbuzz      | MIT Licence                                                                                              |
