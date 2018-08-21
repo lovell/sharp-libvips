@@ -18,4 +18,4 @@ ENV \
   PATH="/root/.cargo/bin:$PATH" \
   PLATFORM="linux-armv7" \
   CHOST="arm-linux-gnueabihf" \
-  FLAGS="-marm -march=armv7-a -mfpu=neon-vfpv4 -mfloat-abi=hard -Os"
+  FLAGS="-marm -march=armv7-a -mfpu=neon-vfpv4 -mfloat-abi=hard -Os -D_GLIBCXX_USE_CXX11_ABI=0"
