@@ -1,17 +1,21 @@
-FROM socialdefect/raspbian-jessie-core
+FROM debian:stretch
 MAINTAINER Lovell Fuller <npm@lovell.info>
 
-# Create Rasbian-based container suitable for compiling Linux ARMv6 binaries
-# Requires the QEMU user mode emulation binaries on the host machine
+# Create Debian-based container suitable for cross-compiling Linux ARMv6 binaries
 
 # Build dependencies
 RUN \
   apt-get update && \
-  apt-get install -y build-essential curl autoconf libtool nasm gtk-doc-tools texinfo gperf advancecomp libglib2.0-dev jq gettext intltool autopoint && \
-  curl https://sh.rustup.rs -sSf | sh -s -- -y
+  apt-get install -y curl && \
+  dpkg --add-architecture armhf && \
+  apt-get update && \
+  apt-get install -y crossbuild-essential-armhf autoconf libtool nasm gtk-doc-tools texinfo gperf advancecomp libglib2.0-dev jq gettext intltool autopoint && \
+  curl https://sh.rustup.rs -sSf | sh -s -- -y && \
+  ~/.cargo/bin/rustup target add arm-unknown-linux-gnueabihf
 
 # Compiler settings
 ENV \
   PATH="/root/.cargo/bin:$PATH" \
   PLATFORM="linux-armv6" \
-  FLAGS="-Os"
+  CHOST="arm-linux-gnueabihf" \
+  FLAGS="-marm -march=armv6j -mfpu=vfp -mfloat-abi=hard -Os -D_GLIBCXX_USE_CXX11_ABI=0"

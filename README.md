@@ -24,14 +24,6 @@ the same shared libraries within multiple containers.
 * [ARMv7-A](linux-armv7/Dockerfile)
 * [ARMv8-A](linux-armv8/Dockerfile)
 
-The QEMU user mode emulation binaries are required to build for
-the ARMv6 platform as the Debian armhf cross-compiler erroneously
-generates unsupported Thumb 2 instructions.
-
-```sh
-sudo apt-get install qemu-user-static
-```
-
 ### Windows
 
 The output of libvips' [build-win64](https://github.com/jcupitt/build-win64)

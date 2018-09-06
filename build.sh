@@ -24,7 +24,7 @@ if ! type docker >/dev/null; then
 fi
 
 # Update base images
-for baseimage in debian:wheezy debian:stretch socialdefect/raspbian-jessie-core; do
+for baseimage in debian:wheezy debian:stretch; do
   docker pull $baseimage
 done
 
