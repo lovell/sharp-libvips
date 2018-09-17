@@ -19,7 +19,8 @@ Run the top-level [build script](build.sh) without parameters for help.
 One [build script](build/lin.sh) is used to (cross-)compile
 the same shared libraries within multiple containers.
 
-* [x64](linux-x64/Dockerfile)
+* [x64 glibc](linux-x64/Dockerfile)
+* [x64 musl](linuxmusl-x64/Dockerfile)
 * [ARMv6](linux-armv6/Dockerfile)
 * [ARMv7-A](linux-armv7/Dockerfile)
 * [ARMv8-A](linux-armv8/Dockerfile)
@@ -51,7 +52,8 @@ Use of libraries under the terms of the LGPLv3 is via the
 | expat         | MIT Licence                                                                                              |
 | fontconfig    | [fontconfig Licence](https://cgit.freedesktop.org/fontconfig/tree/COPYING) (BSD-like)                    |
 | freetype      | [freetype Licence](http://git.savannah.gnu.org/cgit/freetype/freetype2.git/tree/docs/FTL.TXT) (BSD-like) |
-| fribidi       | LGPLv3
+| fribidi       | LGPLv3                                                                                                   |
+| gettext       | LGPLv3                                                                                                   |
 | giflib        | MIT Licence                                                                                              |
 | glib          | LGPLv3                                                                                                   |
 | harfbuzz      | MIT Licence                                                                                              |

@@ -28,6 +28,7 @@ VERSION_PNG16=1.6.34
 VERSION_WEBP=1.0.0
 VERSION_TIFF=4.0.9
 VERSION_ORC=0.4.28
+VERSION_GETTEXT=0.19.8.1
 VERSION_GDKPIXBUF=2.36.12
 VERSION_FREETYPE=2.9.1
 VERSION_EXPAT=2.2.6
@@ -70,6 +71,7 @@ version_latest "png" "$VERSION_PNG16" "15294"
 version_latest "webp" "$VERSION_WEBP" "1761"
 version_latest "tiff" "$VERSION_TIFF" "13521"
 version_latest "orc" "$VERSION_ORC" "2573"
+version_latest "gettext" "$VERSION_GETTEXT" "898"
 #version_latest "gdkpixbuf" "$VERSION_GDKPIXBUF" "9533" # latest version requires meson instead of autotools
 version_latest "freetype" "$VERSION_FREETYPE" "854"
 version_latest "expat" "$VERSION_EXPAT" "770"
@@ -85,6 +87,16 @@ version_latest "gif" "$VERSION_GIF" "1158"
 if [ "$ALL_AT_VERSION_LATEST" = "false" ]; then exit 1; fi
 
 # Download and build dependencies from source
+
+case ${PLATFORM} in *musl*)
+  mkdir ${DEPS}/gettext
+  curl -Ls http://ftp.gnu.org/pub/gnu/gettext/gettext-${VERSION_GETTEXT}.tar.xz | tar xJC ${DEPS}/gettext --strip-components=1
+  cd ${DEPS}/gettext
+  ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking
+  make install-strip
+  rm ${TARGET}/include/gettext-po.h
+  rm -rf ${TARGET}/lib/*gettext*
+esac
 
 mkdir ${DEPS}/zlib
 curl -Ls http://zlib.net/zlib-${VERSION_ZLIB}.tar.xz | tar xJC ${DEPS}/zlib --strip-components=1
@@ -189,7 +201,8 @@ make install
 mkdir ${DEPS}/expat
 curl -Ls ${SOURCEFORGE_BASE_URL}expat/expat/${VERSION_EXPAT}/expat-${VERSION_EXPAT}.tar.bz2 | tar xjC ${DEPS}/expat --strip-components=1
 cd ${DEPS}/expat
-./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static
+./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static \
+  --disable-dependency-tracking --without-xmlwf
 make install
 
 mkdir ${DEPS}/fontconfig
@@ -243,7 +256,7 @@ mkdir ${DEPS}/svg
 curl -Lks https://download.gnome.org/sources/librsvg/$(without_patch $VERSION_SVG)/librsvg-${VERSION_SVG}.tar.xz | tar xJC ${DEPS}/svg --strip-components=1
 cd ${DEPS}/svg
 # Optimise Rust code for binary size
-sed -i 's/debug = true/debug = false\ncodegen-units = 1\nincremental = false\npanic = "abort"\nopt-level = "z"/' Cargo.toml
+sed -i "s/debug = true/debug = false\ncodegen-units = 1\nincremental = false\npanic = \"abort\"\nopt-level = ${RUST_OPT_LEVEL:-\"s\"}/" Cargo.toml
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking \
   --disable-introspection --disable-tools --disable-pixbuf-loader
 make install-strip
@@ -257,8 +270,10 @@ cd ${DEPS}/gif
 make install-strip
 
 mkdir ${DEPS}/vips
-curl -Ls https://github.com/jcupitt/libvips/releases/download/v${VERSION_VIPS}-rc1/vips-${VERSION_VIPS}.tar.gz | tar xzC ${DEPS}/vips --strip-components=1
+#curl -Ls https://github.com/jcupitt/libvips/releases/download/v${VERSION_VIPS}-rc3/vips-${VERSION_VIPS}-rc3.tar.gz | tar xzC ${DEPS}/vips --strip-components=1
+curl -Ls https://github.com/jcupitt/libvips/archive/5623bb1.tar.gz | tar xzC ${DEPS}/vips --strip-components=1
 cd ${DEPS}/vips
+./autogen.sh
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking \
   --disable-debug --disable-introspection --without-python --without-fftw \
   --without-magick --without-pangoft2 --without-ppm --without-analyze --without-radiance \
@@ -284,6 +299,7 @@ echo "{\n\
   \"freetype\": \"${VERSION_FREETYPE}\",\n\
   \"fribidi\": \"${VERSION_FRIBIDI}\",\n\
   \"gdkpixbuf\": \"${VERSION_GDKPIXBUF}\",\n\
+  \"gettext\": \"${VERSION_GETTEXT}\",\n\
   \"gif\": \"${VERSION_GIF}\",\n\
   \"glib\": \"${VERSION_GLIB}\",\n\
   \"gsf\": \"${VERSION_GSF}\",\n\

@@ -6,11 +6,17 @@ if [ $# -lt 1 ]; then
   echo "Usage: $0 VERSION [PLATFORM]"
   echo "Build shared libraries for libvips and its dependencies via containers"
   echo
-  echo "Please specify the libvips VERSION, e.g. 8.6.1"
+  echo "Please specify the libvips VERSION, e.g. 8.7.0"
   echo
   echo "Optionally build for only one PLATFORM, defaults to building for all"
-  echo "Possible values for PLATFORM are: win32-x64, linux-x64, linux-armv6,"
-  echo "linux-armv7, linux-armv8"
+  echo
+  echo "Possible values for PLATFORM are:"
+  echo "- win32-x64"
+  echo "- linux-x64"
+  echo "- linuxmusl-x64"
+  echo "- linux-armv6"
+  echo "- linux-armv7"
+  echo "- linux-armv8"
   echo
   exit 1
 fi
@@ -24,7 +30,7 @@ if ! type docker >/dev/null; then
 fi
 
 # Update base images
-for baseimage in debian:wheezy debian:stretch; do
+for baseimage in debian:wheezy debian:stretch alpine:3.8; do
   docker pull $baseimage
 done
 
@@ -36,7 +42,7 @@ if [ $PLATFORM = "all" ] || [ $PLATFORM = "win32-x64" ]; then
 fi
 
 # Linux (x64, ARMv6, ARMv7, ARMv8)
-for flavour in linux-x64 linux-armv6 linux-armv7 linux-armv8; do
+for flavour in linux-x64 linuxmusl-x64 linux-armv6 linux-armv7 linux-armv8; do
   if [ $PLATFORM = "all" ] || [ $PLATFORM = $flavour ]; then
     echo "Building $flavour..."
     docker build -t vips-dev-$flavour $flavour
