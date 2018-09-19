@@ -19,7 +19,7 @@ cp bin/*.dll lib/
 echo "\"${PLATFORM}\"" >platform.json
 
 # Create versions.json
-curl -LO https://raw.githubusercontent.com/lovell/build-win64/8.7-updates/8.7/vips.modules
+curl -LO https://raw.githubusercontent.com/lovell/build-win64/v8.7.0/8.7/vips.modules
 version_of() {
   xmllint --xpath "string(/moduleset/autotools[@id='$1']/branch/@version | /moduleset/cmake[@id='$1']/branch/@version)" vips.modules
 }
@@ -31,7 +31,9 @@ echo "{\n\
   \"ffi\": \"$(version_of libffi)\",\n\
   \"fontconfig\": \"$(version_of fontconfig)\",\n\
   \"freetype\": \"$(version_of freetype)\",\n\
+  \"fribidi\": \"$(version_of fribidi)\",\n\
   \"gdkpixbuf\": \"$(version_of gdk-pixbuf)\",\n\
+  \"gettext\": \"$(version_of gettext)\",\n\
   \"gif\": \"$(version_of giflib)\",\n\
   \"glib\": \"$(version_of glib)\",\n\
   \"gsf\": \"$(version_of libgsf)\",\n\

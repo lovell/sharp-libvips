@@ -270,10 +270,8 @@ cd ${DEPS}/gif
 make install-strip
 
 mkdir ${DEPS}/vips
-#curl -Ls https://github.com/jcupitt/libvips/releases/download/v${VERSION_VIPS}-rc3/vips-${VERSION_VIPS}-rc3.tar.gz | tar xzC ${DEPS}/vips --strip-components=1
-curl -Ls https://github.com/jcupitt/libvips/archive/5623bb1.tar.gz | tar xzC ${DEPS}/vips --strip-components=1
+curl -Ls https://github.com/jcupitt/libvips/releases/download/v${VERSION_VIPS}/vips-${VERSION_VIPS}.tar.gz | tar xzC ${DEPS}/vips --strip-components=1
 cd ${DEPS}/vips
-./autogen.sh
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking \
   --disable-debug --disable-introspection --without-python --without-fftw \
   --without-magick --without-pangoft2 --without-ppm --without-analyze --without-radiance \
