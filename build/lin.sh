@@ -33,13 +33,13 @@ VERSION_GDKPIXBUF=2.36.12
 VERSION_FREETYPE=2.9.1
 VERSION_EXPAT=2.2.6
 VERSION_FONTCONFIG=2.12.6
-VERSION_HARFBUZZ=1.8.7
+VERSION_HARFBUZZ=1.9.0
 VERSION_PIXMAN=0.34.0
 VERSION_CAIRO=1.15.12
 VERSION_FRIBIDI=1.0.5
-VERSION_PANGO=1.42.3
+VERSION_PANGO=1.42.4
 VERSION_CROCO=0.6.12
-VERSION_SVG=2.43.4
+VERSION_SVG=2.44.6
 VERSION_GIF=5.1.4
 
 # Least out-of-sync Sourceforge mirror
@@ -82,7 +82,7 @@ version_latest "pixman" "$VERSION_PIXMAN" "3648"
 version_latest "fribidi" "$VERSION_FRIBIDI" "857"
 version_latest "pango" "$VERSION_PANGO" "11783"
 version_latest "croco" "$VERSION_CROCO" "11787"
-version_latest "svg" "$VERSION_SVG" "5420"
+#version_latest "svg" "$VERSION_SVG" "5420" # latest version requires rust 1.27 - see https://gitlab.gnome.org/GNOME/librsvg/issues/359
 version_latest "gif" "$VERSION_GIF" "1158"
 if [ "$ALL_AT_VERSION_LATEST" = "false" ]; then exit 1; fi
 
@@ -131,7 +131,8 @@ make install-strip
 mkdir ${DEPS}/gsf
 curl -Lks https://download.gnome.org/sources/libgsf/$(without_patch $VERSION_GSF)/libgsf-${VERSION_GSF}.tar.xz | tar xJC ${DEPS}/gsf --strip-components=1
 cd ${DEPS}/gsf
-./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking
+./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking \
+  --without-bz2 --without-gdk-pixbuf
 make install-strip
 
 mkdir ${DEPS}/exif
