@@ -196,7 +196,8 @@ make install-strip
 mkdir ${DEPS}/freetype
 curl -Ls ${SOURCEFORGE_BASE_URL}freetype/freetype2/${VERSION_FREETYPE}/freetype-${VERSION_FREETYPE}.tar.gz | tar xzC ${DEPS}/freetype --strip-components=1
 cd ${DEPS}/freetype
-./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static
+./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking \
+  --without-bzip2
 make install
 
 mkdir ${DEPS}/expat
