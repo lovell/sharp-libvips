@@ -1,4 +1,4 @@
-FROM debian:stretch
+FROM debian:buster
 MAINTAINER Lovell Fuller <npm@lovell.info>
 
 # Create Debian-based container suitable for cross-compiling Linux ARMv6 binaries
@@ -18,4 +18,4 @@ ENV \
   PATH="/root/.cargo/bin:$PATH" \
   PLATFORM="linux-armv6" \
   CHOST="arm-linux-gnueabihf" \
-  FLAGS="-marm -march=armv6j -mfpu=vfp -mfloat-abi=hard -Os -D_GLIBCXX_USE_CXX11_ABI=0"
+  FLAGS="-marm -mcpu=arm1176jzf-s -mfpu=vfp -mfloat-abi=hard -Os -D_GLIBCXX_USE_CXX11_ABI=0"
