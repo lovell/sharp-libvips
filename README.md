@@ -66,6 +66,7 @@ Use of libraries under the terms of the LGPLv3 is via the
 | libpng        | [libpng License](http://www.libpng.org/pub/png/src/libpng-LICENSE.txt)                                   |
 | librsvg       | LGPLv3                                                                                                   |
 | libtiff       | [libtiff License](http://www.libtiff.org/misc.html) (BSD-like)                                           |
+| libuuid       | New BSD License                                                                                          |
 | libvips       | LGPLv3                                                                                                   |
 | libwebp       | New BSD License                                                                                          |
 | libxml2       | MIT Licence                                                                                              |
