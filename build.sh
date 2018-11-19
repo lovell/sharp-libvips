@@ -30,7 +30,7 @@ if ! type docker >/dev/null; then
 fi
 
 # Update base images
-for baseimage in debian:wheezy debian:stretch debian:buster alpine:3.8; do
+for baseimage in debian:wheezy debian:stretch debian:buster alpine:edge; do
   docker pull $baseimage
 done
 
