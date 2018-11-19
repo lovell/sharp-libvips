@@ -25,21 +25,22 @@ VERSION_EXIF=0.6.21
 VERSION_LCMS2=2.9
 VERSION_JPEG=1.5.3
 VERSION_PNG16=1.6.34
-VERSION_WEBP=1.0.0
-VERSION_TIFF=4.0.9
+VERSION_WEBP=1.0.1
+VERSION_TIFF=4.0.10
 VERSION_ORC=0.4.28
 VERSION_GETTEXT=0.19.8.1
 VERSION_GDKPIXBUF=2.36.12
 VERSION_FREETYPE=2.9.1
 VERSION_EXPAT=2.2.6
-VERSION_FONTCONFIG=2.12.6
-VERSION_HARFBUZZ=2.0.2
+VERSION_UUID=2.33
+VERSION_FONTCONFIG=2.13.1
+VERSION_HARFBUZZ=2.1.3
 VERSION_PIXMAN=0.34.0
-VERSION_CAIRO=1.15.12
+VERSION_CAIRO=1.16.0
 VERSION_FRIBIDI=1.0.5
 VERSION_PANGO=1.42.4
 VERSION_CROCO=0.6.12
-VERSION_SVG=2.44.6
+VERSION_SVG=2.45.0
 VERSION_GIF=5.1.4
 
 # Least out-of-sync Sourceforge mirror
@@ -75,14 +76,15 @@ version_latest "gettext" "$VERSION_GETTEXT" "898"
 #version_latest "gdkpixbuf" "$VERSION_GDKPIXBUF" "9533" # latest version requires meson instead of autotools
 version_latest "freetype" "$VERSION_FREETYPE" "854"
 version_latest "expat" "$VERSION_EXPAT" "770"
-#version_latest "fontconfig" "$VERSION_FONTCONFIG" "827" # latest version has libuuid dependency but this is part of util-linux
+version_latest "uuid" "$VERSION_UUID" "8179"
+version_latest "fontconfig" "$VERSION_FONTCONFIG" "827"
 version_latest "harfbuzz" "$VERSION_HARFBUZZ" "1299"
 version_latest "pixman" "$VERSION_PIXMAN" "3648"
-#version_latest "cairo" "$VERSION_CAIRO" "247" # latest version in release monitoring does not exist
+#version_latest "cairo" "$VERSION_CAIRO" "247" # latest version 1.16.2 in release monitoring does not exist
 version_latest "fribidi" "$VERSION_FRIBIDI" "857"
 version_latest "pango" "$VERSION_PANGO" "11783"
 version_latest "croco" "$VERSION_CROCO" "11787"
-#version_latest "svg" "$VERSION_SVG" "5420" # latest version requires rust 1.27 - see https://gitlab.gnome.org/GNOME/librsvg/issues/359
+version_latest "svg" "$VERSION_SVG" "5420"
 version_latest "gif" "$VERSION_GIF" "1158"
 if [ "$ALL_AT_VERSION_LATEST" = "false" ]; then exit 1; fi
 
@@ -90,7 +92,7 @@ if [ "$ALL_AT_VERSION_LATEST" = "false" ]; then exit 1; fi
 
 case ${PLATFORM} in *musl*)
   mkdir ${DEPS}/gettext
-  curl -Ls http://ftp.gnu.org/pub/gnu/gettext/gettext-${VERSION_GETTEXT}.tar.xz | tar xJC ${DEPS}/gettext --strip-components=1
+  curl -Ls https://ftp.gnu.org/pub/gnu/gettext/gettext-${VERSION_GETTEXT}.tar.xz | tar xJC ${DEPS}/gettext --strip-components=1
   cd ${DEPS}/gettext
   ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking
   make install-strip
@@ -207,6 +209,13 @@ cd ${DEPS}/expat
   --disable-dependency-tracking --without-xmlwf
 make install
 
+mkdir ${DEPS}/uuid
+curl -Ls https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v${VERSION_UUID}/util-linux-${VERSION_UUID}.tar.xz | tar xJC ${DEPS}/uuid --strip-components=1
+cd ${DEPS}/uuid
+./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static \
+  --disable-all-programs --enable-libuuid
+make install-strip
+
 mkdir ${DEPS}/fontconfig
 curl -Ls https://www.freedesktop.org/software/fontconfig/release/fontconfig-${VERSION_FONTCONFIG}.tar.bz2 | tar xjC ${DEPS}/fontconfig --strip-components=1
 cd ${DEPS}/fontconfig
@@ -227,7 +236,7 @@ cd ${DEPS}/pixman
 make install-strip
 
 mkdir ${DEPS}/cairo
-curl -Ls http://cairographics.org/snapshots/cairo-${VERSION_CAIRO}.tar.xz | tar xJC ${DEPS}/cairo --strip-components=1
+curl -Ls http://cairographics.org/releases/cairo-${VERSION_CAIRO}.tar.xz | tar xJC ${DEPS}/cairo --strip-components=1
 cd ${DEPS}/cairo
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking \
   --disable-xlib --disable-xcb --disable-quartz --disable-win32 --disable-egl --disable-glx --disable-wgl \
@@ -312,6 +321,7 @@ echo "{\n\
   \"png\": \"${VERSION_PNG16}\",\n\
   \"svg\": \"${VERSION_SVG}\",\n\
   \"tiff\": \"${VERSION_TIFF}\",\n\
+  \"uuid\": \"${VERSION_UUID}\",\n\
   \"vips\": \"${VERSION_VIPS}\",\n\
   \"webp\": \"${VERSION_WEBP}\",\n\
   \"xml\": \"${VERSION_XML2}\",\n\
