@@ -23,7 +23,7 @@ VERSION_XML2=2.9.8
 VERSION_GSF=1.14.44
 VERSION_EXIF=0.6.21
 VERSION_LCMS2=2.9
-VERSION_JPEG=1.5.3
+VERSION_JPEG=2.0.1
 VERSION_PNG16=1.6.34
 VERSION_WEBP=1.0.1
 VERSION_TIFF=4.0.10
@@ -35,7 +35,7 @@ VERSION_EXPAT=2.2.6
 VERSION_UUID=2.33
 VERSION_FONTCONFIG=2.13.1
 VERSION_HARFBUZZ=2.1.3
-VERSION_PIXMAN=0.34.0
+VERSION_PIXMAN=0.36.0
 VERSION_CAIRO=1.16.0
 VERSION_FRIBIDI=1.0.5
 VERSION_PANGO=1.42.4
@@ -67,7 +67,7 @@ version_latest "xml2" "$VERSION_XML2" "1783"
 version_latest "gsf" "$VERSION_GSF" "1980"
 version_latest "exif" "$VERSION_EXIF" "1607"
 version_latest "lcms2" "$VERSION_LCMS2" "9815"
-#version_latest "jpeg" "$VERSION_JPEG" "1648" # latest version requires cmake
+version_latest "jpeg" "$VERSION_JPEG" "1648"
 version_latest "png" "$VERSION_PNG16" "15294"
 version_latest "webp" "$VERSION_WEBP" "1761"
 version_latest "tiff" "$VERSION_TIFF" "13521"
@@ -153,9 +153,10 @@ make install-strip
 mkdir ${DEPS}/jpeg
 curl -Ls https://github.com/libjpeg-turbo/libjpeg-turbo/archive/${VERSION_JPEG}.tar.gz | tar xzC ${DEPS}/jpeg --strip-components=1
 cd ${DEPS}/jpeg
-autoreconf -fiv
-./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking --with-jpeg8 --without-turbojpeg
-make install-strip
+sed -i "s/cmake_minimum_required(VERSION 2.8.12)/cmake_minimum_required(VERSION 2.8.11)/" CMakeLists.txt
+cmake -G"Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=/root/Toolchain.cmake -DCMAKE_INSTALL_PREFIX=${TARGET} -DCMAKE_INSTALL_LIBDIR=${TARGET}/lib \
+  -DENABLE_SHARED=TRUE -DENABLE_STATIC=FALSE -DWITH_JPEG8=1 -DWITH_TURBOJPEG=FALSE
+make install/strip
 
 mkdir ${DEPS}/png16
 curl -Ls ${SOURCEFORGE_BASE_URL}libpng/libpng16/${VERSION_PNG16}/libpng-${VERSION_PNG16}.tar.xz | tar xJC ${DEPS}/png16 --strip-components=1
