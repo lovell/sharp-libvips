@@ -19,8 +19,8 @@ export CXXFLAGS="${FLAGS}"
 VERSION_ZLIB=1.2.11
 VERSION_FFI=3.2.1
 VERSION_GLIB=2.56.1
-VERSION_XML2=2.9.8
-VERSION_GSF=1.14.44
+VERSION_XML2=2.9.9
+VERSION_GSF=1.14.45
 VERSION_EXIF=0.6.21
 VERSION_LCMS2=2.9
 VERSION_JPEG=2.0.1
@@ -32,15 +32,15 @@ VERSION_GETTEXT=0.19.8.1
 VERSION_GDKPIXBUF=2.36.12
 VERSION_FREETYPE=2.9.1
 VERSION_EXPAT=2.2.6
-VERSION_UUID=2.33
+VERSION_UUID=2.33.1
 VERSION_FONTCONFIG=2.13.1
-VERSION_HARFBUZZ=2.1.3
+VERSION_HARFBUZZ=2.3.0
 VERSION_PIXMAN=0.36.0
 VERSION_CAIRO=1.16.0
 VERSION_FRIBIDI=1.0.5
 VERSION_PANGO=1.42.4
 VERSION_CROCO=0.6.12
-VERSION_SVG=2.45.0
+VERSION_SVG=2.45.3
 VERSION_GIF=5.1.4
 
 # Least out-of-sync Sourceforge mirror
@@ -82,7 +82,7 @@ version_latest "harfbuzz" "$VERSION_HARFBUZZ" "1299"
 version_latest "pixman" "$VERSION_PIXMAN" "3648"
 #version_latest "cairo" "$VERSION_CAIRO" "247" # latest version 1.16.2 in release monitoring does not exist
 version_latest "fribidi" "$VERSION_FRIBIDI" "857"
-version_latest "pango" "$VERSION_PANGO" "11783"
+#version_latest "pango" "$VERSION_PANGO" "11783" # latest version requires meson instead of autotools
 version_latest "croco" "$VERSION_CROCO" "11787"
 version_latest "svg" "$VERSION_SVG" "5420"
 version_latest "gif" "$VERSION_GIF" "1158"
@@ -206,12 +206,13 @@ make install
 mkdir ${DEPS}/expat
 curl -Ls ${SOURCEFORGE_BASE_URL}expat/expat/${VERSION_EXPAT}/expat-${VERSION_EXPAT}.tar.bz2 | tar xjC ${DEPS}/expat --strip-components=1
 cd ${DEPS}/expat
+sed -i "s/getrandom/ignore_getrandom/g" configure # https://github.com/libexpat/libexpat/issues/239
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static \
   --disable-dependency-tracking --without-xmlwf
 make install
 
 mkdir ${DEPS}/uuid
-curl -Ls https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v${VERSION_UUID}/util-linux-${VERSION_UUID}.tar.xz | tar xJC ${DEPS}/uuid --strip-components=1
+curl -Ls https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v$(without_patch $VERSION_UUID)/util-linux-${VERSION_UUID}.tar.xz | tar xJC ${DEPS}/uuid --strip-components=1
 cd ${DEPS}/uuid
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static \
   --disable-all-programs --enable-libuuid
@@ -241,7 +242,7 @@ curl -Ls http://cairographics.org/releases/cairo-${VERSION_CAIRO}.tar.xz | tar x
 cd ${DEPS}/cairo
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking \
   --disable-xlib --disable-xcb --disable-quartz --disable-win32 --disable-egl --disable-glx --disable-wgl \
-  --disable-script --disable-ps --disable-gobject --disable-trace --disable-interpreter
+  --disable-script --disable-ps --disable-trace --disable-interpreter
 make install-strip
 
 mkdir ${DEPS}/fribidi
