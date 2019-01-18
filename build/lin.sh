@@ -18,7 +18,7 @@ export CXXFLAGS="${FLAGS}"
 # Dependency version numbers
 VERSION_ZLIB=1.2.11
 VERSION_FFI=3.2.1
-VERSION_GLIB=2.56.1
+VERSION_GLIB=2.56.4
 VERSION_XML2=2.9.9
 VERSION_GSF=1.14.45
 VERSION_EXIF=0.6.21
@@ -40,7 +40,7 @@ VERSION_CAIRO=1.16.0
 VERSION_FRIBIDI=1.0.5
 VERSION_PANGO=1.42.4
 VERSION_CROCO=0.6.12
-VERSION_SVG=2.45.3
+VERSION_SVG=2.45.4
 VERSION_GIF=5.1.4
 
 # Least out-of-sync Sourceforge mirror
@@ -62,7 +62,7 @@ version_latest() {
 }
 version_latest "zlib" "$VERSION_ZLIB" "5303"
 version_latest "ffi" "$VERSION_FFI" "1611"
-#version_latest "glib" "$VERSION_GLIB" "10024" # latest requires automake 1.13.3 (Debian Wheezy provides 1.11.6)
+#version_latest "glib" "$VERSION_GLIB" "10024" # latest version requires meson instead of autotools
 version_latest "xml2" "$VERSION_XML2" "1783"
 version_latest "gsf" "$VERSION_GSF" "1980"
 version_latest "exif" "$VERSION_EXIF" "1607"
