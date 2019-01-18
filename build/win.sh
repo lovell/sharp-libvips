@@ -7,7 +7,7 @@ VERSION_VIPS_MINOR=$(echo $VERSION_VIPS | cut -d. -f2)
 # Fetch and unzip
 mkdir /vips
 cd /vips
-curl -LO https://github.com/libvips/build-win64/releases/download/v${VERSION_VIPS}/vips-dev-w64-web-${VERSION_VIPS}.zip
+curl -LO https://github.com/lovell/build-win64/releases/download/v${VERSION_VIPS}/vips-dev-w64-web-${VERSION_VIPS}.zip
 unzip vips-dev-w64-web-${VERSION_VIPS}.zip
 
 # Clean and zip
@@ -19,7 +19,7 @@ cp bin/*.dll lib/
 echo "\"${PLATFORM}\"" >platform.json
 
 # Create versions.json
-curl -LO https://raw.githubusercontent.com/libvips/build-win64/v8.7.0/8.7/vips.modules
+curl -LO https://raw.githubusercontent.com/lovell/build-win64/v${VERSION_VIPS}/${VERSION_VIPS_MAJOR}.${VERSION_VIPS_MINOR}/vips.modules
 version_of() {
   xmllint --xpath "string(/moduleset/autotools[@id='$1']/branch/@version | /moduleset/cmake[@id='$1']/branch/@version)" vips.modules
 }
