@@ -23,7 +23,7 @@ the same shared libraries within multiple containers.
 * [x64 musl](linuxmusl-x64/Dockerfile)
 * [ARMv6](linux-armv6/Dockerfile)
 * [ARMv7-A](linux-armv7/Dockerfile)
-* [ARMv8-A](linux-armv8/Dockerfile)
+* [ARM64v8-A](linux-arm64v8/Dockerfile)
 
 ### Windows
 

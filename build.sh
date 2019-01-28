@@ -16,7 +16,7 @@ if [ $# -lt 1 ]; then
   echo "- linuxmusl-x64"
   echo "- linux-armv6"
   echo "- linux-armv7"
-  echo "- linux-armv8"
+  echo "- linux-arm64v8"
   echo
   exit 1
 fi
@@ -41,8 +41,8 @@ if [ $PLATFORM = "all" ] || [ $PLATFORM = "win32-x64" ]; then
   docker run --rm -e "VERSION_VIPS=${VERSION_VIPS}" -v $PWD:/packaging vips-dev-win32-x64 sh -c "/packaging/build/win.sh"
 fi
 
-# Linux (x64, ARMv6, ARMv7, ARMv8)
-for flavour in linux-x64 linuxmusl-x64 linux-armv6 linux-armv7 linux-armv8; do
+# Linux (x64, ARMv6, ARMv7, ARM64v8)
+for flavour in linux-x64 linuxmusl-x64 linux-armv6 linux-armv7 linux-arm64v8; do
   if [ $PLATFORM = "all" ] || [ $PLATFORM = $flavour ]; then
     echo "Building $flavour..."
     docker build -t vips-dev-$flavour $flavour

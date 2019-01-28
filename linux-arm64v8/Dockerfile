@@ -1,7 +1,7 @@
 FROM debian:stretch
 MAINTAINER Lovell Fuller <npm@lovell.info>
 
-# Create Debian-based container suitable for cross-compiling Linux ARMv8-A binaries
+# Create Debian-based container suitable for cross-compiling Linux ARM64v8-A binaries
 
 # Build dependencies
 RUN \
@@ -16,7 +16,7 @@ RUN \
 # Compiler settings
 ENV \
   PATH="/root/.cargo/bin:$PATH" \
-  PLATFORM="linux-armv8" \
+  PLATFORM="linux-arm64v8" \
   CHOST="aarch64-linux-gnu" \
   FLAGS="-march=armv8-a -Os -D_GLIBCXX_USE_CXX11_ABI=0"
 
