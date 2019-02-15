@@ -23,7 +23,7 @@ VERSION_XML2=2.9.9
 VERSION_GSF=1.14.45
 VERSION_EXIF=0.6.21
 VERSION_LCMS2=2.9
-VERSION_JPEG=2.0.1
+VERSION_JPEG=2.0.2
 VERSION_PNG16=1.6.34
 VERSION_WEBP=1.0.2
 VERSION_TIFF=4.0.10
@@ -34,8 +34,8 @@ VERSION_FREETYPE=2.9.1
 VERSION_EXPAT=2.2.6
 VERSION_UUID=2.33.1
 VERSION_FONTCONFIG=2.13.1
-VERSION_HARFBUZZ=2.3.0
-VERSION_PIXMAN=0.36.0
+VERSION_HARFBUZZ=2.3.1
+VERSION_PIXMAN=0.38.0
 VERSION_CAIRO=1.16.0
 VERSION_FRIBIDI=1.0.5
 VERSION_PANGO=1.42.4
@@ -85,7 +85,7 @@ version_latest "fribidi" "$VERSION_FRIBIDI" "857"
 #version_latest "pango" "$VERSION_PANGO" "11783" # latest version requires meson instead of autotools
 version_latest "croco" "$VERSION_CROCO" "11787"
 version_latest "svg" "$VERSION_SVG" "5420"
-version_latest "gif" "$VERSION_GIF" "1158"
+#version_latest "gif" "$VERSION_GIF" "1158" # v5.1.5+ provides a Makefile only so will require custom cross-compilation setup
 if [ "$ALL_AT_VERSION_LATEST" = "false" ]; then exit 1; fi
 
 # Download and build dependencies from source
@@ -228,6 +228,7 @@ make install-strip
 mkdir ${DEPS}/harfbuzz
 curl -Ls https://www.freedesktop.org/software/harfbuzz/release/harfbuzz-${VERSION_HARFBUZZ}.tar.bz2 | tar xjC ${DEPS}/harfbuzz --strip-components=1
 cd ${DEPS}/harfbuzz
+sed -i "s/error   \"-Wunused-local-typedefs\"/ignored \"-Wunused-local-typedefs\"/" src/hb.hh
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking
 make install-strip
 
