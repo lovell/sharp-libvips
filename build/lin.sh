@@ -214,6 +214,7 @@ make install
 mkdir ${DEPS}/uuid
 curl -Ls https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v$(without_patch $VERSION_UUID)/util-linux-${VERSION_UUID}.tar.xz | tar xJC ${DEPS}/uuid --strip-components=1
 cd ${DEPS}/uuid
+sed -i "s/getrandom/ignore_getrandom/g" configure
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static \
   --disable-all-programs --enable-libuuid
 make install-strip
