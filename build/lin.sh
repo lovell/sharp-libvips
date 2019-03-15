@@ -30,7 +30,7 @@ VERSION_TIFF=4.0.10
 VERSION_ORC=0.4.28
 VERSION_GETTEXT=0.19.8.1
 VERSION_GDKPIXBUF=2.36.12
-VERSION_FREETYPE=2.9.1
+VERSION_FREETYPE=2.10.0
 VERSION_EXPAT=2.2.6
 VERSION_UUID=2.33.1
 VERSION_FONTCONFIG=2.13.1
@@ -40,7 +40,7 @@ VERSION_CAIRO=1.16.0
 VERSION_FRIBIDI=1.0.5
 VERSION_PANGO=1.42.4
 VERSION_CROCO=0.6.12
-VERSION_SVG=2.45.4
+VERSION_SVG=2.45.5
 VERSION_GIF=5.1.4
 
 # Least out-of-sync Sourceforge mirror
@@ -231,6 +231,7 @@ cd ${DEPS}/harfbuzz
 sed -i "s/error   \"-Wunused-local-typedefs\"/ignored \"-Wunused-local-typedefs\"/" src/hb.hh
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking
 make install-strip
+rm ${TARGET}/lib/libharfbuzz-subset*
 
 mkdir ${DEPS}/pixman
 curl -Ls http://cairographics.org/releases/pixman-${VERSION_PIXMAN}.tar.gz | tar xzC ${DEPS}/pixman --strip-components=1
