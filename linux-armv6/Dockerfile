@@ -17,7 +17,7 @@ RUN \
 
 # Compiler settings
 ENV \
-  PATH="/root/.cargo/bin:/root/tools/x64-gcc-6.3.1/arm-rpi-linux-gnueabihf/bin:$PATH" \
+  PATH="/root/.cargo/bin:/root/tools/x64-gcc-6.5.0/arm-rpi-linux-gnueabihf/bin:$PATH" \
   PLATFORM="linux-armv6" \
   CHOST="arm-rpi-linux-gnueabihf" \
   RUST_TARGET="arm-unknown-linux-gnueabihf" \
