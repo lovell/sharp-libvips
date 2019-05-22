@@ -12,18 +12,18 @@ unzip vips-dev-w64-web-${VERSION_VIPS}.zip
 
 # Clean and zip
 cd /vips/vips-dev-${VERSION_VIPS_MAJOR}.${VERSION_VIPS_MINOR}
-rm bin/libvips-cpp-42.dll bin/libgsf-win32-1-114.dll bin/libssp-0.dll
+rm bin/libvips-cpp-42.dll
 cp bin/*.dll lib/
 
 # Create platform.json
-echo "\"${PLATFORM}\"" >platform.json
+printf "\"${PLATFORM}\"" >platform.json
 
 # Create versions.json
 curl -LO https://raw.githubusercontent.com/lovell/build-win64/v${VERSION_VIPS}/${VERSION_VIPS_MAJOR}.${VERSION_VIPS_MINOR}/vips.modules
 version_of() {
-  xmllint --xpath "string(/moduleset/autotools[@id='$1']/branch/@version | /moduleset/cmake[@id='$1']/branch/@version)" vips.modules
+  xmllint --xpath "string(/moduleset/autotools[@id='$1']/branch/@version | /moduleset/cmake[@id='$1']/branch/@version | /moduleset/meson[@id='$1']/branch/@version)" vips.modules
 }
-echo "{\n\
+printf "{\n\
   \"cairo\": \"$(version_of cairo)\",\n\
   \"croco\": \"$(version_of libcroco)\",\n\
   \"exif\": \"$(version_of libexif)\",\n\
