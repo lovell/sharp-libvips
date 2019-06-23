@@ -31,12 +31,11 @@ VERSION_ORC=0.4.28
 VERSION_GETTEXT=0.20.1
 VERSION_GDKPIXBUF=2.36.12
 VERSION_FREETYPE=2.10.0
-VERSION_EXPAT=2.2.6
-VERSION_UUID=2.33.2
-VERSION_FONTCONFIG=2.13.1
-VERSION_HARFBUZZ=2.4.0
+VERSION_EXPAT=2.2.7
+VERSION_FONTCONFIG=2.13.91
+VERSION_HARFBUZZ=2.5.2
 VERSION_PIXMAN=0.38.4
-VERSION_CAIRO=1.16.0
+VERSION_CAIRO=1.17.2
 VERSION_FRIBIDI=1.0.5
 VERSION_PANGO=1.42.4
 VERSION_CROCO=0.6.13
@@ -76,7 +75,6 @@ version_latest "gettext" "$VERSION_GETTEXT" "898"
 #version_latest "gdkpixbuf" "$VERSION_GDKPIXBUF" "9533" # latest version requires meson instead of autotools
 version_latest "freetype" "$VERSION_FREETYPE" "854"
 version_latest "expat" "$VERSION_EXPAT" "770"
-version_latest "uuid" "$VERSION_UUID" "8179"
 version_latest "fontconfig" "$VERSION_FONTCONFIG" "827"
 version_latest "harfbuzz" "$VERSION_HARFBUZZ" "1299"
 version_latest "pixman" "$VERSION_PIXMAN" "3648"
@@ -211,23 +209,15 @@ sed -i "s/getrandom/ignore_getrandom/g" configure # https://github.com/libexpat/
   --disable-dependency-tracking --without-xmlwf
 make install
 
-mkdir ${DEPS}/uuid
-curl -Ls https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v$(without_patch $VERSION_UUID)/util-linux-${VERSION_UUID}.tar.xz | tar xJC ${DEPS}/uuid --strip-components=1
-cd ${DEPS}/uuid
-sed -i "s/getrandom/ignore_getrandom/g" configure
-./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static \
-  --disable-all-programs --enable-libuuid
-make install-strip
-
 mkdir ${DEPS}/fontconfig
-curl -Ls https://www.freedesktop.org/software/fontconfig/release/fontconfig-${VERSION_FONTCONFIG}.tar.bz2 | tar xjC ${DEPS}/fontconfig --strip-components=1
+curl -Ls https://www.freedesktop.org/software/fontconfig/release/fontconfig-${VERSION_FONTCONFIG}.tar.xz | tar xJC ${DEPS}/fontconfig --strip-components=1
 cd ${DEPS}/fontconfig
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking \
   --with-expat-includes=${TARGET}/include --with-expat-lib=${TARGET}/lib --sysconfdir=/etc
 make install-strip
 
 mkdir ${DEPS}/harfbuzz
-curl -Ls https://www.freedesktop.org/software/harfbuzz/release/harfbuzz-${VERSION_HARFBUZZ}.tar.bz2 | tar xjC ${DEPS}/harfbuzz --strip-components=1
+curl -Ls https://www.freedesktop.org/software/harfbuzz/release/harfbuzz-${VERSION_HARFBUZZ}.tar.xz | tar xJC ${DEPS}/harfbuzz --strip-components=1
 cd ${DEPS}/harfbuzz
 sed -i "s/error   \"-Wunused-local-typedefs\"/ignored \"-Wunused-local-typedefs\"/" src/hb.hh
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking
@@ -241,7 +231,7 @@ cd ${DEPS}/pixman
 make install-strip
 
 mkdir ${DEPS}/cairo
-curl -Ls http://cairographics.org/releases/cairo-${VERSION_CAIRO}.tar.xz | tar xJC ${DEPS}/cairo --strip-components=1
+curl -Ls http://cairographics.org/snapshots/cairo-${VERSION_CAIRO}.tar.xz | tar xJC ${DEPS}/cairo --strip-components=1
 cd ${DEPS}/cairo
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking \
   --disable-xlib --disable-xcb --disable-quartz --disable-win32 --disable-egl --disable-glx --disable-wgl \
@@ -326,7 +316,6 @@ printf "{\n\
   \"png\": \"${VERSION_PNG16}\",\n\
   \"svg\": \"${VERSION_SVG}\",\n\
   \"tiff\": \"${VERSION_TIFF}\",\n\
-  \"uuid\": \"${VERSION_UUID}\",\n\
   \"vips\": \"${VERSION_VIPS}\",\n\
   \"webp\": \"${VERSION_WEBP}\",\n\
   \"xml\": \"${VERSION_XML2}\",\n\
