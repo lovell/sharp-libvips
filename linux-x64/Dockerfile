@@ -1,16 +1,32 @@
-FROM debian:jessie
+FROM centos:7
 MAINTAINER Lovell Fuller <npm@lovell.info>
 
-# Create Debian 8 (glibc 2.19) container suitable for building Linux x64 binaries
+# Create CentOS 7 (glibc 2.17) container suitable for building Linux x64 binaries
 
 # Build dependencies
 RUN \
-  apt-get update && \
-  apt-get install -y build-essential gcc-4.9 prelink autoconf libtool nasm gtk-doc-tools texinfo gperf advancecomp libglib2.0-dev gobject-introspection jq cmake && \
-  curl https://sh.rustup.rs -sSf | sh -s -- -y
+  yum update -y \
+  && yum install -y epel-release centos-release-scl \
+  && yum group install -y "Development Tools" \
+  && yum install -y --setopt=tsflags=nodocs \
+    advancecomp \
+    cmake3 \
+    devtoolset-8-gcc \
+    devtoolset-8-gcc-c++ \
+    git \
+    glib-devel \
+    gperf \
+    gtk-doc \
+    jq \
+    nasm \
+    prelink \
+  && curl https://sh.rustup.rs -sSf | sh -s -- -y \
+  && ln -s /usr/bin/cmake3 /usr/bin/cmake
 
 # Compiler settings
 ENV \
+  CC="/opt/rh/devtoolset-8/root/usr/bin/gcc" \
+  CXX="/opt/rh/devtoolset-8/root/usr/bin/g++" \
   PATH="/root/.cargo/bin:$PATH" \
   PLATFORM="linux-x64" \
   FLAGS="-O3"

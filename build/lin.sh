@@ -25,15 +25,15 @@ VERSION_EXIF=0.6.21
 VERSION_LCMS2=2.9
 VERSION_JPEG=2.0.2
 VERSION_PNG16=1.6.37
-VERSION_WEBP=1.0.2
+VERSION_WEBP=1.0.3
 VERSION_TIFF=4.0.10
 VERSION_ORC=0.4.28
 VERSION_GETTEXT=0.20.1
 VERSION_GDKPIXBUF=2.36.12
-VERSION_FREETYPE=2.10.0
+VERSION_FREETYPE=2.10.1
 VERSION_EXPAT=2.2.7
 VERSION_FONTCONFIG=2.13.91
-VERSION_HARFBUZZ=2.5.2
+VERSION_HARFBUZZ=2.5.3
 VERSION_PIXMAN=0.38.4
 VERSION_CAIRO=1.17.2
 VERSION_FRIBIDI=1.0.5
@@ -108,6 +108,7 @@ rm ${TARGET}/lib/libz.a
 mkdir ${DEPS}/ffi
 curl -Ls ftp://sourceware.org/pub/libffi/libffi-${VERSION_FFI}.tar.gz | tar xzC ${DEPS}/ffi --strip-components=1
 cd ${DEPS}/ffi
+sed -i 's/@toolexeclibdir@/$(libdir)/g' Makefile.in
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking --disable-builddir
 make install-strip
 
@@ -151,7 +152,6 @@ make install-strip
 mkdir ${DEPS}/jpeg
 curl -Ls https://github.com/libjpeg-turbo/libjpeg-turbo/archive/${VERSION_JPEG}.tar.gz | tar xzC ${DEPS}/jpeg --strip-components=1
 cd ${DEPS}/jpeg
-sed -i "s/cmake_minimum_required(VERSION 2.8.12)/cmake_minimum_required(VERSION 2.8.11)/" CMakeLists.txt
 cmake -G"Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=/root/Toolchain.cmake -DCMAKE_INSTALL_PREFIX=${TARGET} -DCMAKE_INSTALL_LIBDIR=${TARGET}/lib \
   -DENABLE_SHARED=TRUE -DENABLE_STATIC=FALSE -DWITH_JPEG8=1 -DWITH_TURBOJPEG=FALSE
 make install/strip
@@ -206,14 +206,14 @@ curl -Ls ${SOURCEFORGE_BASE_URL}expat/expat/${VERSION_EXPAT}/expat-${VERSION_EXP
 cd ${DEPS}/expat
 sed -i "s/getrandom/ignore_getrandom/g" configure # https://github.com/libexpat/libexpat/issues/239
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static \
-  --disable-dependency-tracking --without-xmlwf
+  --disable-dependency-tracking --without-xmlwf --without-docbook
 make install
 
 mkdir ${DEPS}/fontconfig
 curl -Ls https://www.freedesktop.org/software/fontconfig/release/fontconfig-${VERSION_FONTCONFIG}.tar.xz | tar xJC ${DEPS}/fontconfig --strip-components=1
 cd ${DEPS}/fontconfig
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking \
-  --with-expat-includes=${TARGET}/include --with-expat-lib=${TARGET}/lib --sysconfdir=/etc
+  --with-expat-includes=${TARGET}/include --with-expat-lib=${TARGET}/lib --sysconfdir=/etc --disable-docs
 make install-strip
 
 mkdir ${DEPS}/harfbuzz

@@ -1,7 +1,7 @@
-FROM alpine:edge
+FROM alpine:3.10
 MAINTAINER Lovell Fuller <npm@lovell.info>
 
-# Create Alpine edge/3.9 (musl 1.1.20) container suitable for building Linux x64 binaries
+# Create Alpine 3.10 (musl 1.1.22) container suitable for building Linux x64 binaries
 
 # Build dependencies
 RUN \

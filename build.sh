@@ -30,7 +30,7 @@ if ! type docker >/dev/null; then
 fi
 
 # Update base images
-for baseimage in debian:jessie debian:stretch alpine:edge; do
+for baseimage in centos:7 debian:stretch alpine:3.10; do
   docker pull $baseimage
 done
 
