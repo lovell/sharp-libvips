@@ -1,4 +1,4 @@
-FROM debian:stretch
+FROM debian:bullseye
 MAINTAINER Lovell Fuller <npm@lovell.info>
 
 # Create Debian-based container suitable for cross-compiling Linux ARM64v8-A binaries
