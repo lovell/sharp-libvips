@@ -11,39 +11,37 @@ mkdir ${TARGET}
 export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:${TARGET}/lib/pkgconfig"
 export PATH="${PATH}:${TARGET}/bin"
 export CPPFLAGS="-I${TARGET}/include"
-export LDFLAGS="-L${TARGET}/lib -Wl,-rpath,'\$\$ORIGIN'"
+export LDFLAGS="-L${TARGET}/lib -Wl,-rpath='\$\$ORIGIN'"
+export LD_LIBRARY_PATH="${TARGET}/lib"
 export CFLAGS="${FLAGS}"
 export CXXFLAGS="${FLAGS}"
 
 # Dependency version numbers
 VERSION_ZLIB=1.2.11
-VERSION_FFI=3.2.1
-VERSION_GLIB=2.56.4
-VERSION_XML2=2.9.9
+VERSION_FFI=3.3
+VERSION_GLIB=2.63.2
+VERSION_XML2=2.9.10
 VERSION_GSF=1.14.46
 VERSION_EXIF=0.6.21
 VERSION_LCMS2=2.9
 VERSION_JPEG=2.0.3
 VERSION_PNG16=1.6.37
 VERSION_WEBP=1.0.3
-VERSION_TIFF=4.0.10
-VERSION_ORC=0.4.29
+VERSION_TIFF=4.1.0
+VERSION_ORC=0.4.31
 VERSION_GETTEXT=0.20.1
-VERSION_GDKPIXBUF=2.36.12
+VERSION_GDKPIXBUF=2.40.0
 VERSION_FREETYPE=2.10.1
-VERSION_EXPAT=2.2.8
+VERSION_EXPAT=2.2.9
 VERSION_FONTCONFIG=2.13.92
-VERSION_HARFBUZZ=2.6.1
+VERSION_HARFBUZZ=2.6.4
 VERSION_PIXMAN=0.38.4
-VERSION_CAIRO=1.17.2
-VERSION_FRIBIDI=1.0.5
-VERSION_PANGO=1.42.4
+VERSION_CAIRO=1.16.0
+VERSION_FRIBIDI=1.0.7
+VERSION_PANGO=1.44.7
 VERSION_CROCO=0.6.13
-VERSION_SVG=2.45.5
+VERSION_SVG=2.46.4
 VERSION_GIF=5.1.4
-
-# Least out-of-sync Sourceforge mirror
-SOURCEFORGE_BASE_URL=https://netix.dl.sourceforge.net/project/
 
 # Remove patch version component
 without_patch() {
@@ -61,7 +59,7 @@ version_latest() {
 }
 version_latest "zlib" "$VERSION_ZLIB" "5303"
 version_latest "ffi" "$VERSION_FFI" "1611"
-#version_latest "glib" "$VERSION_GLIB" "10024" # latest version requires meson instead of autotools
+version_latest "glib" "$VERSION_GLIB" "10024"
 version_latest "xml2" "$VERSION_XML2" "1783"
 version_latest "gsf" "$VERSION_GSF" "1980"
 version_latest "exif" "$VERSION_EXIF" "1607"
@@ -70,9 +68,9 @@ version_latest "jpeg" "$VERSION_JPEG" "1648"
 version_latest "png" "$VERSION_PNG16" "1705"
 version_latest "webp" "$VERSION_WEBP" "1761"
 version_latest "tiff" "$VERSION_TIFF" "13521"
-#version_latest "orc" "$VERSION_ORC" "2573" # pin to 0.4.29 until 0.4.31 is available
+version_latest "orc" "$VERSION_ORC" "2573"
 version_latest "gettext" "$VERSION_GETTEXT" "898"
-#version_latest "gdkpixbuf" "$VERSION_GDKPIXBUF" "9533" # latest version requires meson instead of autotools
+version_latest "gdkpixbuf" "$VERSION_GDKPIXBUF" "9533"
 version_latest "freetype" "$VERSION_FREETYPE" "854"
 version_latest "expat" "$VERSION_EXPAT" "770"
 version_latest "fontconfig" "$VERSION_FONTCONFIG" "827"
@@ -80,9 +78,9 @@ version_latest "harfbuzz" "$VERSION_HARFBUZZ" "1299"
 version_latest "pixman" "$VERSION_PIXMAN" "3648"
 #version_latest "cairo" "$VERSION_CAIRO" "247" # latest version in release monitoring does not exist
 version_latest "fribidi" "$VERSION_FRIBIDI" "857"
-#version_latest "pango" "$VERSION_PANGO" "11783" # latest version requires meson instead of autotools
+version_latest "pango" "$VERSION_PANGO" "11783"
 version_latest "croco" "$VERSION_CROCO" "11787"
-#version_latest "svg" "$VERSION_SVG" "5420" latest version fails to link against latest cairo
+#version_latest "svg" "$VERSION_SVG" "5420" # v2.47.0+ requires rust>=1.36 but rustup does not support musl
 #version_latest "gif" "$VERSION_GIF" "1158" # v5.1.5+ provides a Makefile only so will require custom cross-compilation setup
 if [ "$ALL_AT_VERSION_LATEST" = "false" ]; then exit 1; fi
 
@@ -96,17 +94,18 @@ case ${PLATFORM} in *musl*)
   make install-strip
   rm ${TARGET}/include/gettext-po.h
   rm -rf ${TARGET}/lib/*gettext*
+  export LDFLAGS="-L${TARGET}/lib -lintl -Wl,-rpath='\$ORIGIN'"
 esac
 
 mkdir ${DEPS}/zlib
-curl -Ls http://zlib.net/zlib-${VERSION_ZLIB}.tar.xz | tar xJC ${DEPS}/zlib --strip-components=1
+curl -Ls https://zlib.net/zlib-${VERSION_ZLIB}.tar.xz | tar xJC ${DEPS}/zlib --strip-components=1
 cd ${DEPS}/zlib
 ./configure --prefix=${TARGET} --uname=linux
 make install
 rm ${TARGET}/lib/libz.a
 
 mkdir ${DEPS}/ffi
-curl -Ls ftp://sourceware.org/pub/libffi/libffi-${VERSION_FFI}.tar.gz | tar xzC ${DEPS}/ffi --strip-components=1
+curl -Ls https://sourceware.org/pub/libffi/libffi-${VERSION_FFI}.tar.gz | tar xzC ${DEPS}/ffi --strip-components=1
 cd ${DEPS}/ffi
 sed -i 's/@toolexeclibdir@/$(libdir)/g' Makefile.in
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking --disable-builddir
@@ -115,18 +114,17 @@ make install-strip
 mkdir ${DEPS}/glib
 curl -Lks https://download.gnome.org/sources/glib/$(without_patch $VERSION_GLIB)/glib-${VERSION_GLIB}.tar.xz | tar xJC ${DEPS}/glib --strip-components=1
 cd ${DEPS}/glib
-echo glib_cv_stack_grows=no >>glib.cache
-echo glib_cv_uscore=no >>glib.cache
-./configure --cache-file=glib.cache --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking \
-  --with-pcre=internal --disable-libmount
-make install-strip
+CFLAGS= CXXFLAGS= meson setup _build --buildtype=release --strip --libdir=lib --prefix=${TARGET} ${MESON} \
+  -Dinternal_pcre=true -Dlibmount=false
+ninja -C _build
+ninja -C _build install
 
 mkdir ${DEPS}/xml2
 curl -Ls http://xmlsoft.org/sources/libxml2-${VERSION_XML2}.tar.gz | tar xzC ${DEPS}/xml2 --strip-components=1
 cd ${DEPS}/xml2
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking \
   --without-python --without-debug --without-docbook --without-ftp --without-html --without-legacy \
-  --without-pattern --without-push --without-regexps --without-schemas --without-schematron --with-zlib=${TARGET}
+  --without-push --without-schematron --with-zlib=${TARGET}
 make install-strip
 
 mkdir ${DEPS}/gsf
@@ -137,14 +135,14 @@ cd ${DEPS}/gsf
 make install-strip
 
 mkdir ${DEPS}/exif
-curl -Ls ${SOURCEFORGE_BASE_URL}libexif/libexif/${VERSION_EXIF}/libexif-${VERSION_EXIF}.tar.bz2 | tar xjC ${DEPS}/exif --strip-components=1
+curl -Ls https://sourceforge.mirrorservice.org/l/li/libexif/libexif/${VERSION_EXIF}/libexif-${VERSION_EXIF}.tar.bz2 | tar xjC ${DEPS}/exif --strip-components=1
 cd ${DEPS}/exif
 autoreconf -fiv
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking
 make install-strip
 
 mkdir ${DEPS}/lcms2
-curl -Ls ${SOURCEFORGE_BASE_URL}lcms/lcms/${VERSION_LCMS2}/lcms2-${VERSION_LCMS2}.tar.gz | tar xzC ${DEPS}/lcms2 --strip-components=1
+curl -Ls https://sourceforge.mirrorservice.org/l/lc/lcms/lcms/${VERSION_LCMS2}/lcms2-${VERSION_LCMS2}.tar.gz | tar xzC ${DEPS}/lcms2 --strip-components=1
 cd ${DEPS}/lcms2
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking
 make install-strip
@@ -157,56 +155,53 @@ cmake -G"Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=/root/Toolchain.cmake -DCMAKE_IN
 make install/strip
 
 mkdir ${DEPS}/png16
-curl -Ls ${SOURCEFORGE_BASE_URL}libpng/libpng16/${VERSION_PNG16}/libpng-${VERSION_PNG16}.tar.xz | tar xJC ${DEPS}/png16 --strip-components=1
+curl -Ls https://sourceforge.mirrorservice.org/l/li/libpng/libpng16/${VERSION_PNG16}/libpng-${VERSION_PNG16}.tar.xz | tar xJC ${DEPS}/png16 --strip-components=1
 cd ${DEPS}/png16
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking
 make install-strip
 
 mkdir ${DEPS}/webp
-curl -Ls http://downloads.webmproject.org/releases/webp/libwebp-${VERSION_WEBP}.tar.gz | tar xzC ${DEPS}/webp --strip-components=1
+curl -Ls https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-${VERSION_WEBP}.tar.gz | tar xzC ${DEPS}/webp --strip-components=1
 cd ${DEPS}/webp
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking \
   --disable-neon --enable-libwebpmux
 make install-strip
 
 mkdir ${DEPS}/tiff
-curl -Ls http://download.osgeo.org/libtiff/tiff-${VERSION_TIFF}.tar.gz | tar xzC ${DEPS}/tiff --strip-components=1
+curl -Ls https://download.osgeo.org/libtiff/tiff-${VERSION_TIFF}.tar.gz | tar xzC ${DEPS}/tiff --strip-components=1
 cd ${DEPS}/tiff
 if [ -n "${CHOST}" ]; then autoreconf -fiv; fi
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking --disable-mdi --disable-pixarlog --disable-cxx
 make install-strip
 
 mkdir ${DEPS}/orc
-curl -Ls http://gstreamer.freedesktop.org/data/src/orc/orc-${VERSION_ORC}.tar.xz | tar xJC ${DEPS}/orc --strip-components=1
+curl -Ls https://gstreamer.freedesktop.org/data/src/orc/orc-${VERSION_ORC}.tar.xz | tar xJC ${DEPS}/orc --strip-components=1
 cd ${DEPS}/orc
-./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking
-make install-strip
-cd ${TARGET}/lib
-rm -rf liborc-test-*
+CFLAGS= CXXFLAGS= meson setup _build --buildtype=release --strip --libdir=lib --prefix=${TARGET} ${MESON} \
+  -Dorc-test=disabled -Dbenchmarks=disabled -Dexamples=disabled -Dgtk_doc=disabled -Dtests=disabled -Dtools=disabled
+ninja -C _build
+ninja -C _build install
 
 mkdir ${DEPS}/gdkpixbuf
 curl -Lks https://download.gnome.org/sources/gdk-pixbuf/$(without_patch $VERSION_GDKPIXBUF)/gdk-pixbuf-${VERSION_GDKPIXBUF}.tar.xz | tar xJC ${DEPS}/gdkpixbuf --strip-components=1
 cd ${DEPS}/gdkpixbuf
-touch gdk-pixbuf/loaders.cache
-LD_LIBRARY_PATH=${TARGET}/lib \
-./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking \
-  --disable-introspection --disable-modules \
-  --without-libtiff --without-gdiplus --with-included-loaders=png,jpeg
-make install-strip
+CFLAGS= CXXFLAGS= meson setup _build --buildtype=release --strip --libdir=lib --prefix=${TARGET} ${MESON} \
+  -Dtiff=false -Dx11=false -Dgir=false -Dinstalled_tests=false -Dgio_sniffing=false -Dman=false -Dbuiltin_loaders=png,jpeg
+ninja -C _build
+ninja -C _build install
 
 mkdir ${DEPS}/freetype
-curl -Ls ${SOURCEFORGE_BASE_URL}freetype/freetype2/${VERSION_FREETYPE}/freetype-${VERSION_FREETYPE}.tar.gz | tar xzC ${DEPS}/freetype --strip-components=1
+curl -Ls https://download.savannah.gnu.org/releases/freetype/freetype-${VERSION_FREETYPE}.tar.xz | tar xJC ${DEPS}/freetype --strip-components=1
 cd ${DEPS}/freetype
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking \
   --without-bzip2
 make install
 
 mkdir ${DEPS}/expat
-curl -Ls ${SOURCEFORGE_BASE_URL}expat/expat/${VERSION_EXPAT}/expat-${VERSION_EXPAT}.tar.bz2 | tar xjC ${DEPS}/expat --strip-components=1
+curl -Ls https://github.com/libexpat/libexpat/releases/download/R_2_2_9/expat-${VERSION_EXPAT}.tar.xz | tar xJC ${DEPS}/expat --strip-components=1
 cd ${DEPS}/expat
-sed -i "s/getrandom/ignore_getrandom/g" configure # https://github.com/libexpat/libexpat/issues/239
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static \
-  --disable-dependency-tracking --without-xmlwf --without-docbook
+  --disable-dependency-tracking --without-xmlwf --without-docbook --without-getrandom --without-sys-getrandom
 make install
 
 mkdir ${DEPS}/fontconfig
@@ -225,17 +220,18 @@ make install-strip
 rm ${TARGET}/lib/libharfbuzz-subset*
 
 mkdir ${DEPS}/pixman
-curl -Ls http://cairographics.org/releases/pixman-${VERSION_PIXMAN}.tar.gz | tar xzC ${DEPS}/pixman --strip-components=1
+curl -Ls https://cairographics.org/releases/pixman-${VERSION_PIXMAN}.tar.gz | tar xzC ${DEPS}/pixman --strip-components=1
 cd ${DEPS}/pixman
-./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking --disable-libpng --disable-arm-iwmmxt
+./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking \
+  --disable-libpng --disable-arm-iwmmxt
 make install-strip
 
 mkdir ${DEPS}/cairo
-curl -Ls http://cairographics.org/snapshots/cairo-${VERSION_CAIRO}.tar.xz | tar xJC ${DEPS}/cairo --strip-components=1
+curl -Ls https://cairographics.org/releases/cairo-${VERSION_CAIRO}.tar.xz | tar xJC ${DEPS}/cairo --strip-components=1
 cd ${DEPS}/cairo
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking \
   --disable-xlib --disable-xcb --disable-quartz --disable-win32 --disable-egl --disable-glx --disable-wgl \
-  --disable-script --disable-ps --disable-trace --disable-interpreter
+  --disable-ps --disable-trace --disable-interpreter
 make install-strip
 
 mkdir ${DEPS}/fribidi
@@ -248,9 +244,10 @@ make install-strip
 mkdir ${DEPS}/pango
 curl -Lks https://download.gnome.org/sources/pango/$(without_patch $VERSION_PANGO)/pango-${VERSION_PANGO}.tar.xz | tar xJC ${DEPS}/pango --strip-components=1
 cd ${DEPS}/pango
-./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking \
-  --without-gtk-doc
-make install-strip
+CFLAGS= CXXFLAGS= meson setup _build --buildtype=release --strip --libdir=lib --prefix=${TARGET} ${MESON} \
+  -Dgtk_doc=false -Dintrospection=false
+ninja -C _build
+ninja -C _build install
 
 mkdir ${DEPS}/croco
 curl -Lks https://download.gnome.org/sources/libcroco/$(without_patch $VERSION_CROCO)/libcroco-${VERSION_CROCO}.tar.xz | tar xJC ${DEPS}/croco --strip-components=1
@@ -262,7 +259,7 @@ mkdir ${DEPS}/svg
 curl -Lks https://download.gnome.org/sources/librsvg/$(without_patch $VERSION_SVG)/librsvg-${VERSION_SVG}.tar.xz | tar xJC ${DEPS}/svg --strip-components=1
 cd ${DEPS}/svg
 # Optimise Rust code for binary size
-sed -i "s/debug = true/debug = false\ncodegen-units = 1\nincremental = false\npanic = \"abort\"\nopt-level = ${RUST_OPT_LEVEL:-\"s\"}/" Cargo.toml
+sed -i "s/debug = true/debug = false\ncodegen-units = 1\nincremental = false\npanic = \"abort\"\nopt-level = \"s\"/" Cargo.toml
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking \
   --disable-introspection --disable-tools --disable-pixbuf-loader
 make install-strip
@@ -270,7 +267,7 @@ make install-strip
 execstack -c ${TARGET}/lib/librsvg-2.so || true
 
 mkdir ${DEPS}/gif
-curl -Ls ${SOURCEFORGE_BASE_URL}giflib/giflib-${VERSION_GIF}.tar.gz | tar xzC ${DEPS}/gif --strip-components=1
+curl -Ls https://sourceforge.mirrorservice.org/g/gi/giflib/giflib-${VERSION_GIF}.tar.gz | tar xzC ${DEPS}/gif --strip-components=1
 cd ${DEPS}/gif
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking
 make install-strip
