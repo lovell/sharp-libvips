@@ -16,7 +16,7 @@ jobs:
         tag_name: ${{ github.ref }}
         release_name: Release ${{ github.ref }}
         draft: false
-        prerelease: false
+        prerelease: true
     - shell: bash
       run: |
         echo '${{ steps.create-release.outputs.upload_url }}' > upload-url.txt
