@@ -9,7 +9,7 @@ RUN \
   apt-get install -y curl && \
   dpkg --add-architecture armhf && \
   apt-get update && \
-  apt-get install -y autoconf libtool nasm gtk-doc-tools texinfo gperf advancecomp libglib2.0-dev jq gettext intltool autopoint cmake python3-pip ninja-build && \
+  apt-get install -y autoconf libtool nasm gtk-doc-tools texinfo gperf advancecomp libglib2.0-dev jq gettext intltool autopoint cmake python3-pip ninja-build patchelf && \
   mkdir /root/tools && \
   curl -Ls https://github.com/rvagg/rpi-newer-crosstools/archive/master.tar.gz | tar xzC /root/tools --strip-components=1 && \
   curl https://sh.rustup.rs -sSf | sh -s -- -y && \

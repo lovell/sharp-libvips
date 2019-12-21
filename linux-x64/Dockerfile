@@ -20,6 +20,7 @@ RUN \
     jq \
     nasm \
     prelink \
+    patchelf \
     ninja-build && \
   curl https://sh.rustup.rs -sSf | sh -s -- -y && \
   ln -s /usr/bin/cmake3 /usr/bin/cmake && \

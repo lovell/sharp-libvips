@@ -11,7 +11,7 @@ mkdir ${TARGET}
 export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:${TARGET}/lib/pkgconfig"
 export PATH="${PATH}:${TARGET}/bin"
 export CPPFLAGS="-I${TARGET}/include"
-export LDFLAGS="-L${TARGET}/lib -Wl,-rpath='\$\$ORIGIN'"
+export LDFLAGS="-L${TARGET}/lib"
 export LD_LIBRARY_PATH="${TARGET}/lib"
 export CFLAGS="${FLAGS}"
 export CXXFLAGS="${FLAGS}"
@@ -19,7 +19,7 @@ export CXXFLAGS="${FLAGS}"
 # Dependency version numbers
 VERSION_ZLIB=1.2.11
 VERSION_FFI=3.3
-VERSION_GLIB=2.63.2
+VERSION_GLIB=2.63.3
 VERSION_XML2=2.9.10
 VERSION_GSF=1.14.46
 VERSION_EXIF=0.6.21
@@ -40,7 +40,7 @@ VERSION_CAIRO=1.16.0
 VERSION_FRIBIDI=1.0.8
 VERSION_PANGO=1.44.7
 VERSION_CROCO=0.6.13
-VERSION_SVG=2.46.4
+VERSION_SVG=2.47.1
 VERSION_GIF=5.1.4
 
 # Remove patch version component
@@ -80,7 +80,7 @@ version_latest "pixman" "$VERSION_PIXMAN" "3648"
 version_latest "fribidi" "$VERSION_FRIBIDI" "857"
 version_latest "pango" "$VERSION_PANGO" "11783"
 version_latest "croco" "$VERSION_CROCO" "11787"
-#version_latest "svg" "$VERSION_SVG" "5420" # v2.47.0+ requires rust>=1.36 but rustup does not support musl
+version_latest "svg" "$VERSION_SVG" "5420"
 #version_latest "gif" "$VERSION_GIF" "1158" # v5.1.5+ provides a Makefile only so will require custom cross-compilation setup
 if [ "$ALL_AT_VERSION_LATEST" = "false" ]; then exit 1; fi
 
@@ -94,7 +94,7 @@ case ${PLATFORM} in *musl*)
   make install-strip
   rm ${TARGET}/include/gettext-po.h
   rm -rf ${TARGET}/lib/*gettext*
-  export LDFLAGS="-L${TARGET}/lib -lintl -Wl,-rpath='\$ORIGIN'"
+  export LDFLAGS="$LDFLAGS -lintl"
 esac
 
 mkdir ${DEPS}/zlib
@@ -189,6 +189,7 @@ CFLAGS= CXXFLAGS= meson setup _build --buildtype=release --strip --libdir=lib --
   -Dtiff=false -Dx11=false -Dgir=false -Dinstalled_tests=false -Dgio_sniffing=false -Dman=false -Dbuiltin_loaders=png,jpeg
 ninja -C _build
 ninja -C _build install
+rm -rf ${TARGET}/lib/gdk-pixbuf-2.0
 
 mkdir ${DEPS}/freetype
 curl -Ls https://download.savannah.gnu.org/releases/freetype/freetype-${VERSION_FREETYPE}.tar.xz | tar xJC ${DEPS}/freetype --strip-components=1
@@ -286,7 +287,10 @@ make install-strip
 cd ${TARGET}/include
 rm -rf vips/vipsc++.h vips/vipscpp.h
 cd ${TARGET}/lib
-rm -rf pkgconfig .libs *.la libvipsCC*
+rm -rf pkgconfig .libs *.la libvipsCC* cmake
+
+# Set RPATH to $ORIGIN
+find ${TARGET}/lib -type f -name "*.so*" -exec sh -c "patchelf --set-rpath '\$ORIGIN' --force-rpath {}" \;
 
 # Create JSON file of version numbers
 cd ${TARGET}
