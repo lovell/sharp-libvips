@@ -39,7 +39,6 @@ VERSION_PIXMAN=0.38.4
 VERSION_CAIRO=1.16.0
 VERSION_FRIBIDI=1.0.8
 VERSION_PANGO=1.44.7
-VERSION_CROCO=0.6.13
 VERSION_SVG=2.47.1
 VERSION_GIF=5.1.4
 
@@ -79,7 +78,6 @@ version_latest "pixman" "$VERSION_PIXMAN" "3648"
 #version_latest "cairo" "$VERSION_CAIRO" "247" # latest version in release monitoring does not exist
 version_latest "fribidi" "$VERSION_FRIBIDI" "857"
 version_latest "pango" "$VERSION_PANGO" "11783"
-version_latest "croco" "$VERSION_CROCO" "11787"
 version_latest "svg" "$VERSION_SVG" "5420"
 #version_latest "gif" "$VERSION_GIF" "1158" # v5.1.5+ provides a Makefile only so will require custom cross-compilation setup
 if [ "$ALL_AT_VERSION_LATEST" = "false" ]; then exit 1; fi
@@ -250,12 +248,6 @@ CFLAGS= CXXFLAGS= meson setup _build --buildtype=release --strip --libdir=lib --
 ninja -C _build
 ninja -C _build install
 
-mkdir ${DEPS}/croco
-curl -Lks https://download.gnome.org/sources/libcroco/$(without_patch $VERSION_CROCO)/libcroco-${VERSION_CROCO}.tar.xz | tar xJC ${DEPS}/croco --strip-components=1
-cd ${DEPS}/croco
-./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking
-make install-strip
-
 mkdir ${DEPS}/svg
 curl -Lks https://download.gnome.org/sources/librsvg/$(without_patch $VERSION_SVG)/librsvg-${VERSION_SVG}.tar.xz | tar xJC ${DEPS}/svg --strip-components=1
 cd ${DEPS}/svg
@@ -296,7 +288,6 @@ find ${TARGET}/lib -type f -name "*.so*" -exec sh -c "patchelf --set-rpath '\$OR
 cd ${TARGET}
 printf "{\n\
   \"cairo\": \"${VERSION_CAIRO}\",\n\
-  \"croco\": \"${VERSION_CROCO}\",\n\
   \"exif\": \"${VERSION_EXIF}\",\n\
   \"expat\": \"${VERSION_EXPAT}\",\n\
   \"ffi\": \"${VERSION_FFI}\",\n\

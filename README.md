@@ -58,7 +58,7 @@ Use of libraries under the terms of the LGPLv3 is via the
 | glib          | LGPLv3                                                                                                   |
 | harfbuzz      | MIT Licence                                                                                              |
 | lcms          | MIT Licence                                                                                              |
-| libcroco      | LGPLv3                                                                                                   |
+| libcroco      | LGPLv3 (Windows only)                                                                                    |
 | libexif       | LGPLv3                                                                                                   |
 | libffi        | MIT Licence                                                                                              |
 | libgsf        | LGPLv3                                                                                                   |
