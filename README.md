@@ -50,9 +50,10 @@ Use of libraries under the terms of the LGPLv3 is via the
 |---------------|----------------------------------------------------------------------------------------------------------|
 | cairo         | Mozilla Public License 2.0                                                                               |
 | expat         | MIT Licence                                                                                              |
-| fontconfig    | [fontconfig Licence](https://cgit.freedesktop.org/fontconfig/tree/COPYING) (BSD-like)                    |
-| freetype      | [freetype Licence](http://git.savannah.gnu.org/cgit/freetype/freetype2.git/tree/docs/FTL.TXT) (BSD-like) |
+| fontconfig    | [fontconfig Licence](https://gitlab.freedesktop.org/fontconfig/fontconfig/blob/master/COPYING) (BSD-like)|
+| freetype      | [freetype Licence](https://git.savannah.gnu.org/cgit/freetype/freetype2.git/tree/docs/FTL.TXT) (BSD-like)|
 | fribidi       | LGPLv3                                                                                                   |
+| gdk-pixbuf    | LGPLv3                                                                                                   |
 | gettext       | LGPLv3                                                                                                   |
 | giflib        | MIT Licence                                                                                              |
 | glib          | LGPLv3                                                                                                   |
@@ -65,11 +66,11 @@ Use of libraries under the terms of the LGPLv3 is via the
 | libjpeg-turbo | [zlib License, IJG License](https://github.com/libjpeg-turbo/libjpeg-turbo/blob/master/LICENSE.md)       |
 | libpng        | [libpng License](http://www.libpng.org/pub/png/src/libpng-LICENSE.txt)                                   |
 | librsvg       | LGPLv3                                                                                                   |
-| libtiff       | [libtiff License](http://www.libtiff.org/misc.html) (BSD-like)                                           |
-| libuuid       | New BSD License                                                                                          |
+| libtiff       | [libtiff License](https://libtiff.gitlab.io/libtiff/misc.html) (BSD-like)                                |
 | libvips       | LGPLv3                                                                                                   |
 | libwebp       | New BSD License                                                                                          |
 | libxml2       | MIT Licence                                                                                              |
+| orc           | [orc License](https://gitlab.freedesktop.org/gstreamer/orc/blob/master/COPYING) (BSD-like)               |
 | pango         | LGPLv3                                                                                                   |
 | pixman        | MIT Licence                                                                                              |
 | zlib          | [zlib Licence](https://github.com/madler/zlib/blob/master/zlib.h)                                        |
