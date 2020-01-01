@@ -319,6 +319,13 @@ printf "{\n\
 
 printf "\"${PLATFORM}\"" >platform.json
 
+# Add third-party notices
+curl -Os https://raw.githubusercontent.com/lovell/sharp-libvips/master/THIRD-PARTY-NOTICES.md
+
 # Create .tar.gz
-tar czf /packaging/libvips-${VERSION_VIPS}-${PLATFORM}.tar.gz include lib *.json
+tar czf /packaging/libvips-${VERSION_VIPS}-${PLATFORM}.tar.gz \
+  include \
+  lib \
+  *.json \
+  THIRD-PARTY-NOTICES.md
 advdef --recompress --shrink-insane /packaging/libvips-${VERSION_VIPS}-${PLATFORM}.tar.gz

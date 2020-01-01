@@ -7,7 +7,7 @@ VERSION_VIPS_MINOR=$(echo $VERSION_VIPS | cut -d. -f2)
 # Fetch and unzip
 mkdir /vips
 cd /vips
-curl -LO https://github.com/lovell/build-win64/releases/download/v${VERSION_VIPS}/vips-dev-w64-web-${VERSION_VIPS}.zip
+curl -LOs https://github.com/lovell/build-win64/releases/download/v${VERSION_VIPS}/vips-dev-w64-web-${VERSION_VIPS}.zip
 unzip vips-dev-w64-web-${VERSION_VIPS}.zip
 
 # Clean and zip
@@ -19,7 +19,7 @@ cp bin/*.dll lib/
 printf "\"${PLATFORM}\"" >platform.json
 
 # Create versions.json
-curl -LO https://raw.githubusercontent.com/lovell/build-win64/v${VERSION_VIPS}/${VERSION_VIPS_MAJOR}.${VERSION_VIPS_MINOR}/vips.modules
+curl -Os https://raw.githubusercontent.com/lovell/build-win64/v${VERSION_VIPS}/${VERSION_VIPS_MAJOR}.${VERSION_VIPS_MINOR}/vips.modules
 version_of() {
   xmllint --xpath "string(/moduleset/autotools[@id='$1']/branch/@version | /moduleset/cmake[@id='$1']/branch/@version | /moduleset/meson[@id='$1']/branch/@version)" vips.modules
 }
@@ -53,7 +53,18 @@ printf "{\n\
 rm vips.modules
 cat versions.json
 
+# Add third-party notices
+curl -Os https://raw.githubusercontent.com/lovell/sharp-libvips/master/THIRD-PARTY-NOTICES.md
+
 echo "Creating tarball"
-tar czf /packaging/libvips-${VERSION_VIPS}-${PLATFORM}.tar.gz include lib/glib-2.0 lib/libvips.lib lib/libglib-2.0.lib lib/libgobject-2.0.lib lib/*.dll *.json
+tar czf /packaging/libvips-${VERSION_VIPS}-${PLATFORM}.tar.gz \
+  include \
+  lib/glib-2.0 \
+  lib/libvips.lib \
+  lib/libglib-2.0.lib \
+  lib/libgobject-2.0.lib \
+  lib/*.dll \
+  *.json \
+  THIRD-PARTY-NOTICES.md
 echo "Shrinking tarball"
 advdef --recompress --shrink-insane /packaging/libvips-${VERSION_VIPS}-${PLATFORM}.tar.gz
