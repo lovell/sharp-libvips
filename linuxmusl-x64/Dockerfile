@@ -11,7 +11,7 @@ RUN \
     texinfo gperf glib-dev gobject-introspection-dev findutils jq linux-headers cmake binutils python3 ninja patchelf && \
   apk --update --no-cache --repository https://alpine.global.ssl.fastly.net/alpine/v3.11/community/ add cargo && \
   apk --update --no-cache --repository https://alpine.global.ssl.fastly.net/alpine/edge/testing/ add advancecomp && \
-  pip3 install meson
+  pip3 install meson==0.52.1
 
 # Compiler settings
 ENV \

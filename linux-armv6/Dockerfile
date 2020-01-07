@@ -14,7 +14,7 @@ RUN \
   curl -Ls https://github.com/rvagg/rpi-newer-crosstools/archive/master.tar.gz | tar xzC /root/tools --strip-components=1 && \
   curl https://sh.rustup.rs -sSf | sh -s -- -y && \
   ~/.cargo/bin/rustup target add arm-unknown-linux-gnueabihf && \
-  pip3 install meson
+  pip3 install meson==0.52.1
 
 # Compiler settings
 ENV \
