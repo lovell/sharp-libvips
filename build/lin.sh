@@ -19,7 +19,7 @@ export CXXFLAGS="${FLAGS}"
 # Dependency version numbers
 VERSION_ZLIB=1.2.11
 VERSION_FFI=3.3
-VERSION_GLIB=2.63.3
+VERSION_GLIB=2.63.5
 VERSION_XML2=2.9.10
 VERSION_GSF=1.14.46
 VERSION_EXIF=0.6.21
@@ -39,7 +39,7 @@ VERSION_PIXMAN=0.38.4
 VERSION_CAIRO=1.16.0
 VERSION_FRIBIDI=1.0.8
 VERSION_PANGO=1.44.7
-VERSION_SVG=2.47.1
+VERSION_SVG=2.47.3
 VERSION_GIF=5.1.4
 
 # Remove patch version component
@@ -113,7 +113,7 @@ mkdir ${DEPS}/glib
 curl -Lks https://download.gnome.org/sources/glib/$(without_patch $VERSION_GLIB)/glib-${VERSION_GLIB}.tar.xz | tar xJC ${DEPS}/glib --strip-components=1
 cd ${DEPS}/glib
 CFLAGS= CXXFLAGS= meson setup _build --buildtype=release --strip --libdir=lib --prefix=${TARGET} ${MESON} \
-  -Dinternal_pcre=true -Dlibmount=false
+  -Dinternal_pcre=true -Dlibmount=disabled
 ninja -C _build
 ninja -C _build install
 
