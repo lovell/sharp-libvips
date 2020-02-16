@@ -1,5 +1,5 @@
 FROM alpine:3.11
-MAINTAINER Lovell Fuller <npm@lovell.info>
+LABEL maintainer="Lovell Fuller <npm@lovell.info>"
 
 # Create Alpine 3.11 (musl 1.1.24) container suitable for building Linux x64 binaries
 
@@ -11,7 +11,7 @@ RUN \
     texinfo gperf glib-dev gobject-introspection-dev findutils jq linux-headers cmake binutils python3 ninja patchelf && \
   apk --update --no-cache --repository https://alpine.global.ssl.fastly.net/alpine/v3.11/community/ add cargo && \
   apk --update --no-cache --repository https://alpine.global.ssl.fastly.net/alpine/edge/testing/ add advancecomp && \
-  pip3 install meson==0.52.1
+  pip3 install meson
 
 # Compiler settings
 ENV \
