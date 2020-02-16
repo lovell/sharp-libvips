@@ -1,5 +1,5 @@
 FROM centos:7
-MAINTAINER Lovell Fuller <npm@lovell.info>
+LABEL maintainer="Lovell Fuller <npm@lovell.info>"
 
 # Create CentOS 7 (glibc 2.17) container suitable for building Linux x64 binaries
 
@@ -25,7 +25,7 @@ RUN \
   curl https://sh.rustup.rs -sSf | sh -s -- -y && \
   ln -s /usr/bin/cmake3 /usr/bin/cmake && \
   ln -s /usr/bin/ninja-build /usr/bin/ninja && \
-  pip3 install meson==0.52.1
+  pip3 install meson
 
 # Compiler settings
 ENV \
