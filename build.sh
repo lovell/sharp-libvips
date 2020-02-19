@@ -11,6 +11,7 @@ if [ $# -lt 1 ]; then
   echo "Optionally build for only one PLATFORM, defaults to building for all"
   echo
   echo "Possible values for PLATFORM are:"
+  echo "- win32-ia32"
   echo "- win32-x64"
   echo "- linux-x64"
   echo "- linuxmusl-x64"
@@ -34,11 +35,11 @@ for baseimage in centos:7 debian:stretch debian:bullseye alpine:3.11; do
   docker pull $baseimage
 done
 
-# Windows (x64)
-if [ $PLATFORM = "all" ] || [ $PLATFORM = "win32-x64" ]; then
-  echo "Building win32-x64..."
-  docker build -t vips-dev-win32-x64 win32-x64
-  docker run --rm -e "VERSION_VIPS=${VERSION_VIPS}" -v $PWD:/packaging vips-dev-win32-x64 sh -c "/packaging/build/win.sh"
+# Windows
+if [ $PLATFORM = "all" ] || [ $PLATFORM = "win32-ia32" ] || [ $PLATFORM = "win32-x64" ]; then
+  echo "Building $PLATFORM..."
+  docker build -t vips-dev-$PLATFORM $PLATFORM
+  docker run --rm -e "VERSION_VIPS=${VERSION_VIPS}" -v $PWD:/packaging vips-dev-$PLATFORM sh -c "/packaging/build/win.sh"
 fi
 
 # Linux (x64, ARMv6, ARMv7, ARM64v8)

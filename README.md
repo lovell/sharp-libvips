@@ -27,8 +27,11 @@ the same shared libraries within multiple containers.
 
 ### Windows
 
-The output of libvips' [build-win64](https://github.com/jcupitt/build-win64)
-"web" target is [post-processed](build/win.sh) within a [container](win32-x64/Dockerfile).
+The output of libvips' [build-win64-mxe](https://github.com/libvips/build-win64-mxe)
+"web" target is [post-processed](build/win.sh) within multiple containers.
+
+* [win32-ia32](win32-ia32/Dockerfile)
+* [win32-x64](win32-x64/Dockerfile)
 
 ### OS X
 

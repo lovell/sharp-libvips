@@ -7,8 +7,9 @@ VERSION_VIPS_MINOR=$(echo $VERSION_VIPS | cut -d. -f2)
 # Fetch and unzip
 mkdir /vips
 cd /vips
-curl -LOs https://github.com/libvips/build-win64-mxe/releases/download/v${VERSION_VIPS}/vips-dev-w64-web-${VERSION_VIPS}.zip
-unzip vips-dev-w64-web-${VERSION_VIPS}.zip
+BITS=$(echo -n $PLATFORM | tail -c 2)
+curl -LOs https://github.com/libvips/build-win64-mxe/releases/download/v${VERSION_VIPS}/vips-dev-w${BITS}-web-${VERSION_VIPS}.zip
+unzip vips-dev-w${BITS}-web-${VERSION_VIPS}.zip
 
 # Clean and zip
 cd /vips/vips-dev-${VERSION_VIPS_MAJOR}.${VERSION_VIPS_MINOR}
