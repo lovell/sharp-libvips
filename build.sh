@@ -31,7 +31,7 @@ if ! type docker >/dev/null; then
 fi
 
 # Update base images
-for baseimage in centos:7 debian:stretch debian:bullseye alpine:3.11; do
+for baseimage in centos:7 debian:buster debian:bullseye alpine:3.11; do
   docker pull $baseimage
 done
 

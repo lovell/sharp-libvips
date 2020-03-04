@@ -1,4 +1,4 @@
-FROM debian:stretch
+FROM debian:buster
 LABEL maintainer="Lovell Fuller <npm@lovell.info>"
 
 # Create Debian-based container suitable for cross-compiling Linux ARMv6 binaries
