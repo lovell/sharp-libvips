@@ -19,7 +19,7 @@ export CXXFLAGS="${FLAGS}"
 # Dependency version numbers
 VERSION_ZLIB=1.2.11
 VERSION_FFI=3.3
-VERSION_GLIB=2.63.5
+VERSION_GLIB=2.64.0
 VERSION_XML2=2.9.10
 VERSION_GSF=1.14.46
 VERSION_EXIF=0.6.21
@@ -37,7 +37,7 @@ VERSION_FONTCONFIG=2.13.92
 VERSION_HARFBUZZ=2.6.4
 VERSION_PIXMAN=0.38.4
 VERSION_CAIRO=1.16.0
-VERSION_FRIBIDI=1.0.8
+VERSION_FRIBIDI=1.0.9
 VERSION_PANGO=1.44.7
 VERSION_SVG=2.47.3
 VERSION_GIF=5.1.4
@@ -237,7 +237,7 @@ cd ${DEPS}/cairo
 make install-strip
 
 mkdir ${DEPS}/fribidi
-curl -Ls https://github.com/fribidi/fribidi/releases/download/v${VERSION_FRIBIDI}/fribidi-${VERSION_FRIBIDI}.tar.bz2 | tar xjC ${DEPS}/fribidi --strip-components=1
+curl -Ls https://github.com/fribidi/fribidi/releases/download/v${VERSION_FRIBIDI}/fribidi-${VERSION_FRIBIDI}.tar.xz | tar xJC ${DEPS}/fribidi --strip-components=1
 cd ${DEPS}/fribidi
 autoreconf -fiv
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking
