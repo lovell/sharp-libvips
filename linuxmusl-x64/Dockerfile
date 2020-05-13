@@ -10,7 +10,7 @@ RUN \
     build-base curl git autoconf automake libtool intltool shared-mime-info nasm gtk-doc \
     texinfo gperf glib-dev gobject-introspection-dev findutils jq linux-headers cmake binutils python3 ninja patchelf && \
   apk --update --no-cache --repository https://alpine.global.ssl.fastly.net/alpine/v3.11/community/ add cargo && \
-  apk --update --no-cache --repository https://alpine.global.ssl.fastly.net/alpine/edge/testing/ add advancecomp && \
+  apk --update --no-cache --repository https://alpine.global.ssl.fastly.net/alpine/edge/community/ add advancecomp && \
   pip3 install meson
 
 # Compiler settings
