@@ -19,9 +19,9 @@ export CXXFLAGS="${FLAGS}"
 # Dependency version numbers
 VERSION_ZLIB=1.2.11
 VERSION_FFI=3.3
-VERSION_GLIB=2.64.0
+VERSION_GLIB=2.64.2
 VERSION_XML2=2.9.10
-VERSION_GSF=1.14.46
+VERSION_GSF=1.14.47
 VERSION_EXIF=0.6.21
 VERSION_LCMS2=2.9
 VERSION_JPEG=2.0.4
@@ -29,17 +29,17 @@ VERSION_PNG16=1.6.37
 VERSION_WEBP=1.1.0
 VERSION_TIFF=4.1.0
 VERSION_ORC=0.4.31
-VERSION_GETTEXT=0.20.1
+VERSION_GETTEXT=0.20.2
 VERSION_GDKPIXBUF=2.40.0
-VERSION_FREETYPE=2.10.1
+VERSION_FREETYPE=2.10.2
 VERSION_EXPAT=2.2.9
 VERSION_FONTCONFIG=2.13.92
-VERSION_HARFBUZZ=2.6.4
-VERSION_PIXMAN=0.38.4
+VERSION_HARFBUZZ=2.6.6
+VERSION_PIXMAN=0.40.0
 VERSION_CAIRO=1.16.0
 VERSION_FRIBIDI=1.0.9
 VERSION_PANGO=1.44.7
-VERSION_SVG=2.48.0
+VERSION_SVG=2.48.4
 VERSION_GIF=5.1.4
 
 # Remove patch version component
@@ -214,7 +214,7 @@ cd ${DEPS}/fontconfig
 make install-strip
 
 mkdir ${DEPS}/harfbuzz
-curl -Ls https://www.freedesktop.org/software/harfbuzz/release/harfbuzz-${VERSION_HARFBUZZ}.tar.xz | tar xJC ${DEPS}/harfbuzz --strip-components=1
+curl -Ls https://github.com/harfbuzz/harfbuzz/releases/download/${VERSION_HARFBUZZ}/harfbuzz-${VERSION_HARFBUZZ}.tar.xz | tar xJC ${DEPS}/harfbuzz --strip-components=1
 cd ${DEPS}/harfbuzz
 sed -i "s/error   \"-Wunused-local-typedefs\"/ignored \"-Wunused-local-typedefs\"/" src/hb.hh
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking
