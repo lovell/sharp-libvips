@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 set -e
 
 if [ $# -lt 1 ]; then
@@ -6,7 +6,7 @@ if [ $# -lt 1 ]; then
   echo "Usage: $0 VERSION [PLATFORM]"
   echo "Build shared libraries for libvips and its dependencies via containers"
   echo
-  echo "Please specify the libvips VERSION, e.g. 8.7.0"
+  echo "Please specify the libvips VERSION, e.g. 8.9.1"
   echo
   echo "Optionally build for only one PLATFORM, defaults to building for all"
   echo
@@ -36,11 +36,13 @@ for baseimage in centos:7 debian:buster debian:bullseye alpine:3.11; do
 done
 
 # Windows
-if [ $PLATFORM = "all" ] || [ $PLATFORM = "win32-ia32" ] || [ $PLATFORM = "win32-x64" ]; then
-  echo "Building $PLATFORM..."
-  docker build -t vips-dev-$PLATFORM $PLATFORM
-  docker run --rm -e "VERSION_VIPS=${VERSION_VIPS}" -v $PWD:/packaging vips-dev-$PLATFORM sh -c "/packaging/build/win.sh"
-fi
+for flavour in win32-ia32 win32-x64; do
+  if [ $PLATFORM = "all" ] || [ $PLATFORM = $flavour ]; then
+    echo "Building $flavour..."
+    docker build -t vips-dev-$flavour $flavour
+    docker run --rm -e "VERSION_VIPS=${VERSION_VIPS}" -v $PWD:/packaging vips-dev-$flavour sh -c "/packaging/build/win.sh"
+  fi
+done
 
 # Linux (x64, ARMv6, ARMv7, ARM64v8)
 for flavour in linux-x64 linuxmusl-x64 linux-armv6 linux-armv7 linux-arm64v8; do

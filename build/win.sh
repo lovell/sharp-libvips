@@ -1,18 +1,17 @@
-#!/bin/sh
+#!/usr/bin/env bash
 set -e
 
-VERSION_VIPS_MAJOR=$(echo $VERSION_VIPS | cut -d. -f1)
-VERSION_VIPS_MINOR=$(echo $VERSION_VIPS | cut -d. -f2)
+VERSION_VIPS_SHORT=${VERSION_VIPS%.[[:digit:]]*}
 
 # Fetch and unzip
 mkdir /vips
 cd /vips
-BITS=$(echo -n $PLATFORM | tail -c 2)
+BITS=${PLATFORM: -2}
 curl -LOs https://github.com/libvips/build-win64-mxe/releases/download/v${VERSION_VIPS}/vips-dev-w${BITS}-web-${VERSION_VIPS}.zip
 unzip vips-dev-w${BITS}-web-${VERSION_VIPS}.zip
 
 # Clean and zip
-cd /vips/vips-dev-${VERSION_VIPS_MAJOR}.${VERSION_VIPS_MINOR}
+cd /vips/vips-dev-${VERSION_VIPS_SHORT}
 rm bin/libvips-cpp-42.dll
 cp bin/*.dll lib/
 
