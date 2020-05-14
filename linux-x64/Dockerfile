@@ -13,15 +13,17 @@ RUN \
     cmake3 \
     devtoolset-8-gcc \
     devtoolset-8-gcc-c++ \
-    git \
-    glib-devel \
+    glib2-devel \
+    gobject-introspection-devel \
     gperf \
     gtk-doc \
     jq \
     nasm \
-    prelink \
+    ninja-build \
     patchelf \
-    ninja-build && \
+    prelink \
+    python3 \
+    && \
   curl https://sh.rustup.rs -sSf | sh -s -- -y && \
   ln -s /usr/bin/cmake3 /usr/bin/cmake && \
   ln -s /usr/bin/ninja-build /usr/bin/ninja && \
@@ -33,6 +35,6 @@ ENV \
   CXX="/opt/rh/devtoolset-8/root/usr/bin/g++" \
   PATH="/root/.cargo/bin:$PATH" \
   PLATFORM="linux-x64" \
-  FLAGS="-O3"
+  FLAGS="-s -O3 -fPIC"
 
 COPY Toolchain.cmake /root/
