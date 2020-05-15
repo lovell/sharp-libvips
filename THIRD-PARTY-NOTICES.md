@@ -20,7 +20,7 @@ used under the terms of the following licences:
 | libffi        | MIT Licence                                                                                               |
 | libgsf        | LGPLv3                                                                                                    |
 | libjpeg-turbo | [zlib License, IJG License](https://github.com/libjpeg-turbo/libjpeg-turbo/blob/master/LICENSE.md)        |
-| libpng        | [libpng License](http://www.libpng.org/pub/png/src/libpng-LICENSE.txt)                                    |
+| libpng        | [libpng License](https://github.com/glennrp/libpng/blob/master/LICENSE)                                   |
 | librsvg       | LGPLv3                                                                                                    |
 | libtiff       | [libtiff License](https://libtiff.gitlab.io/libtiff/misc.html) (BSD-like)                                 |
 | libvips       | LGPLv3                                                                                                    |
