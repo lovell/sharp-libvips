@@ -8,13 +8,14 @@ mkdir ${DEPS}
 mkdir ${TARGET}
 
 # Common build paths and flags
-export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:${TARGET}/lib/pkgconfig"
+export PKG_CONFIG_LIBDIR="${TARGET}/lib/pkgconfig"
 export PATH="${PATH}:${TARGET}/bin"
-export CPPFLAGS="-I${TARGET}/include"
-export LDFLAGS="-L${TARGET}/lib"
+export CPATH="${TARGET}/include"
+export LIBRARY_PATH="${TARGET}/lib"
 export LD_LIBRARY_PATH="${TARGET}/lib"
 export CFLAGS="${FLAGS}"
 export CXXFLAGS="${FLAGS}"
+export LDFLAGS="-L${TARGET}/lib -Wl,-rpath='\$\$ORIGIN/'"
 
 # Dependency version numbers
 VERSION_ZLIB=1.2.11
@@ -75,7 +76,7 @@ version_latest "expat" "$VERSION_EXPAT" "770"
 version_latest "fontconfig" "$VERSION_FONTCONFIG" "827"
 version_latest "harfbuzz" "$VERSION_HARFBUZZ" "1299"
 version_latest "pixman" "$VERSION_PIXMAN" "3648"
-#version_latest "cairo" "$VERSION_CAIRO" "247" # latest version in release monitoring does not exist
+#version_latest "cairo" "$VERSION_CAIRO" "247" # latest version in release monitoring is unstable
 version_latest "fribidi" "$VERSION_FRIBIDI" "857"
 version_latest "pango" "$VERSION_PANGO" "11783"
 version_latest "svg" "$VERSION_SVG" "5420"
@@ -88,12 +89,9 @@ case ${PLATFORM} in *musl*)
   mkdir ${DEPS}/gettext
   curl -Ls https://ftp.gnu.org/pub/gnu/gettext/gettext-${VERSION_GETTEXT}.tar.xz | tar xJC ${DEPS}/gettext --strip-components=1
   cd ${DEPS}/gettext/gettext-runtime
-  ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking
   ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
     --disable-libasprintf --disable-java --disable-native-java --disable-csharp
   make install-strip
-  rm -rf ${TARGET}/lib/*gettext*
-  export LDFLAGS="$LDFLAGS -lintl"
 esac
 
 mkdir ${DEPS}/zlib
@@ -119,8 +117,8 @@ sed -i "s/build_tests = .*/build_tests = false/" meson.build
 case ${PLATFORM} in *musl*)
   curl -Ls https://git.alpinelinux.org/aports/plain/main/glib/musl-libintl.patch | patch -p1
 esac
-CFLAGS= CXXFLAGS= meson setup _build --buildtype=release --strip --libdir=lib --prefix=${TARGET} ${MESON} \
-  -Dinternal_pcre=true -Dlibmount=disabled
+CFLAGS= CXXFLAGS= LDFLAGS=${LDFLAGS/\$/} meson setup _build --buildtype=release --strip --libdir=lib --prefix=${TARGET} ${MESON} \
+  -Dinternal_pcre=true -Dinstalled_tests=false -Dlibmount=disabled
 ninja -C _build
 ninja -C _build install
 
@@ -155,7 +153,7 @@ make install-strip
 mkdir ${DEPS}/jpeg
 curl -Ls https://github.com/libjpeg-turbo/libjpeg-turbo/archive/${VERSION_JPEG}.tar.gz | tar xzC ${DEPS}/jpeg --strip-components=1
 cd ${DEPS}/jpeg
-cmake -G"Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=/root/Toolchain.cmake -DCMAKE_INSTALL_PREFIX=${TARGET} -DCMAKE_INSTALL_LIBDIR=${TARGET}/lib \
+LDFLAGS=${LDFLAGS/\$/} cmake -G"Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=/root/Toolchain.cmake -DCMAKE_INSTALL_PREFIX=${TARGET} -DCMAKE_INSTALL_LIBDIR=${TARGET}/lib \
   -DENABLE_SHARED=TRUE -DENABLE_STATIC=FALSE -DWITH_JPEG8=1 -DWITH_TURBOJPEG=FALSE
 make install/strip
 
@@ -183,7 +181,7 @@ make install-strip
 mkdir ${DEPS}/orc
 curl -Ls https://gstreamer.freedesktop.org/data/src/orc/orc-${VERSION_ORC}.tar.xz | tar xJC ${DEPS}/orc --strip-components=1
 cd ${DEPS}/orc
-CFLAGS= CXXFLAGS= meson setup _build --buildtype=release --strip --libdir=lib --prefix=${TARGET} ${MESON} \
+CFLAGS= CXXFLAGS= LDFLAGS=${LDFLAGS/\$/} meson setup _build --buildtype=release --strip --libdir=lib --prefix=${TARGET} ${MESON} \
   -Dorc-test=disabled -Dbenchmarks=disabled -Dexamples=disabled -Dgtk_doc=disabled -Dtests=disabled -Dtools=disabled
 ninja -C _build
 ninja -C _build install
@@ -200,10 +198,12 @@ sed -i "/\[ 'xpm'/,+5d" gdk-pixbuf/meson.build
 # Ensure meson can find libjpeg when cross-compiling
 sed -i "s/has_header('jpeglib.h')/has_header('jpeglib.h', args: '-I\/target\/include')/g" meson.build
 sed -i "s/cc.find_library('jpeg'/dependency('libjpeg'/g" meson.build
-CFLAGS= CXXFLAGS= meson setup _build --buildtype=release --strip --libdir=lib --prefix=${TARGET} ${MESON} \
+CFLAGS= CXXFLAGS= LDFLAGS=${LDFLAGS/\$/} meson setup _build --buildtype=release --strip --libdir=lib --prefix=${TARGET} ${MESON} \
   -Dtiff=false -Dx11=false -Dgir=false -Dinstalled_tests=false -Dgio_sniffing=false -Dman=false -Dbuiltin_loaders=png,jpeg
 ninja -C _build
 ninja -C _build install
+# Include libjpeg and libpng as a dependency of gdk-pixbuf, see: https://gitlab.gnome.org/GNOME/gdk-pixbuf/merge_requests/50
+sed -i "s/^\(Requires:.*\)/\1 libjpeg, libpng16/" ${TARGET}/lib/pkgconfig/gdk-pixbuf-2.0.pc
 rm -rf ${TARGET}/lib/gdk-pixbuf-2.0
 
 mkdir ${DEPS}/freetype
@@ -214,7 +214,7 @@ cd ${DEPS}/freetype
 make install
 
 mkdir ${DEPS}/expat
-curl -Ls https://github.com/libexpat/libexpat/releases/download/R_${VERSION_EXPAT//./_}/expat-${VERSION_EXPAT}.tar.xz | tar xJC ${DEPS}/expat --strip-components=1 
+curl -Ls https://github.com/libexpat/libexpat/releases/download/R_${VERSION_EXPAT//./_}/expat-${VERSION_EXPAT}.tar.xz | tar xJC ${DEPS}/expat --strip-components=1
 cd ${DEPS}/expat
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static \
   --disable-dependency-tracking --without-xmlwf --without-docbook --without-getrandom --without-sys-getrandom
@@ -264,7 +264,7 @@ curl -Lks https://download.gnome.org/sources/pango/$(without_patch $VERSION_PANG
 cd ${DEPS}/pango
 # Disable utils, examples, tests and tools
 sed -i "/subdir('utils')/,+3d" meson.build
-CFLAGS= CXXFLAGS= meson setup _build --buildtype=release --strip --libdir=lib --prefix=${TARGET} ${MESON} \
+CFLAGS= CXXFLAGS= LDFLAGS=${LDFLAGS/\$/} meson setup _build --buildtype=release --strip --libdir=lib --prefix=${TARGET} ${MESON} \
   -Dgtk_doc=false -Dintrospection=false
 ninja -C _build
 ninja -C _build install
@@ -272,6 +272,7 @@ ninja -C _build install
 mkdir ${DEPS}/svg
 curl -Lks https://download.gnome.org/sources/librsvg/$(without_patch $VERSION_SVG)/librsvg-${VERSION_SVG}.tar.xz | tar xJC ${DEPS}/svg --strip-components=1
 cd ${DEPS}/svg
+sed -i "s/^\(Requires:.*\)/\1 cairo-gobject pangocairo/" librsvg.pc.in
 # Optimise Rust code for binary size
 sed -i "s/debug = true/debug = false\nopt-level = 's'\nlto = true\ncodegen-units = 1\nincremental = false\npanic = 'abort'/" Cargo.toml
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking \
@@ -297,11 +298,9 @@ cd ${DEPS}/vips
   --with-jpeg-includes=${TARGET}/include --with-jpeg-libraries=${TARGET}/lib
 make install-strip
 
-# Remove the old C++ bindings
+# Cleanup
+rm -rf ${TARGET}/lib/{pkgconfig,.libs,*.la,cmake}
 cd ${TARGET}/include
-rm -rf vips/vipsc++.h vips/vipscpp.h
-cd ${TARGET}/lib
-rm -rf pkgconfig .libs *.la libvipsCC* cmake
 
 # Set RPATH to $ORIGIN
 find ${TARGET}/lib -type f -name "*.so*" -exec sh -c "patchelf --set-rpath '\$ORIGIN' --force-rpath {}" \;
