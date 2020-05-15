@@ -39,10 +39,9 @@ See [package-libvips-darwin](https://github.com/lovell/package-libvips-darwin).
 
 ## Licences
 
-These scripts are licensed under the terms of the
+These scripts are licensed under the terms of the [Apache 2.0 Licence](LICENSE).
 [Apache 2.0 Licence](https://github.com/lovell/sharp-libvips/blob/master/LICENSE).
 
-The shared libraries contained in the tarballs
-are distributed under the terms of
-[various licences](https://github.com/lovell/sharp-libvips/blob/master/THIRD-PARTY-NOTICES.md),
-all of which are compatible with the Apache 2.0 Licence.
+The shared libraries contained in the tarballs are distributed under
+the terms of [various licences](THIRD-PARTY-NOTICES.md), all of which
+are compatible with the Apache 2.0 Licence.
