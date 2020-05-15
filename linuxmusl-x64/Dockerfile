@@ -7,8 +7,29 @@ LABEL maintainer="Lovell Fuller <npm@lovell.info>"
 RUN \
   apk update && apk upgrade && \
   apk --update --no-cache add \
-    build-base curl git autoconf automake libtool intltool shared-mime-info nasm gtk-doc \
-    texinfo gperf glib-dev gobject-introspection-dev findutils jq linux-headers cmake binutils python3 ninja patchelf && \
+    autoconf \
+    automake \
+    binutils \
+    build-base \
+    cmake \
+    curl \
+    findutils \
+    git \
+    glib-dev \
+    gobject-introspection-dev \
+    gperf \
+    gtk-doc \
+    intltool \
+    jq \
+    libtool \
+    linux-headers \
+    nasm \
+    ninja \
+    patchelf \
+    python3 \
+    shared-mime-info \
+    texinfo \
+    && \
   apk --update --no-cache --repository https://alpine.global.ssl.fastly.net/alpine/edge/community/ add advancecomp && \
   curl https://sh.rustup.rs -sSf | sh -s -- -y && \
   pip3 install meson
