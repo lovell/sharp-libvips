@@ -20,7 +20,6 @@ RUN \
     jq \
     nasm \
     ninja-build \
-    patchelf \
     prelink \
     python3 \
     && \
@@ -35,6 +34,8 @@ ENV \
   CXX="/opt/rh/devtoolset-8/root/usr/bin/g++" \
   PATH="/root/.cargo/bin:$PATH" \
   PLATFORM="linux-x64" \
-  FLAGS="-s -O3 -fPIC"
+  FLAGS="-O3 -fPIC" \
+  MESON="--cross-file=/root/meson.ini"
 
 COPY Toolchain.cmake /root/
+COPY meson.ini /root/

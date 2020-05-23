@@ -25,7 +25,6 @@ RUN \
     linux-headers \
     nasm \
     ninja \
-    patchelf \
     python3 \
     shared-mime-info \
     texinfo \
@@ -38,7 +37,7 @@ RUN \
 ENV \
   PATH="/root/.cargo/bin:$PATH" \
   PLATFORM="linuxmusl-x64" \
-  FLAGS="-s -O3 -fPIC"
+  FLAGS="-O3 -fPIC"
 
 # Musl defaults to static libs but we need them to be dynamic for host toolchain.
 # The toolchain will produce static libs by default.

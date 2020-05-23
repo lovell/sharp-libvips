@@ -26,13 +26,12 @@ RUN \
     libtool \
     nasm \
     ninja-build \
-    patchelf \
     python3-pip \
     texinfo \
     && \
   curl https://sh.rustup.rs -sSf | sh -s -- -y && \
   ~/.cargo/bin/rustup target add arm-unknown-linux-gnueabihf && \
-  pip3 install meson==0.53.2
+  pip3 install meson
 
 # Compiler settings
 ENV \
@@ -40,7 +39,7 @@ ENV \
   PKG_CONFIG="/usr/bin/arm-linux-gnueabihf-pkg-config" \
   PLATFORM="linux-armv7" \
   CHOST="arm-linux-gnueabihf" \
-  FLAGS="-marm -march=armv7-a -mfpu=neon-vfpv4 -mfloat-abi=hard -s -O3 -fPIC -D_GLIBCXX_USE_CXX11_ABI=0" \
+  FLAGS="-marm -march=armv7-a -mfpu=neon-vfpv4 -mfloat-abi=hard -O3 -fPIC -D_GLIBCXX_USE_CXX11_ABI=0" \
   MESON="--cross-file=/root/meson.ini"
 
 COPY Toolchain.cmake /root/

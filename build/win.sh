@@ -7,8 +7,8 @@ VERSION_VIPS_SHORT=${VERSION_VIPS%.[[:digit:]]*}
 mkdir /vips
 cd /vips
 BITS=${PLATFORM: -2}
-curl -LOs https://github.com/libvips/build-win64-mxe/releases/download/v${VERSION_VIPS}/vips-dev-w${BITS}-web-${VERSION_VIPS}.zip
-unzip vips-dev-w${BITS}-web-${VERSION_VIPS}.zip
+curl -LOs https://github.com/libvips/build-win64-mxe/releases/download/v${VERSION_VIPS}/vips-dev-w${BITS}-web-${VERSION_VIPS}-static.zip
+unzip vips-dev-w${BITS}-web-${VERSION_VIPS}-static.zip
 
 # Clean and zip
 cd /vips/vips-dev-${VERSION_VIPS_SHORT}
@@ -33,3 +33,6 @@ tar czf /packaging/libvips-${VERSION_VIPS}-${PLATFORM}.tar.gz \
   THIRD-PARTY-NOTICES.md
 echo "Shrinking tarball"
 advdef --recompress --shrink-insane /packaging/libvips-${VERSION_VIPS}-${PLATFORM}.tar.gz
+
+# Remove working directories
+rm -rf lib include *.json THIRD-PARTY-NOTICES.md
