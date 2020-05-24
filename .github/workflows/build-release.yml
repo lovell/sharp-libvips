@@ -1,8 +1,6 @@
 name: Build Release
 on:
   push:
-    branches:
-      - sharp-static # Temporary
     tags:
       - v*
 jobs:
@@ -15,8 +13,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: v8.9.2-sharp-static-build3 # Temporary
-        release_name: Test build for lovell/sharp-libvips#39 # Temporary
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
         draft: false
         prerelease: true
     - shell: bash
