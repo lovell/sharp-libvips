@@ -25,7 +25,6 @@ RUN \
     && \
   curl https://sh.rustup.rs -sSf | sh -s -- -y && \
   ln -s /usr/bin/cmake3 /usr/bin/cmake && \
-  ln -s /usr/bin/ninja-build /usr/bin/ninja && \
   pip3 install meson
 
 # Compiler settings
