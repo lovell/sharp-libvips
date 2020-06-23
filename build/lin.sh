@@ -281,8 +281,8 @@ curl -Ls https://cairographics.org/releases/cairo-${VERSION_CAIRO}.tar.xz | tar 
 cd ${DEPS}/cairo
 sed -i'.bak' "s/^\(Libs:.*\)/\1 @CAIRO_NONPKGCONFIG_LIBS@/" src/cairo.pc.in
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
-  --disable-xlib --disable-xcb --disable-quartz --disable-win32 --disable-egl --disable-glx --disable-wgl \
-  --disable-ps --disable-trace --disable-interpreter \
+  --disable-xlib --disable-xcb --disable-win32 --disable-egl --disable-glx --disable-wgl --disable-ps \
+  --disable-trace --disable-interpreter ${LINUX:+--disable-quartz} ${DARWIN:+--enable-quartz-image} \
   LIBS="-lpixman-1 -lfreetype"
 make install-strip
 
