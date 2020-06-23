@@ -41,6 +41,7 @@ ENV \
   PKG_CONFIG="/usr/bin/arm-linux-gnueabihf-pkg-config" \
   PLATFORM="linux-armv7" \
   CHOST="arm-linux-gnueabihf" \
+  RUST_TARGET="arm-unknown-linux-gnueabihf" \
   FLAGS="-marm -march=armv7-a -mfpu=neon-vfpv4 -mfloat-abi=hard -O3 -fPIC -D_GLIBCXX_USE_CXX11_ABI=0" \
   MESON="--cross-file=/root/meson.ini"
 

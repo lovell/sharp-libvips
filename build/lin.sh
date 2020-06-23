@@ -45,6 +45,15 @@ if [ "$DARWIN" = true ]; then
   export LDFLAGS+=" -framework CoreServices -framework CoreFoundation -framework Foundation -framework AppKit"
 fi
 
+# Optimise Rust code for binary size
+export RUSTFLAGS="${RUSTFLAGS} -Copt-level=s -Clto=on -Ccodegen-units=1 -Cincremental=false -Cpanic=abort"
+
+# Set a default build target for Cargo if we're not cross-compiling
+# See: https://github.com/rust-lang/cargo/issues/6375#issuecomment-444900324
+if [ -z "${CHOST}" ]; then
+  export CARGO_BUILD_TARGET="${RUST_TARGET}"
+fi
+
 # We don't want to use any native libraries, so unset PKG_CONFIG_PATH
 unset PKG_CONFIG_PATH
 
@@ -312,14 +321,11 @@ cd ${DEPS}/svg
 sed -i'.bak' "s/^\(Requires:.*\)/\1 cairo-gobject pangocairo/" librsvg.pc.in
 # Do not include debugging symbols
 sed -i'.bak' "/debug =/ s/= .*/= false/" Cargo.toml
-# Optimise Rust code for binary size
-printf "opt-level = 's'\n\
-lto = true\n\
-codegen-units = 1\n\
-panic = 'abort'\n" >>Cargo.toml
+# LTO optimization does not work for staticlib+rlib compilation
+sed -i'.bak' "s/, \"rlib\"//" librsvg/Cargo.toml
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
   --disable-introspection --disable-tools --disable-pixbuf-loader ${DARWIN:+--disable-Bsymbolic}
-make install-strip
+make install-strip RUST_TARGET_SUBDIR="${RUST_TARGET}/release"
 
 mkdir ${DEPS}/gif
 curl -Ls https://sourceforge.mirrorservice.org/g/gi/giflib/giflib-${VERSION_GIF}.tar.gz | tar xzC ${DEPS}/gif --strip-components=1

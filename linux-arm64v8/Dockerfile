@@ -39,6 +39,7 @@ ENV \
   PKG_CONFIG="/usr/bin/aarch64-linux-gnu-pkg-config" \
   PLATFORM="linux-arm64v8" \
   CHOST="aarch64-linux-gnu" \
+  RUST_TARGET="aarch64-unknown-linux-gnu" \
   FLAGS="-march=armv8-a -O3 -fPIC -D_GLIBCXX_USE_CXX11_ABI=0" \
   MESON="--cross-file=/root/meson.ini"
 
