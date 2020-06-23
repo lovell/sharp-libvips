@@ -51,11 +51,11 @@ unset PKG_CONFIG_PATH
 # Dependency version numbers
 VERSION_ZLIB=1.2.11
 VERSION_FFI=3.3
-VERSION_GLIB=2.64.3
+VERSION_GLIB=2.65.0
 VERSION_XML2=2.9.10
 VERSION_GSF=1.14.47
 VERSION_EXIF=0.6.22
-VERSION_LCMS2=2.9
+VERSION_LCMS2=2.11
 VERSION_JPEG=2.0.4
 VERSION_PNG16=1.6.37
 VERSION_WEBP=1.1.0
@@ -66,12 +66,12 @@ VERSION_GDKPIXBUF=2.40.0
 VERSION_FREETYPE=2.10.2
 VERSION_EXPAT=2.2.9
 VERSION_FONTCONFIG=2.13.92
-VERSION_HARFBUZZ=2.6.6
+VERSION_HARFBUZZ=2.6.8
 VERSION_PIXMAN=0.40.0
 VERSION_CAIRO=1.16.0
 VERSION_FRIBIDI=1.0.9
-VERSION_PANGO=1.44.7
-VERSION_SVG=2.48.4
+VERSION_PANGO=1.45.3
+VERSION_SVG=2.49.2
 VERSION_GIF=5.1.4
 
 # Remove patch version component
@@ -144,7 +144,8 @@ cd ${DEPS}/glib
 # Disable tests
 sed -i'.bak' "/build_tests =/ s/= .*/= false/" meson.build
 if [ "${PLATFORM%-*}" == "linuxmusl" ]; then
-  curl -Ls https://git.alpinelinux.org/aports/plain/main/glib/musl-libintl.patch | patch -p1
+  #curl -Ls https://git.alpinelinux.org/aports/plain/main/glib/musl-libintl.patch | patch -p1 # not compatible with glib 2.65.0
+  curl -Ls https://gist.github.com/kleisauke/f4bda6fc3030cf7b8a4fdb88e2ce8e13/raw/246ac97dfba72ad7607c69eed1810b2354cd2e86/musl-libintl.patch | patch -p1
 fi
 LDFLAGS=${LDFLAGS/\$/} meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   -Dinternal_pcre=true -Dinstalled_tests=false -Dlibmount=disabled ${DARWIN:+-Dbsymbolic_functions=false}
@@ -174,7 +175,8 @@ autoreconf -fiv
 make install-strip
 
 mkdir ${DEPS}/lcms2
-curl -Ls https://sourceforge.mirrorservice.org/l/lc/lcms/lcms/${VERSION_LCMS2}/lcms2-${VERSION_LCMS2}.tar.gz | tar xzC ${DEPS}/lcms2 --strip-components=1
+#curl -Ls https://sourceforge.mirrorservice.org/l/lc/lcms/lcms/${VERSION_LCMS2}/lcms2-${VERSION_LCMS2}.tar.gz | tar xzC ${DEPS}/lcms2 --strip-components=1 # 2.11 not yet synchronized
+curl -Ls https://downloads.sourceforge.net/project/lcms/lcms/${VERSION_LCMS2}/lcms2-${VERSION_LCMS2}.tar.gz | tar xzC ${DEPS}/lcms2 --strip-components=1
 cd ${DEPS}/lcms2
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking
 make install-strip
