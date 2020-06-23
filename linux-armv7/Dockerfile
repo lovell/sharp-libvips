@@ -30,6 +30,8 @@ RUN \
     texinfo \
     && \
   curl https://sh.rustup.rs -sSf | sh -s -- -y && \
+  # Downgrade to 1.43.0, see: https://github.com/rust-lang/compiler-builtins/issues/353
+  ~/.cargo/bin/rustup toolchain install 1.43.0 && ~/.cargo/bin/rustup default 1.43.0 && \
   ~/.cargo/bin/rustup target add arm-unknown-linux-gnueabihf && \
   pip3 install meson
 
