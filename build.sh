@@ -27,7 +27,7 @@ PLATFORM="${2:-all}"
 
 # macOS
 # Note: we intentionally don't build these binaries inside a Docker container
-if [ $PLATFORM = "darwin-x64" ]; then
+if [ $PLATFORM = "darwin-x64" ] && [ "$(uname)" == "Darwin" ]; then
   export VERSION_VIPS
   export PLATFORM
   export RUST_TARGET="x86_64-apple-darwin"

@@ -347,8 +347,8 @@ make install-strip
 # Cleanup
 rm -rf ${TARGET}/lib/{pkgconfig,.libs,*.la,cmake}
 
-mkdir ${TARGET}/lib-filterd
-mv ${TARGET}/lib/glib-2.0 ${TARGET}/lib-filterd
+mkdir ${TARGET}/lib-filtered
+mv ${TARGET}/lib/glib-2.0 ${TARGET}/lib-filtered
 
 # Pack only the relevant libraries
 # Note: we can't use ldd on Linux, since that can only be executed on the target machine
@@ -386,7 +386,7 @@ function copydeps {
 }
 
 cd ${TARGET}/lib
-copydeps ${VIPS_CPP_DEP} ${TARGET}/lib-filterd
+copydeps ${VIPS_CPP_DEP} ${TARGET}/lib-filtered
 
 # Create JSON file of version numbers
 cd ${TARGET}
@@ -425,7 +425,7 @@ curl -Os https://raw.githubusercontent.com/lovell/sharp-libvips/master/THIRD-PAR
 
 # Create the tarball
 rm -rf lib
-mv lib-filterd lib
+mv lib-filtered lib
 tar chzf ${PACKAGE}/libvips-${VERSION_VIPS}-${PLATFORM}.tar.gz \
   include \
   lib \
