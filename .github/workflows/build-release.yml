@@ -62,14 +62,14 @@ jobs:
       run: |
         pip3 install meson ninja
         brew install advancecomp automake nasm pkg-config
-      if: matrix.os == 'macos-latest'
+      if: matrix.os == 'macos-10.15'
     - name: Setup toolchain (macOS)
       shell: bash
       run: |
         echo "::set-env name=CC::clang"
         echo "::set-env name=CXX::clang++"
         echo "::set-env name=MACOSX_DEPLOYMENT_TARGET::10.9"
-      if: matrix.os == 'macos-latest'
+      if: matrix.os == 'macos-10.15'
     - name: Build ${{ matrix.platform }}
       run: ./build.sh $(cat LIBVIPS_VERSION) ${{ matrix.platform }}
     - name: Upload Release Asset
