@@ -25,15 +25,16 @@ RUN \
     libtool \
     nasm \
     ninja-build \
-    patchelf \
     python3-pip \
     texinfo \
     && \
   mkdir /root/tools && \
   curl -Ls https://github.com/rvagg/rpi-newer-crosstools/archive/master.tar.gz | tar xzC /root/tools --strip-components=1 && \
   curl https://sh.rustup.rs -sSf | sh -s -- -y && \
+  # Downgrade to 1.43.0, see: https://github.com/rust-lang/compiler-builtins/issues/353
+  ~/.cargo/bin/rustup toolchain install 1.43.0 && ~/.cargo/bin/rustup default 1.43.0 && \
   ~/.cargo/bin/rustup target add arm-unknown-linux-gnueabihf && \
-  pip3 install meson==0.53.2
+  pip3 install meson
 
 # Compiler settings
 ENV \
@@ -42,7 +43,7 @@ ENV \
   PLATFORM="linux-armv6" \
   CHOST="arm-rpi-linux-gnueabihf" \
   RUST_TARGET="arm-unknown-linux-gnueabihf" \
-  FLAGS="-marm -mcpu=arm1176jzf-s -mfpu=vfp -mfloat-abi=hard -s -O3 -fPIC -D_GLIBCXX_USE_CXX11_ABI=0" \
+  FLAGS="-marm -mcpu=arm1176jzf-s -mfpu=vfp -mfloat-abi=hard -O3 -fPIC -D_GLIBCXX_USE_CXX11_ABI=0" \
   MESON="--cross-file=/root/meson.ini"
 
 COPY Toolchain.cmake /root/

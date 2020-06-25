@@ -1,2 +1,4 @@
 libvips*
 *.log
+deps/
+target/

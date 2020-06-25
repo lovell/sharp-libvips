@@ -35,12 +35,14 @@ The output of libvips' [build-win64-mxe](https://github.com/libvips/build-win64-
 
 ### macOS
 
-See [package-libvips-darwin](https://github.com/lovell/package-libvips-darwin).
+Uses a macOS virtual machine hosted by GitHub to compile the shared libraries.
+The dylib files are compiled within the same build script as Linux.
+
+Depedency paths are modified to be the relative `@rpath` using `install_name_tool`.
 
 ## Licences
 
 These scripts are licensed under the terms of the [Apache 2.0 Licence](LICENSE).
-[Apache 2.0 Licence](https://github.com/lovell/sharp-libvips/blob/master/LICENSE).
 
 The shared libraries contained in the tarballs are distributed under
 the terms of [various licences](THIRD-PARTY-NOTICES.md), all of which
