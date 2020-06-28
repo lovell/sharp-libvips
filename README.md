@@ -6,7 +6,10 @@ for the most common operating systems and CPU architectures.
 During `npm install`, these binaries are fetched as tarballs from
 this repository via HTTPS and stored locally within `node_modules/sharp/vendor`.
 
-The base URL can be overridden using the `SHARP_DIST_BASE_URL` environment variable.
+The base URL can be overridden using the
+`npm_config_sharp_libvips_binary_host` environment variable.
+
+https://sharp.pixelplumbing.com/install#custom-prebuilt-binaries
 
 ## Creating a tarball
 
