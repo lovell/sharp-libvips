@@ -70,7 +70,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ env.upload_url }}
+        upload_url: ${{ needs.create-release.outputs.upload_url }}
         asset_path: ${{ steps.build-release.outputs.asset_file_name_br }}
         asset_name: ${{ steps.build-release.outputs.asset_file_name_br }}
         asset_content_type: application/x-brotli
