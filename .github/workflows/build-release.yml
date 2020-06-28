@@ -46,20 +46,31 @@ jobs:
     - name: Install dependencies (macOS)
       run: |
         pip3 install meson ninja
-        brew install advancecomp automake nasm pkg-config
+        brew install advancecomp automake brotli nasm pkg-config
       if: matrix.platform == 'darwin-x64'
     - name: Build ${{ matrix.platform }}
       id: build-release
       run: |
         ./build.sh $(cat LIBVIPS_VERSION) ${{ matrix.platform }}
-        echo "::set-output name=asset_file_name::libvips-$(cat LIBVIPS_VERSION)-${{ matrix.platform }}.tar.gz"
-    - name: Upload Release Asset
+        echo "::set-output name=asset_file_name_gz::libvips-$(cat LIBVIPS_VERSION)-${{ matrix.platform }}.tar.gz"
+        echo "::set-output name=asset_file_name_br::libvips-$(cat LIBVIPS_VERSION)-${{ matrix.platform }}.tar.br"
+    - name: Upload Release Asset (.tar.gz)
       id: upload-release-asset
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.create-release.outputs.upload_url }}
-        asset_path: ${{ steps.build-release.outputs.asset_file_name }}
-        asset_name: ${{ steps.build-release.outputs.asset_file_name }}
+        asset_path: ${{ steps.build-release.outputs.asset_file_name_gz }}
+        asset_name: ${{ steps.build-release.outputs.asset_file_name_gz }}
         asset_content_type: application/gzip
+    - name: Upload Release Asset (.tar.br)
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ env.upload_url }}
+        asset_path: ${{ steps.build-release.outputs.asset_file_name_br }}
+        asset_name: ${{ steps.build-release.outputs.asset_file_name_br }}
+        asset_content_type: application/x-brotli

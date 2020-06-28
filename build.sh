@@ -80,4 +80,4 @@ for flavour in linux-x64 linuxmusl-x64 linux-armv6 linux-armv7 linux-arm64v8; do
 done
 
 # Display checksums
-sha256sum *.tar.gz
+sha256sum *.tar.{br,gz}

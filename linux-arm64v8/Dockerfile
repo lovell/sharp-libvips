@@ -13,6 +13,7 @@ RUN \
     advancecomp \
     autoconf \
     autopoint \
+    brotli \
     cmake \
     crossbuild-essential-arm64 \
     gettext \

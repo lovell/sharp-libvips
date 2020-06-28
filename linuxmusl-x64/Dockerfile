@@ -10,6 +10,7 @@ RUN \
     autoconf \
     automake \
     binutils \
+    brotli \
     build-base \
     cmake \
     curl \

@@ -13,6 +13,7 @@ RUN \
     advancecomp \
     autoconf \
     autopoint \
+    brotli \
     cmake \
     gettext \
     git \

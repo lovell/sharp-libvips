@@ -10,6 +10,7 @@ RUN \
   yum group install -y "Development Tools" && \
   yum install -y --setopt=tsflags=nodocs \
     advancecomp \
+    brotli \
     cmake3 \
     devtoolset-8-gcc \
     devtoolset-8-gcc-c++ \
