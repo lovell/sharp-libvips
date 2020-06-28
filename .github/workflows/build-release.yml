@@ -6,6 +6,8 @@ on:
 jobs:
   create-release:
     runs-on: 'ubuntu-latest'
+    outputs:
+      upload_url: ${{ steps.create-release.outputs.upload_url }}
     steps:
     - name: Create Release
       id: create-release
@@ -17,19 +19,10 @@ jobs:
         release_name: Release ${{ github.ref }}
         draft: false
         prerelease: true
-    - shell: bash
-      run: |
-        echo '${{ steps.create-release.outputs.upload_url }}' > upload-url.txt
-    - name: Save GitHub release upload URL for next job
-      uses: actions/upload-artifact@v1
-      with:
-        name: upload-url
-        path: upload-url.txt
   build:
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.experimental }}
-    needs:
-      - 'create-release'
+    needs: create-release
     strategy:
       fail-fast: false
       matrix:
@@ -48,37 +41,25 @@ jobs:
             platform: 'darwin-x64'
             experimental: true
     steps:
-    - uses: actions/checkout@v1
-    - name: Fetch GitHub Release upload URL
-      uses: actions/download-artifact@v1
-      with:
-        name: upload-url
-    - name: Set up environment variables
-      shell: bash
-      run: |
-        echo "::set-env name=upload_url::$(cat upload-url/upload-url.txt)"
-        echo "::set-env name=asset_file_name::libvips-$(cat LIBVIPS_VERSION)-${{ matrix.platform }}.tar.gz"
+    - name: Checkout
+      uses: actions/checkout@v2
     - name: Install dependencies (macOS)
       run: |
         pip3 install meson ninja
         brew install advancecomp automake nasm pkg-config
-      if: matrix.os == 'macos-10.15'
-    - name: Setup toolchain (macOS)
-      shell: bash
-      run: |
-        echo "::set-env name=CC::clang"
-        echo "::set-env name=CXX::clang++"
-        echo "::set-env name=MACOSX_DEPLOYMENT_TARGET::10.9"
-      if: matrix.os == 'macos-10.15'
+      if: matrix.platform == 'darwin-x64'
     - name: Build ${{ matrix.platform }}
-      run: ./build.sh $(cat LIBVIPS_VERSION) ${{ matrix.platform }}
+      id: build-release
+      run: |
+        ./build.sh $(cat LIBVIPS_VERSION) ${{ matrix.platform }}
+        echo "::set-output name=asset_file_name::libvips-$(cat LIBVIPS_VERSION)-${{ matrix.platform }}.tar.gz"
     - name: Upload Release Asset
       id: upload-release-asset
-      uses: actions/upload-release-asset@v1.0.1
+      uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ env.upload_url }}
-        asset_path: ${{ env.asset_file_name }}
-        asset_name: ${{ env.asset_file_name }}
+        upload_url: ${{ needs.create-release.outputs.upload_url }}
+        asset_path: ${{ steps.build-release.outputs.asset_file_name }}
+        asset_name: ${{ steps.build-release.outputs.asset_file_name }}
         asset_content_type: application/gzip
