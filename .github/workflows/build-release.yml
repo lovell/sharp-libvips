@@ -55,7 +55,7 @@ jobs:
         echo "::set-output name=asset_file_name_gz::libvips-$(cat LIBVIPS_VERSION)-${{ matrix.platform }}.tar.gz"
         echo "::set-output name=asset_file_name_br::libvips-$(cat LIBVIPS_VERSION)-${{ matrix.platform }}.tar.br"
     - name: Upload Release Asset (.tar.gz)
-      id: upload-release-asset
+      id: upload-release-asset-gz
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -65,7 +65,7 @@ jobs:
         asset_name: ${{ steps.build-release.outputs.asset_file_name_gz }}
         asset_content_type: application/gzip
     - name: Upload Release Asset (.tar.br)
-      id: upload-release-asset
+      id: upload-release-asset-br
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
