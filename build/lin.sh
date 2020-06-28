@@ -431,4 +431,12 @@ tar chzf ${PACKAGE}/libvips-${VERSION_VIPS}-${PLATFORM}.tar.gz \
   lib \
   *.json \
   THIRD-PARTY-NOTICES.md
+
+# Recompress using AdvanceCOMP, ~5% smaller
 advdef --recompress --shrink-insane ${PACKAGE}/libvips-${VERSION_VIPS}-${PLATFORM}.tar.gz
+
+# Recompress using Brotli, ~15% smaller
+gunzip -c ${PACKAGE}/libvips-${VERSION_VIPS}-${PLATFORM}.tar.gz | brotli -o ${PACKAGE}/libvips-${VERSION_VIPS}-${PLATFORM}.tar.br
+
+# Allow tarballs to be read outside container
+chmod 644 ${PACKAGE}/libvips-${VERSION_VIPS}-${PLATFORM}.tar.*
