@@ -34,7 +34,6 @@ ENV \
   CXX="/opt/rh/devtoolset-8/root/usr/bin/g++" \
   PATH="/root/.cargo/bin:$PATH" \
   PLATFORM="linux-x64" \
-  RUST_TARGET="x86_64-unknown-linux-gnu" \
   FLAGS="-O3 -fPIC" \
   MESON="--cross-file=/root/meson.ini"
 

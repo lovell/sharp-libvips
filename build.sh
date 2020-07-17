@@ -34,7 +34,6 @@ if [ $PLATFORM = "darwin-x64" ] && [ "$(uname)" == "Darwin" ]; then
 
   export VERSION_VIPS
   export PLATFORM
-  export RUST_TARGET="x86_64-apple-darwin"
 
   # 10.9 should be a good minimal release target
   export MACOSX_DEPLOYMENT_TARGET="10.9"
