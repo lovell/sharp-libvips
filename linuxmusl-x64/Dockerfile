@@ -38,7 +38,6 @@ RUN \
 ENV \
   PATH="/root/.cargo/bin:$PATH" \
   PLATFORM="linuxmusl-x64" \
-  RUST_TARGET="x86_64-unknown-linux-musl" \
   FLAGS="-O3 -fPIC"
 
 # Musl defaults to static libs but we need them to be dynamic for host toolchain.

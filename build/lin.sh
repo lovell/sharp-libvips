@@ -46,13 +46,12 @@ if [ "$DARWIN" = true ]; then
 fi
 
 # Optimise Rust code for binary size
-export RUSTFLAGS="${RUSTFLAGS} -Copt-level=s -Clto=on -Ccodegen-units=1 -Cincremental=false -Cpanic=abort"
-
-# Set a default build target for Cargo if we're not cross-compiling
-# See: https://github.com/rust-lang/cargo/issues/6375#issuecomment-444900324
-if [ -z "${CHOST}" ]; then
-  export CARGO_BUILD_TARGET="${RUST_TARGET}"
-fi
+export CARGO_PROFILE_RELEASE_DEBUG=false
+export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
+export CARGO_PROFILE_RELEASE_INCREMENTAL=false
+export CARGO_PROFILE_RELEASE_LTO=true
+export CARGO_PROFILE_RELEASE_OPT_LEVEL=s
+export CARGO_PROFILE_RELEASE_PANIC=abort
 
 # We don't want to use any native libraries, so unset PKG_CONFIG_PATH
 unset PKG_CONFIG_PATH
@@ -325,7 +324,7 @@ sed -i'.bak' "/debug =/ s/= .*/= false/" Cargo.toml
 sed -i'.bak' "s/, \"rlib\"//" librsvg/Cargo.toml
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
   --disable-introspection --disable-tools --disable-pixbuf-loader ${DARWIN:+--disable-Bsymbolic}
-make install-strip RUST_TARGET_SUBDIR="${RUST_TARGET}/release"
+make install-strip
 
 mkdir ${DEPS}/gif
 curl -Ls https://sourceforge.mirrorservice.org/g/gi/giflib/giflib-${VERSION_GIF}.tar.gz | tar xzC ${DEPS}/gif --strip-components=1
