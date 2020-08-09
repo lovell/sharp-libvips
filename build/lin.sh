@@ -59,7 +59,7 @@ unset PKG_CONFIG_PATH
 # Dependency version numbers
 VERSION_ZLIB=1.2.11
 VERSION_FFI=3.3
-VERSION_GLIB=2.65.0
+VERSION_GLIB=2.65.1
 VERSION_XML2=2.9.10
 VERSION_GSF=1.14.47
 VERSION_EXIF=0.6.22
@@ -69,7 +69,7 @@ VERSION_PNG16=1.6.37
 VERSION_WEBP=1.1.0
 VERSION_TIFF=4.1.0
 VERSION_ORC=0.4.31
-VERSION_GETTEXT=0.20.2
+VERSION_GETTEXT=0.21
 VERSION_GDKPIXBUF=2.40.0
 VERSION_FREETYPE=2.10.2
 VERSION_EXPAT=2.2.9
@@ -78,7 +78,7 @@ VERSION_HARFBUZZ=2.6.8
 VERSION_PIXMAN=0.40.0
 VERSION_CAIRO=1.16.0
 VERSION_FRIBIDI=1.0.10
-VERSION_PANGO=1.45.3
+VERSION_PANGO=1.45.5
 VERSION_SVG=2.49.3
 VERSION_GIF=5.1.4
 
@@ -113,7 +113,7 @@ version_latest "gdkpixbuf" "$VERSION_GDKPIXBUF" "9533"
 version_latest "freetype" "$VERSION_FREETYPE" "854"
 version_latest "expat" "$VERSION_EXPAT" "770"
 version_latest "fontconfig" "$VERSION_FONTCONFIG" "827"
-version_latest "harfbuzz" "$VERSION_HARFBUZZ" "1299"
+#version_latest "harfbuzz" "$VERSION_HARFBUZZ" "1299" # latest version is meson-only, need to fix linker errors
 version_latest "pixman" "$VERSION_PIXMAN" "3648"
 #version_latest "cairo" "$VERSION_CAIRO" "247" # latest version in release monitoring is unstable
 version_latest "fribidi" "$VERSION_FRIBIDI" "857"
@@ -249,7 +249,7 @@ mkdir ${DEPS}/freetype
 curl -Ls https://download.savannah.gnu.org/releases/freetype/freetype-${VERSION_FREETYPE}.tar.xz | tar xJC ${DEPS}/freetype --strip-components=1
 cd ${DEPS}/freetype
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
-  --without-bzip2
+  --without-bzip2 --without-png
 make install
 
 mkdir ${DEPS}/expat
@@ -305,7 +305,7 @@ ninja -C _build
 ninja -C _build install
 
 mkdir ${DEPS}/pango
-curl -Lks https://download.gnome.org/sources/pango/$(without_patch $VERSION_PANGO)/pango-${VERSION_PANGO}.tar.xz | tar xJC ${DEPS}/pango --strip-components=1
+curl -Ls https://download.gnome.org/sources/pango/$(without_patch $VERSION_PANGO)/pango-${VERSION_PANGO}.tar.xz | tar xJC ${DEPS}/pango --strip-components=1
 cd ${DEPS}/pango
 # Disable utils, examples, tests and tools
 sed -i'.bak' "/subdir('utils')/{N;N;N;d;}" meson.build
@@ -315,7 +315,7 @@ ninja -C _build
 ninja -C _build install
 
 mkdir ${DEPS}/svg
-curl -Lks https://download.gnome.org/sources/librsvg/$(without_patch $VERSION_SVG)/librsvg-${VERSION_SVG}.tar.xz | tar xJC ${DEPS}/svg --strip-components=1
+curl -Ls https://download.gnome.org/sources/librsvg/$(without_patch $VERSION_SVG)/librsvg-${VERSION_SVG}.tar.xz | tar xJC ${DEPS}/svg --strip-components=1
 cd ${DEPS}/svg
 sed -i'.bak' "s/^\(Requires:.*\)/\1 cairo-gobject pangocairo/" librsvg.pc.in
 # Do not include debugging symbols
