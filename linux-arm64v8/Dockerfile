@@ -3,6 +3,12 @@ LABEL maintainer="Lovell Fuller <npm@lovell.info>"
 
 # Create Debian-based container suitable for cross-compiling Linux ARM64v8-A binaries
 
+# Path settings
+ENV \
+  RUSTUP_HOME="/usr/local/rustup" \
+  CARGO_HOME="/usr/local/cargo" \
+  PATH="/usr/local/cargo/bin:$PATH"
+
 # Build dependencies
 RUN \
   apt-get update && \
@@ -30,13 +36,15 @@ RUN \
     python3-pip \
     texinfo \
     && \
-  curl https://sh.rustup.rs -sSf | sh -s -- -y && \
-  ~/.cargo/bin/rustup target add aarch64-unknown-linux-gnu && \
+  curl https://sh.rustup.rs -sSf | sh -s -- -y \
+    --no-modify-path \
+    --profile minimal \
+    && \
+  rustup target add aarch64-unknown-linux-gnu && \
   pip3 install meson
 
 # Compiler settings
 ENV \
-  PATH="/root/.cargo/bin:$PATH" \
   PKG_CONFIG="/usr/bin/aarch64-linux-gnu-pkg-config" \
   PLATFORM="linux-arm64v8" \
   CHOST="aarch64-linux-gnu" \
