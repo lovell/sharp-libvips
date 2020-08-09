@@ -45,6 +45,13 @@ if [ "$DARWIN" = true ]; then
   export LDFLAGS+=" -framework CoreServices -framework CoreFoundation -framework Foundation -framework AppKit"
 fi
 
+# Run as many parallel jobs as there are available CPU cores
+if [ "$LINUX" = true ]; then
+  export MAKEFLAGS="-j$(nproc)"
+elif [ "$DARWIN" = true ]; then
+  export MAKEFLAGS="-j$(sysctl -n hw.logicalcpu)"
+fi
+
 # Optimise Rust code for binary size
 export CARGO_PROFILE_RELEASE_DEBUG=false
 export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
