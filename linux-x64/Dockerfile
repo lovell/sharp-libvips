@@ -12,8 +12,8 @@ RUN \
     advancecomp \
     brotli \
     cmake3 \
-    devtoolset-8-gcc \
-    devtoolset-8-gcc-c++ \
+    devtoolset-9-gcc \
+    devtoolset-9-gcc-c++ \
     glib2-devel \
     gobject-introspection-devel \
     gperf \
@@ -30,9 +30,7 @@ RUN \
 
 # Compiler settings
 ENV \
-  CC="/opt/rh/devtoolset-8/root/usr/bin/gcc" \
-  CXX="/opt/rh/devtoolset-8/root/usr/bin/g++" \
-  PATH="/root/.cargo/bin:$PATH" \
+  PATH="/root/.cargo/bin:/opt/rh/devtoolset-9/root/usr/bin:$PATH" \
   PLATFORM="linux-x64" \
   FLAGS="-O3 -fPIC" \
   MESON="--cross-file=/root/meson.ini"
