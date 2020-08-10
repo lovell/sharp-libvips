@@ -1,0 +1,34 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Randy <randy408@protonmail.com>
+Date: Wed, 29 Jul 2020 15:31:50 +0200
+Subject: [PATCH 1/1] Ignore spec violation for tRNS chunks (fixes #118)
+
+
+diff --git a/spng/spng.c b/spng/spng.c
+index 1111111..2222222 100644
+--- a/spng/spng.c
++++ b/spng/spng.c
+@@ -208,6 +208,7 @@ struct spng_ctx
+     unsigned streaming: 1;
+ 
+     unsigned encode_only: 1;
++    unsigned strict : 1;
+ 
+     /* input file contains this chunk */
+     struct spng_chunk_bitfield file;
+@@ -1884,7 +1885,14 @@ static int read_non_idat_chunks(spng_ctx *ctx)
+                 }
+                 ctx->trns.n_type3_entries = chunk.length;
+             }
+-            else return SPNG_ETRNS_COLOR_TYPE;
++
++            /* The standard explicitly forbids tRNS chunks for grayscale alpha,
++                truecolor alpha images but libpng only emits a warning by default. */
++            if(ctx->ihdr.color_type == 4 || ctx->ihdr.color_type == 6)
++            {
++                if(ctx->strict) return SPNG_ETRNS_COLOR_TYPE;
++                else continue;
++            }
+ 
+             ctx->file.trns = 1;
+             ctx->stored.trns = 1;

@@ -66,6 +66,7 @@ VERSION_EXIF=0.6.22
 VERSION_LCMS2=2.11
 VERSION_JPEG=2.0.5
 VERSION_PNG16=1.6.37
+VERSION_SPNG=0.6.0
 VERSION_WEBP=1.1.0
 VERSION_TIFF=4.1.0
 VERSION_ORC=0.4.31
@@ -105,6 +106,7 @@ version_latest "exif" "$VERSION_EXIF" "1607"
 version_latest "lcms2" "$VERSION_LCMS2" "9815"
 version_latest "jpeg" "$VERSION_JPEG" "1648"
 version_latest "png" "$VERSION_PNG16" "1705"
+version_latest "spng" "$VERSION_SPNG" "24289"
 version_latest "webp" "$VERSION_WEBP" "1761"
 version_latest "tiff" "$VERSION_TIFF" "13521"
 version_latest "orc" "$VERSION_ORC" "2573"
@@ -201,6 +203,15 @@ curl -Ls https://sourceforge.mirrorservice.org/l/li/libpng/libpng16/${VERSION_PN
 cd ${DEPS}/png16
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking
 make install-strip
+
+mkdir ${DEPS}/spng
+curl -Ls https://github.com/randy408/libspng/archive/v${VERSION_SPNG}.tar.gz | tar xzC ${DEPS}/spng --strip-components=1
+cd ${DEPS}/spng
+patch -p1 < ${PACKAGE}/build/patches/libspng-0.6-fixes.patch
+meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
+  -Dstatic_zlib=true
+ninja -C _build
+ninja -C _build install
 
 mkdir ${DEPS}/webp
 curl -Ls https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-${VERSION_WEBP}.tar.gz | tar xzC ${DEPS}/webp --strip-components=1
@@ -410,6 +421,7 @@ printf "{\n\
   \"pixman\": \"${VERSION_PIXMAN}\",\n\
   \"png\": \"${VERSION_PNG16}\",\n\
   \"svg\": \"${VERSION_SVG}\",\n\
+  \"spng\": \"${VERSION_SPNG}\",\n\
   \"tiff\": \"${VERSION_TIFF}\",\n\
   \"vips\": \"${VERSION_VIPS}\",\n\
   \"webp\": \"${VERSION_WEBP}\",\n\
