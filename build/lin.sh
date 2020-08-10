@@ -75,7 +75,7 @@ VERSION_GDKPIXBUF=2.40.0
 VERSION_FREETYPE=2.10.2
 VERSION_EXPAT=2.2.9
 VERSION_FONTCONFIG=2.13.92
-VERSION_HARFBUZZ=2.6.8
+VERSION_HARFBUZZ=2.7.0
 VERSION_PIXMAN=0.40.0
 VERSION_CAIRO=1.16.0
 VERSION_FRIBIDI=1.0.10
@@ -115,7 +115,7 @@ version_latest "gdkpixbuf" "$VERSION_GDKPIXBUF" "9533"
 version_latest "freetype" "$VERSION_FREETYPE" "854"
 version_latest "expat" "$VERSION_EXPAT" "770"
 version_latest "fontconfig" "$VERSION_FONTCONFIG" "827"
-#version_latest "harfbuzz" "$VERSION_HARFBUZZ" "1299" # latest version is meson-only, need to fix linker errors
+version_latest "harfbuzz" "$VERSION_HARFBUZZ" "1299"
 version_latest "pixman" "$VERSION_PIXMAN" "3648"
 #version_latest "cairo" "$VERSION_CAIRO" "247" # latest version in release monitoring is unstable
 version_latest "fribidi" "$VERSION_FRIBIDI" "857"
@@ -278,12 +278,14 @@ cd ${DEPS}/fontconfig
 make install-strip
 
 mkdir ${DEPS}/harfbuzz
-curl -Ls https://github.com/harfbuzz/harfbuzz/releases/download/${VERSION_HARFBUZZ}/harfbuzz-${VERSION_HARFBUZZ}.tar.xz | tar xJC ${DEPS}/harfbuzz --strip-components=1
+curl -Ls https://github.com/harfbuzz/harfbuzz/archive/${VERSION_HARFBUZZ}.tar.gz | tar xzC ${DEPS}/harfbuzz --strip-components=1
 cd ${DEPS}/harfbuzz
-sed -i'.bak' "s/error   \"-Wunused-local-typedefs\"/ignored \"-Wunused-local-typedefs\"/" src/hb.hh
-./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
-  --without-icu ${DARWIN:+--with-coretext}
-make install-strip
+# Disable utils
+sed -i'.bak' "/subdir('util')/d" meson.build
+LDFLAGS=${LDFLAGS/\$/} meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
+  -Dicu=disabled -Dtests=disabled -Dintrospection=disabled -Ddocs=disabled -Dbenchmark=disabled ${DARWIN:+-Dcoretext=enabled}
+ninja -C _build
+ninja -C _build install
 
 mkdir ${DEPS}/pixman
 curl -Ls https://cairographics.org/releases/pixman-${VERSION_PIXMAN}.tar.gz | tar xzC ${DEPS}/pixman --strip-components=1
