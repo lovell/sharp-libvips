@@ -3,6 +3,12 @@ LABEL maintainer="Lovell Fuller <npm@lovell.info>"
 
 # Create Debian-based container suitable for cross-compiling Linux ARMv7-A binaries
 
+# Path settings
+ENV \
+  RUSTUP_HOME="/usr/local/rustup" \
+  CARGO_HOME="/usr/local/cargo" \
+  PATH="/usr/local/cargo/bin:$PATH"
+
 # Build dependencies
 RUN \
   apt-get update && \
@@ -30,15 +36,17 @@ RUN \
     python3-pip \
     texinfo \
     && \
-  curl https://sh.rustup.rs -sSf | sh -s -- -y && \
+  curl https://sh.rustup.rs -sSf | sh -s -- -y \
+    --no-modify-path \
+    --profile minimal \
+    && \
   # Downgrade to 1.43.0, see: https://github.com/rust-lang/compiler-builtins/issues/353
-  ~/.cargo/bin/rustup toolchain install 1.43.0 && ~/.cargo/bin/rustup default 1.43.0 && \
-  ~/.cargo/bin/rustup target add arm-unknown-linux-gnueabihf && \
+  rustup toolchain install 1.43.0 && rustup default 1.43.0 && \
+  rustup target add arm-unknown-linux-gnueabihf && \
   pip3 install meson
 
 # Compiler settings
 ENV \
-  PATH="/root/.cargo/bin:$PATH" \
   PKG_CONFIG="/usr/bin/arm-linux-gnueabihf-pkg-config" \
   PLATFORM="linux-armv7" \
   CHOST="arm-linux-gnueabihf" \

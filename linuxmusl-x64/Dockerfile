@@ -3,6 +3,12 @@ LABEL maintainer="Lovell Fuller <npm@lovell.info>"
 
 # Create Alpine 3.11 (musl 1.1.24) container suitable for building Linux x64 binaries
 
+# Path settings
+ENV \
+  RUSTUP_HOME="/usr/local/rustup" \
+  CARGO_HOME="/usr/local/cargo" \
+  PATH="/usr/local/cargo/bin:$PATH"
+
 # Build dependencies
 RUN \
   apk update && apk upgrade && \
@@ -31,12 +37,14 @@ RUN \
     texinfo \
     && \
   apk --update --no-cache --repository https://alpine.global.ssl.fastly.net/alpine/edge/community/ add advancecomp && \
-  curl https://sh.rustup.rs -sSf | sh -s -- -y && \
+  curl https://sh.rustup.rs -sSf | sh -s -- -y \
+    --no-modify-path \
+    --profile minimal \
+    && \
   pip3 install meson
 
 # Compiler settings
 ENV \
-  PATH="/root/.cargo/bin:$PATH" \
   PLATFORM="linuxmusl-x64" \
   FLAGS="-O3 -fPIC"
 
