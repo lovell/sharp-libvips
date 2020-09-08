@@ -359,7 +359,8 @@ cd ${DEPS}/vips
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking \
   --disable-debug --disable-deprecated --disable-introspection --without-analyze --without-cfitsio --without-fftw \
   --without-heif --without-imagequant --without-magick --without-matio --without-nifti --without-OpenEXR \
-  --without-openslide --without-pdfium --without-poppler --without-ppm --without-radiance
+  --without-openslide --without-pdfium --without-poppler --without-ppm --without-radiance \
+  ${LINUX:+LDFLAGS="$LDFLAGS -Wl,-Bsymbolic-functions"}
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/#_removing_rpath
 sed -i'.bak' 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
 make install-strip
