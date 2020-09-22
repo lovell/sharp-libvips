@@ -73,7 +73,7 @@ VERSION_EXIF=0.6.22
 VERSION_LCMS2=2.11
 VERSION_JPEG=2.0.5
 VERSION_PNG16=1.6.37
-VERSION_SPNG=0.6.0
+VERSION_SPNG=0.6.1
 VERSION_WEBP=1.1.0
 VERSION_TIFF=4.1.0
 VERSION_ORC=0.4.32
@@ -86,7 +86,7 @@ VERSION_HARFBUZZ=2.7.2
 VERSION_PIXMAN=0.40.0
 VERSION_CAIRO=1.16.0
 VERSION_FRIBIDI=1.0.10
-VERSION_PANGO=1.46.1
+VERSION_PANGO=1.46.2
 VERSION_SVG=2.50.0
 VERSION_GIF=5.1.4
 
@@ -192,7 +192,6 @@ autoreconf -fiv
 make install-strip
 
 mkdir ${DEPS}/lcms2
-#curl -Ls https://sourceforge.mirrorservice.org/l/lc/lcms/lcms/${VERSION_LCMS2}/lcms2-${VERSION_LCMS2}.tar.gz | tar xzC ${DEPS}/lcms2 --strip-components=1 # 2.11 not yet synchronized
 curl -Ls https://downloads.sourceforge.net/project/lcms/lcms/${VERSION_LCMS2}/lcms2-${VERSION_LCMS2}.tar.gz | tar xzC ${DEPS}/lcms2 --strip-components=1
 cd ${DEPS}/lcms2
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking
@@ -206,7 +205,7 @@ LDFLAGS=${LDFLAGS/\$/} cmake -G"Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=${ROOT}/T
 make install/strip
 
 mkdir ${DEPS}/png16
-curl -Ls https://sourceforge.mirrorservice.org/l/li/libpng/libpng16/${VERSION_PNG16}/libpng-${VERSION_PNG16}.tar.xz | tar xJC ${DEPS}/png16 --strip-components=1
+curl -Ls https://downloads.sourceforge.net/project/libpng/libpng16/${VERSION_PNG16}/libpng-${VERSION_PNG16}.tar.xz | tar xJC ${DEPS}/png16 --strip-components=1
 cd ${DEPS}/png16
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking
 make install-strip
@@ -214,7 +213,6 @@ make install-strip
 mkdir ${DEPS}/spng
 curl -Ls https://github.com/randy408/libspng/archive/v${VERSION_SPNG}.tar.gz | tar xzC ${DEPS}/spng --strip-components=1
 cd ${DEPS}/spng
-patch -p1 < ${PACKAGE}/build/patches/libspng-0.6-fixes.patch
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   -Dstatic_zlib=true
 ninja -C _build
@@ -348,7 +346,7 @@ sed -i'.bak' "s/, \"rlib\"//" librsvg/Cargo.toml
 make install-strip
 
 mkdir ${DEPS}/gif
-curl -Ls https://sourceforge.mirrorservice.org/g/gi/giflib/giflib-${VERSION_GIF}.tar.gz | tar xzC ${DEPS}/gif --strip-components=1
+curl -Ls https://downloads.sourceforge.net/project/giflib/giflib-${VERSION_GIF}.tar.gz | tar xzC ${DEPS}/gif --strip-components=1
 cd ${DEPS}/gif
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking
 make install-strip
