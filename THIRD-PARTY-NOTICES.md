@@ -5,6 +5,7 @@ used under the terms of the following licences:
 
 | Library       | Used under the terms of                                                                                   |
 |---------------|-----------------------------------------------------------------------------------------------------------|
+| aom           | BSD 2-Clause + [Alliance for Open Media Patent License 1.0](https://aomedia.org/license/patent-license/)  |
 | cairo         | Mozilla Public License 2.0                                                                                |
 | expat         | MIT Licence                                                                                               |
 | fontconfig    | [fontconfig Licence](https://gitlab.freedesktop.org/fontconfig/fontconfig/blob/master/COPYING) (BSD-like) |
@@ -19,6 +20,7 @@ used under the terms of the following licences:
 | libexif       | LGPLv3                                                                                                    |
 | libffi        | MIT Licence                                                                                               |
 | libgsf        | LGPLv3                                                                                                    |
+| libheif       | LGPLv3                                                                                                    |
 | libjpeg-turbo | [zlib License, IJG License](https://github.com/libjpeg-turbo/libjpeg-turbo/blob/master/LICENSE.md)        |
 | libpng        | [libpng License](https://github.com/glennrp/libpng/blob/master/LICENSE)                                   |
 | librsvg       | LGPLv3                                                                                                    |

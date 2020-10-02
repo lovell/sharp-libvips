@@ -89,6 +89,8 @@ VERSION_FRIBIDI=1.0.10
 VERSION_PANGO=1.47.0
 VERSION_SVG=2.50.0
 VERSION_GIF=5.1.4
+VERSION_AOM=2.0.0
+VERSION_HEIF=1.9.1
 
 # Remove patch version component
 without_patch() {
@@ -129,6 +131,8 @@ version_latest "fribidi" "$VERSION_FRIBIDI" "857"
 version_latest "pango" "$VERSION_PANGO" "11783"
 version_latest "svg" "$VERSION_SVG" "5420"
 #version_latest "gif" "$VERSION_GIF" "1158" # v5.1.5+ provides a Makefile only so will require custom cross-compilation setup
+#version_latest "aom" "$VERSION_AOM" "17628" # latest version in release monitoring does not exist
+version_latest "heif" "$VERSION_HEIF" "64439"
 if [ "$ALL_AT_VERSION_LATEST" = "false" ]; then exit 1; fi
 
 # Download and build dependencies from source
@@ -195,6 +199,25 @@ mkdir ${DEPS}/lcms2
 curl -Ls https://downloads.sourceforge.net/project/lcms/lcms/${VERSION_LCMS2}/lcms2-${VERSION_LCMS2}.tar.gz | tar xzC ${DEPS}/lcms2 --strip-components=1
 cd ${DEPS}/lcms2
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking
+make install-strip
+
+mkdir ${DEPS}/aom
+curl -Ls https://aomedia.googlesource.com/aom/+archive/v${VERSION_AOM}.tar.gz | tar xzC ${DEPS}/aom
+cd ${DEPS}/aom
+mkdir aom_build
+cd aom_build
+AOM_AS_FLAGS="${FLAGS}" LDFLAGS=${LDFLAGS/\$/} cmake -G"Unix Makefiles" \
+  -DCMAKE_TOOLCHAIN_FILE=${ROOT}/Toolchain.cmake -DCMAKE_INSTALL_PREFIX=${TARGET} -DCMAKE_INSTALL_LIBDIR=lib \
+  -DENABLE_DOCS=0 -DENABLE_TESTS=0 -DENABLE_TESTDATA=0 -DENABLE_TOOLS=0 -DENABLE_EXAMPLES=0 \
+  -DENABLE_NASM=ON \
+  ..
+make install/strip
+
+mkdir ${DEPS}/heif
+curl -Ls https://github.com/strukturag/libheif/releases/download/v${VERSION_HEIF}/libheif-${VERSION_HEIF}.tar.gz | tar xzC ${DEPS}/heif --strip-components=1
+cd ${DEPS}/heif
+./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
+  --disable-gdk-pixbuf --disable-go --disable-examples --disable-libde265 --disable-x265
 make install-strip
 
 mkdir ${DEPS}/jpeg
@@ -356,7 +379,7 @@ curl -Ls https://github.com/libvips/libvips/releases/download/v${VERSION_VIPS}/v
 cd ${DEPS}/vips
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking \
   --disable-debug --disable-deprecated --disable-introspection --without-analyze --without-cfitsio --without-fftw \
-  --without-heif --without-imagequant --without-magick --without-matio --without-nifti --without-OpenEXR \
+  --without-imagequant --without-magick --without-matio --without-nifti --without-OpenEXR \
   --without-openslide --without-pdfium --without-poppler --without-ppm --without-radiance \
   ${LINUX:+LDFLAGS="$LDFLAGS -Wl,-Bsymbolic-functions"}
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/#_removing_rpath
@@ -410,6 +433,7 @@ copydeps ${VIPS_CPP_DEP} ${TARGET}/lib-filtered
 # Create JSON file of version numbers
 cd ${TARGET}
 printf "{\n\
+  \"aom\": \"${VERSION_AOM}\",\n\
   \"cairo\": \"${VERSION_CAIRO}\",\n\
   \"exif\": \"${VERSION_EXIF}\",\n\
   \"expat\": \"${VERSION_EXPAT}\",\n\
@@ -423,6 +447,7 @@ printf "{\n\
   \"glib\": \"${VERSION_GLIB}\",\n\
   \"gsf\": \"${VERSION_GSF}\",\n\
   \"harfbuzz\": \"${VERSION_HARFBUZZ}\",\n\
+  \"heif\": \"${VERSION_HEIF}\",\n\
   \"jpeg\": \"${VERSION_JPEG}\",\n\
   \"lcms\": \"${VERSION_LCMS2}\",\n\
   \"orc\": \"${VERSION_ORC}\",\n\
