@@ -221,6 +221,7 @@ curl -Ls https://github.com/strukturag/libheif/releases/download/v${VERSION_HEIF
 cd ${DEPS}/heif
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
   --disable-gdk-pixbuf --disable-go --disable-examples --disable-libde265 --disable-x265
+sed -i'.bak' "s/Requires:/Requires:\nRequires.private: aom/" libheif.pc # https://github.com/strukturag/libheif/pull/354
 make install-strip
 
 mkdir ${DEPS}/jpeg
