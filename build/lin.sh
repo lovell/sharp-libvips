@@ -10,6 +10,9 @@ case ${PLATFORM} in
     PACKAGE=/packaging
     ROOT=/root
     VIPS_CPP_DEP=libvips-cpp.so.42
+    ;;&
+  linux-armv6)
+    WITHOUT_NEON=true
     ;;
   darwin*)
     DARWIN=true
@@ -209,7 +212,7 @@ cd aom_build
 AOM_AS_FLAGS="${FLAGS}" LDFLAGS=${LDFLAGS/\$/} cmake -G"Unix Makefiles" \
   -DCMAKE_TOOLCHAIN_FILE=${ROOT}/Toolchain.cmake -DCMAKE_INSTALL_PREFIX=${TARGET} -DCMAKE_INSTALL_LIBDIR=lib \
   -DENABLE_DOCS=0 -DENABLE_TESTS=0 -DENABLE_TESTDATA=0 -DENABLE_TOOLS=0 -DENABLE_EXAMPLES=0 \
-  -DENABLE_NASM=ON \
+  -DENABLE_NASM=1 ${WITHOUT_NEON:+-DENABLE_NEON=0} \
   ..
 make install/strip
 
