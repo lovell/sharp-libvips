@@ -10,9 +10,6 @@ case ${PLATFORM} in
     PACKAGE=/packaging
     ROOT=/root
     VIPS_CPP_DEP=libvips-cpp.so.42
-    ;;&
-  linux-armv6)
-    WITHOUT_NEON=true
     ;;
   darwin*)
     DARWIN=true
