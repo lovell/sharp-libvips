@@ -3,11 +3,14 @@ set -e
 
 VERSION_VIPS_SHORT=${VERSION_VIPS%.[[:digit:]]*}
 
+# Common options for curl
+CURL="curl --silent --location --retry 3 --retry-max-time 30"
+
 # Fetch and unzip
 mkdir /vips
 cd /vips
 BITS=${PLATFORM: -2}
-curl -LOs https://github.com/libvips/build-win64-mxe/releases/download/v${VERSION_VIPS}/vips-dev-w${BITS}-web-${VERSION_VIPS}-static.zip
+$CURL -O https://github.com/libvips/build-win64-mxe/releases/download/v${VERSION_VIPS}/vips-dev-w${BITS}-web-${VERSION_VIPS}-static.zip
 unzip vips-dev-w${BITS}-web-${VERSION_VIPS}-static.zip
 
 # Clean and zip
@@ -19,7 +22,7 @@ cp bin/*.dll lib/
 printf "\"${PLATFORM}\"" >platform.json
 
 # Add third-party notices
-curl -Os https://raw.githubusercontent.com/lovell/sharp-libvips/master/THIRD-PARTY-NOTICES.md
+$CURL -O https://raw.githubusercontent.com/lovell/sharp-libvips/master/THIRD-PARTY-NOTICES.md
 
 echo "Creating tarball"
 tar czf /packaging/libvips-${VERSION_VIPS}-${PLATFORM}.tar.gz \
