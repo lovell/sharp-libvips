@@ -10,7 +10,7 @@ CURL="curl --silent --location --retry 3 --retry-max-time 30"
 mkdir /vips
 cd /vips
 BITS=${PLATFORM: -2}
-$CURL -O https://github.com/libvips/build-win64-mxe/releases/download/v${VERSION_VIPS}/vips-dev-w${BITS}-web-${VERSION_VIPS}-static.zip
+$CURL -O https://github.com/libvips/build-win64-mxe/releases/download/v${VERSION_VIPS}-build2/vips-dev-w${BITS}-web-${VERSION_VIPS}-static.zip
 unzip vips-dev-w${BITS}-web-${VERSION_VIPS}-static.zip
 
 # Clean and zip
