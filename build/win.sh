@@ -10,14 +10,23 @@ CURL="curl --silent --location --retry 3 --retry-max-time 30"
 mkdir /vips
 cd /vips
 
-if [[ $PLATFORM == "win32-arm64v8" ]]; then
-  $CURL -O https://github.com/libvips/build-win64-mxe/releases/download/v${VERSION_VIPS}-build2/vips-dev-arm64-web-${VERSION_VIPS}-static.zip
-  unzip vips-dev-arm64-web-${VERSION_VIPS}-static.zip
-else
-  BITS=${PLATFORM: -2}
-  $CURL -O https://github.com/libvips/build-win64-mxe/releases/download/v${VERSION_VIPS}-build2/vips-dev-w${BITS}-web-${VERSION_VIPS}-static.zip
-  unzip vips-dev-w${BITS}-web-${VERSION_VIPS}-static.zip
-fi
+case ${PLATFORM} in
+  *arm64v8)
+    ARCH=arm64
+    ;;
+  *x64)
+    ARCH=w64
+    ;;
+  *ia32)
+    ARCH=w32
+    ;;
+esac
+
+FILENAME="vips-dev-${ARCH}-web-${VERSION_VIPS}-static.zip"
+URL="https://github.com/libvips/build-win64-mxe/releases/download/v${VERSION_VIPS}-build2/${FILENAME}"
+echo "Downloading $URL"
+$CURL -O $URL
+unzip $FILENAME
 
 # Clean and zip
 cd /vips/vips-dev-${VERSION_VIPS_SHORT}

@@ -65,8 +65,8 @@ done
 for flavour in win32-ia32 win32-x64 win32-arm64v8; do
   if [ $PLATFORM = "all" ] || [ $PLATFORM = $flavour ]; then
     echo "Building $flavour..."
-    docker build -t vips-dev-$flavour $flavour
-    docker run --rm -e "VERSION_VIPS=${VERSION_VIPS}" -v $PWD:/packaging vips-dev-$flavour sh -c "/packaging/build/win.sh"
+    docker build -t vips-dev-win32 win32
+    docker run --rm -e "VERSION_VIPS=${VERSION_VIPS}" -e "PLATFORM=${flavour}" -v $PWD:/packaging vips-dev-win32 sh -c "/packaging/build/win.sh"
   fi
 done
 
