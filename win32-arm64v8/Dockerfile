@@ -5,4 +5,4 @@ LABEL maintainer="Lovell Fuller <npm@lovell.info>"
 
 RUN apt-get update && apt-get install -y advancecomp brotli curl zip
 
-ENV PLATFORM="win32-arm64"
+ENV PLATFORM="win32-arm64v8"

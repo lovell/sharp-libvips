@@ -35,7 +35,7 @@ The output of libvips' [build-win64-mxe](https://github.com/libvips/build-win64-
 
 * [win32-ia32](win32-ia32/Dockerfile)
 * [win32-x64](win32-x64/Dockerfile)
-* [win32-arm64](win32-arm64/Dockerfile)
+* [win32-arm64v8](win32-arm64v8/Dockerfile)
 
 ### macOS
 
