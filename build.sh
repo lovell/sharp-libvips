@@ -13,6 +13,7 @@ if [ $# -lt 1 ]; then
   echo "Possible values for PLATFORM are:"
   echo "- win32-ia32"
   echo "- win32-x64"
+  echo "- win32-arm64v8"
   echo "- linux-x64"
   echo "- linuxmusl-x64"
   echo "- linux-armv6"
@@ -61,7 +62,7 @@ for baseimage in centos:7 debian:buster debian:bullseye alpine:3.11; do
 done
 
 # Windows
-for flavour in win32-ia32 win32-x64; do
+for flavour in win32-ia32 win32-x64 win32-arm64v8; do
   if [ $PLATFORM = "all" ] || [ $PLATFORM = $flavour ]; then
     echo "Building $flavour..."
     docker build -t vips-dev-$flavour $flavour
