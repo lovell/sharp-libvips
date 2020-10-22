@@ -92,7 +92,7 @@ VERSION_FRIBIDI=1.0.10
 VERSION_PANGO=1.47.0
 VERSION_SVG=2.50.1
 VERSION_GIF=5.1.4
-VERSION_AOM=2.0.0
+VERSION_AOM=430d58446e1f71ec2283af0d6c1879bc7a3553dd
 VERSION_HEIF=1.9.1
 
 # Remove patch version component
@@ -205,7 +205,7 @@ cd ${DEPS}/lcms2
 make install-strip
 
 mkdir ${DEPS}/aom
-$CURL https://aomedia.googlesource.com/aom/+archive/v${VERSION_AOM}.tar.gz | tar xzC ${DEPS}/aom
+$CURL https://aomedia.googlesource.com/aom/+archive/${VERSION_AOM}.tar.gz | tar xzC ${DEPS}/aom
 cd ${DEPS}/aom
 mkdir aom_build
 cd aom_build
