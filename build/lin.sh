@@ -356,7 +356,7 @@ cd ${DEPS}/pango
 # Disable utils, examples, tests and tools
 sed -i'.bak' "/subdir('utils')/{N;N;N;d;}" meson.build
 LDFLAGS=${LDFLAGS/\$/} meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
-  -Dgtk_doc=false -Dintrospection=disabled -Duse_fontconfig=true
+  -Dgtk_doc=false -Dintrospection=disabled -Dfontconfig=enabled
 ninja -C _build
 ninja -C _build install
 
