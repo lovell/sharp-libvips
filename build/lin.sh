@@ -81,18 +81,18 @@ VERSION_WEBP=1.1.0
 VERSION_TIFF=4.1.0
 VERSION_ORC=0.4.32
 VERSION_GETTEXT=0.21
-VERSION_GDKPIXBUF=2.42.0
+VERSION_GDKPIXBUF=2.42.2
 VERSION_FREETYPE=2.10.4
 VERSION_EXPAT=2.2.10
-VERSION_FONTCONFIG=2.13.92
+VERSION_FONTCONFIG=2.13.93
 VERSION_HARFBUZZ=2.7.2
 VERSION_PIXMAN=0.40.0
 VERSION_CAIRO=1.16.0
 VERSION_FRIBIDI=1.0.10
 VERSION_PANGO=1.48.0
-VERSION_SVG=2.50.1
+VERSION_SVG=2.50.2
 VERSION_GIF=5.1.4
-VERSION_AOM=2.0.0
+VERSION_AOM=2.0.1
 VERSION_HEIF=1.9.1
 
 # Remove patch version component
@@ -116,7 +116,7 @@ version_latest "xml2" "$VERSION_XML2" "1783"
 version_latest "gsf" "$VERSION_GSF" "1980"
 version_latest "exif" "$VERSION_EXIF" "1607"
 version_latest "lcms2" "$VERSION_LCMS2" "9815"
-version_latest "jpeg" "$VERSION_JPEG" "1648"
+#version_latest "jpeg" "$VERSION_JPEG" "1648" # latest version in release monitoring is beta
 version_latest "png" "$VERSION_PNG16" "1705"
 version_latest "spng" "$VERSION_SPNG" "24289"
 version_latest "webp" "$VERSION_WEBP" "1761"
