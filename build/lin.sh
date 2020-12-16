@@ -87,7 +87,7 @@ VERSION_EXPAT=2.2.10
 VERSION_FONTCONFIG=2.13.93
 VERSION_HARFBUZZ=2.7.2
 VERSION_PIXMAN=0.40.0
-VERSION_CAIRO=1.16.0
+VERSION_CAIRO=1.17.4
 VERSION_FRIBIDI=1.0.10
 VERSION_PANGO=1.48.0
 VERSION_SVG=2.50.2
@@ -129,7 +129,7 @@ version_latest "expat" "$VERSION_EXPAT" "770"
 version_latest "fontconfig" "$VERSION_FONTCONFIG" "827"
 version_latest "harfbuzz" "$VERSION_HARFBUZZ" "1299"
 version_latest "pixman" "$VERSION_PIXMAN" "3648"
-#version_latest "cairo" "$VERSION_CAIRO" "247" # latest version in release monitoring is unstable
+version_latest "cairo" "$VERSION_CAIRO" "247"
 version_latest "fribidi" "$VERSION_FRIBIDI" "857"
 version_latest "pango" "$VERSION_PANGO" "11783"
 version_latest "svg" "$VERSION_SVG" "5420"
@@ -331,7 +331,7 @@ ninja -C _build
 ninja -C _build install
 
 mkdir ${DEPS}/cairo
-$CURL https://cairographics.org/releases/cairo-${VERSION_CAIRO}.tar.xz | tar xJC ${DEPS}/cairo --strip-components=1
+$CURL https://cairographics.org/snapshots/cairo-${VERSION_CAIRO}.tar.xz | tar xJC ${DEPS}/cairo --strip-components=1
 cd ${DEPS}/cairo
 sed -i'.bak' "s/^\(Libs:.*\)/\1 @CAIRO_NONPKGCONFIG_LIBS@/" src/cairo.pc.in
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
