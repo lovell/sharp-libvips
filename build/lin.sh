@@ -69,7 +69,7 @@ CURL="curl --silent --location --retry 3 --retry-max-time 30"
 # Dependency version numbers
 VERSION_ZLIB=1.2.11
 VERSION_FFI=3.3
-VERSION_GLIB=2.67.0
+VERSION_GLIB=2.67.1
 VERSION_XML2=2.9.10
 VERSION_GSF=1.14.47
 VERSION_EXIF=0.6.22
@@ -135,7 +135,7 @@ version_latest "pango" "$VERSION_PANGO" "11783"
 version_latest "svg" "$VERSION_SVG" "5420"
 #version_latest "gif" "$VERSION_GIF" "1158" # v5.1.5+ provides a Makefile only so will require custom cross-compilation setup
 #version_latest "aom" "$VERSION_AOM" "17628" # latest version in release monitoring does not exist
-#version_latest "heif" "$VERSION_HEIF" "64439" # release monitoring has yet to catch up with latest version
+version_latest "heif" "$VERSION_HEIF" "64439"
 if [ "$ALL_AT_VERSION_LATEST" = "false" ]; then exit 1; fi
 
 # Download and build dependencies from source
