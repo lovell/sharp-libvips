@@ -78,7 +78,7 @@ VERSION_JPEG=2.0.6
 VERSION_PNG16=1.6.37
 VERSION_SPNG=0.6.1
 VERSION_WEBP=1.1.0
-VERSION_TIFF=4.1.0
+VERSION_TIFF=4.2.0
 VERSION_ORC=0.4.32
 VERSION_GETTEXT=0.21
 VERSION_GDKPIXBUF=2.42.2
@@ -316,8 +316,8 @@ cd ${DEPS}/harfbuzz
 sed -i'.bak' "/subdir('util')/d" meson.build
 LDFLAGS=${LDFLAGS/\$/} meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   -Dicu=disabled -Dtests=disabled -Dintrospection=disabled -Ddocs=disabled -Dbenchmark=disabled ${DARWIN:+-Dcoretext=enabled}
-ninja -C _build
-ninja -C _build install
+ninja -j1 -C _build
+ninja -j1 -C _build install
 
 mkdir ${DEPS}/pixman
 $CURL https://cairographics.org/releases/pixman-${VERSION_PIXMAN}.tar.gz | tar xzC ${DEPS}/pixman --strip-components=1
@@ -359,17 +359,19 @@ LDFLAGS=${LDFLAGS/\$/} meson setup _build --default-library=static --buildtype=r
 ninja -C _build
 ninja -C _build install
 
-mkdir ${DEPS}/svg
-$CURL https://download.gnome.org/sources/librsvg/$(without_patch $VERSION_SVG)/librsvg-${VERSION_SVG}.tar.xz | tar xJC ${DEPS}/svg --strip-components=1
-cd ${DEPS}/svg
-sed -i'.bak' "s/^\(Requires:.*\)/\1 cairo-gobject pangocairo/" librsvg.pc.in
-# Do not include debugging symbols
-sed -i'.bak' "/debug =/ s/= .*/= false/" Cargo.toml
-# LTO optimization does not work for staticlib+rlib compilation
-sed -i'.bak' "s/, \"rlib\"//" librsvg/Cargo.toml
-./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
-  --disable-introspection --disable-tools --disable-pixbuf-loader ${DARWIN:+--disable-Bsymbolic}
-make install-strip
+if [ "${PLATFORM}" != "linuxmusl-arm64" ]; then
+  mkdir ${DEPS}/svg
+  $CURL https://download.gnome.org/sources/librsvg/$(without_patch $VERSION_SVG)/librsvg-${VERSION_SVG}.tar.xz | tar xJC ${DEPS}/svg --strip-components=1
+  cd ${DEPS}/svg
+  sed -i'.bak' "s/^\(Requires:.*\)/\1 cairo-gobject pangocairo/" librsvg.pc.in
+  # Do not include debugging symbols
+  sed -i'.bak' "/debug =/ s/= .*/= false/" Cargo.toml
+  # LTO optimization does not work for staticlib+rlib compilation
+  sed -i'.bak' "s/, \"rlib\"//" librsvg/Cargo.toml
+  ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
+    --disable-introspection --disable-tools --disable-pixbuf-loader ${DARWIN:+--disable-Bsymbolic}
+  make install-strip
+fi
 
 mkdir ${DEPS}/gif
 $CURL https://downloads.sourceforge.net/project/giflib/giflib-${VERSION_GIF}.tar.gz | tar xzC ${DEPS}/gif --strip-components=1

@@ -54,7 +54,3 @@ ENV \
   RUSTFLAGS="-C target-feature=-crt-static"
 
 COPY Toolchain.cmake /root/
-
-COPY lin.sh /root/
-
-RUN /root/lin.sh

@@ -71,24 +71,14 @@ for flavour in win32-ia32 win32-x64 win32-arm64v8; do
   fi
 done
 
-# Linux (x64)
-for flavour in linux-x64 linuxmusl-x64; do
+# Linux (x64 ARMv6, ARMv7, ARM64v8)
+for flavour in linux-x64 linuxmusl-x64 linuxmusl-arm64 linux-armv6 linux-armv7 linux-arm64v8; do
   if [ $PLATFORM = "all" ] || [ $PLATFORM = $flavour ]; then
     echo "Building $flavour..."
     docker build -t vips-dev-$flavour $flavour
     docker run --rm -e "VERSION_VIPS=${VERSION_VIPS}" -v $PWD:/packaging vips-dev-$flavour sh -c "/packaging/build/lin.sh"
   fi
 done
-
-# Linux (ARMv6, ARMv7, ARM64v8)
-for flavour in linuxmusl-arm64 linux-armv6 linux-armv7 linux-arm64v8; do
-  if [ $PLATFORM = "all" ] || [ $PLATFORM = $flavour ]; then
-    echo "Building $flavour, --platform linux/${PLATFORM#*-}"
-    docker buildx build -t vips-dev-$flavour $flavour --platform linux/${PLATFORM#*-}
-    # docker run --rm -e "VERSION_VIPS=${VERSION_VIPS}" -v $PWD:/packaging vips-dev-$flavour sh -c "/packaging/build/lin.sh"
-  fi
-done
-
 
 # Display checksums
 sha256sum *.tar.{br,gz}
