@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 set -e
 
+# alias arm64 to arm64v8
+if [ $PLATFORM = "linuxmusl-arm64" ]; then
+  PLATFORM="linuxmusl-arm64v8"
+fi
+if [ $PLATFORM = "linux-arm64" ]; then
+  PLATFORM="linux-arm64v8"
+fi
+
 # Environment / working directories
 case ${PLATFORM} in
   linux*)
@@ -359,7 +367,7 @@ LDFLAGS=${LDFLAGS/\$/} meson setup _build --default-library=static --buildtype=r
 ninja -C _build
 ninja -C _build install
 
-if [ "${PLATFORM}" != "linuxmusl-arm64" ]; then
+if [ "$PLATFORM" != "linuxmusl-arm64v8" ]; then
   mkdir ${DEPS}/svg
   $CURL https://download.gnome.org/sources/librsvg/$(without_patch $VERSION_SVG)/librsvg-${VERSION_SVG}.tar.xz | tar xJC ${DEPS}/svg --strip-components=1
   cd ${DEPS}/svg

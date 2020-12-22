@@ -35,6 +35,7 @@ RUN \
     python3 \
     shared-mime-info \
     texinfo \
+    tar \
     && \
   apk --update --no-cache --repository https://alpine.global.ssl.fastly.net/alpine/edge/community/ add advancecomp && \
   curl https://sh.rustup.rs -sSf | sh -s -- -y \

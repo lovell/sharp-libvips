@@ -16,16 +16,24 @@ if [ $# -lt 1 ]; then
   echo "- win32-arm64v8"
   echo "- linux-x64"
   echo "- linuxmusl-x64"
-  echo "- linuxmusl-arm64"
+  echo "- linuxmusl-arm64v8/arm64"
   echo "- linux-armv6"
   echo "- linux-armv7"
-  echo "- linux-arm64v8"
+  echo "- linux-arm64v8/arm64"
   echo "- darwin-x64"
   echo
   exit 1
 fi
 VERSION_VIPS="$1"
 PLATFORM="${2:-all}"
+
+# alias arm64 to arm64v8
+if [ $PLATFORM = "linuxmusl-arm64" ]; then
+  PLATFORM="linuxmusl-arm64v8"
+fi
+if [ $PLATFORM = "linux-arm64" ]; then
+  PLATFORM="linux-arm64v8"
+fi
 
 # macOS
 # Note: we intentionally don't build these binaries inside a Docker container
@@ -72,7 +80,7 @@ for flavour in win32-ia32 win32-x64 win32-arm64v8; do
 done
 
 # Linux (x64 ARMv6, ARMv7, ARM64v8)
-for flavour in linux-x64 linuxmusl-x64 linuxmusl-arm64 linux-armv6 linux-armv7 linux-arm64v8; do
+for flavour in linux-x64 linuxmusl-x64 linuxmusl-arm64v8 linux-armv6 linux-armv7 linux-arm64v8; do
   if [ $PLATFORM = "all" ] || [ $PLATFORM = $flavour ]; then
     echo "Building $flavour..."
     docker build -t vips-dev-$flavour $flavour
