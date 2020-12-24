@@ -367,19 +367,17 @@ LDFLAGS=${LDFLAGS/\$/} meson setup _build --default-library=static --buildtype=r
 ninja -C _build
 ninja -C _build install
 
-if [ "$PLATFORM" != "linuxmusl-arm64v8" ]; then
-  mkdir ${DEPS}/svg
-  $CURL https://download.gnome.org/sources/librsvg/$(without_patch $VERSION_SVG)/librsvg-${VERSION_SVG}.tar.xz | tar xJC ${DEPS}/svg --strip-components=1
-  cd ${DEPS}/svg
-  sed -i'.bak' "s/^\(Requires:.*\)/\1 cairo-gobject pangocairo/" librsvg.pc.in
-  # Do not include debugging symbols
-  sed -i'.bak' "/debug =/ s/= .*/= false/" Cargo.toml
-  # LTO optimization does not work for staticlib+rlib compilation
-  sed -i'.bak' "s/, \"rlib\"//" librsvg/Cargo.toml
-  ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
-    --disable-introspection --disable-tools --disable-pixbuf-loader ${DARWIN:+--disable-Bsymbolic}
-  make install-strip
-fi
+mkdir ${DEPS}/svg
+$CURL https://download.gnome.org/sources/librsvg/$(without_patch $VERSION_SVG)/librsvg-${VERSION_SVG}.tar.xz | tar xJC ${DEPS}/svg --strip-components=1
+cd ${DEPS}/svg
+sed -i'.bak' "s/^\(Requires:.*\)/\1 cairo-gobject pangocairo/" librsvg.pc.in
+# Do not include debugging symbols
+sed -i'.bak' "/debug =/ s/= .*/= false/" Cargo.toml
+# LTO optimization does not work for staticlib+rlib compilation
+sed -i'.bak' "s/, \"rlib\"//" librsvg/Cargo.toml
+./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
+  --disable-introspection --disable-tools --disable-pixbuf-loader ${DARWIN:+--disable-Bsymbolic}
+make install-strip
 
 mkdir ${DEPS}/gif
 $CURL https://downloads.sourceforge.net/project/giflib/giflib-${VERSION_GIF}.tar.gz | tar xzC ${DEPS}/gif --strip-components=1
