@@ -16,7 +16,7 @@ case ${PLATFORM} in
     DEPS=$PWD/deps
     TARGET=$PWD/target
     PACKAGE=$PWD
-    ROOT=$PWD/darwin-x64
+    ROOT=$PWD/$PLATFORM
     VIPS_CPP_DEP=libvips-cpp.42.dylib
     ;;
 esac
@@ -32,6 +32,8 @@ export LIBRARY_PATH="${TARGET}/lib"
 export LD_LIBRARY_PATH="${TARGET}/lib"
 export CFLAGS="${FLAGS}"
 export CXXFLAGS="${FLAGS}"
+export OBJCFLAGS="${FLAGS}"
+export OBJCXXFLAGS="${FLAGS}"
 export LDFLAGS="-L${TARGET}/lib"
 
 # On Linux, we need to create a relocatable library
@@ -43,6 +45,9 @@ fi
 # On macOS, we need to explicitly link against the system libraries
 if [ "$DARWIN" = true ]; then
   export LDFLAGS+=" -framework CoreServices -framework CoreFoundation -framework Foundation -framework AppKit"
+  if [ "$PLATFORM" == "darwin-arm64" ]; then
+    export DARWIN_ARM=true
+  fi
 fi
 
 # Run as many parallel jobs as there are available CPU cores
@@ -161,12 +166,15 @@ cd ${DEPS}/zlib
 ./configure --prefix=${TARGET} ${LINUX:+--uname=linux} ${DARWIN:+--uname=darwin} --static
 make install
 
+# Do not build ffi on darwin-arm64 so that meson will build it itself properly
+if [ $DARWIN_ARM != true ]; then
 mkdir ${DEPS}/ffi
 $CURL https://github.com/libffi/libffi/releases/download/v${VERSION_FFI}/libffi-${VERSION_FFI}.tar.gz | tar xzC ${DEPS}/ffi --strip-components=1
 cd ${DEPS}/ffi
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
   --disable-builddir --disable-multi-os-directory --disable-raw-api --disable-structs
 make install-strip
+fi
 
 mkdir ${DEPS}/glib
 $CURL https://download.gnome.org/sources/glib/$(without_patch $VERSION_GLIB)/glib-${VERSION_GLIB}.tar.xz | tar xJC ${DEPS}/glib --strip-components=1
@@ -218,7 +226,7 @@ cd aom_build
 AOM_AS_FLAGS="${FLAGS}" LDFLAGS=${LDFLAGS/\$/} cmake -G"Unix Makefiles" \
   -DCMAKE_TOOLCHAIN_FILE=${ROOT}/Toolchain.cmake -DCMAKE_INSTALL_PREFIX=${TARGET} -DCMAKE_INSTALL_LIBDIR=lib \
   -DBUILD_SHARED_LIBS=FALSE -DENABLE_DOCS=0 -DENABLE_TESTS=0 -DENABLE_TESTDATA=0 -DENABLE_TOOLS=0 -DENABLE_EXAMPLES=0 \
-  -DCONFIG_PIC=1 -DENABLE_NASM=1 ${WITHOUT_NEON:+-DENABLE_NEON=0} \
+  -DCONFIG_PIC=1 -DENABLE_NASM=1 ${WITHOUT_NEON:+-DENABLE_NEON=0} ${DARWIN_ARM:+-DCONFIG_RUNTIME_CPU_DETECT=0} \
   ..
 make install/strip
 
@@ -293,6 +301,14 @@ sed -i'.bak' "/gdk-pixbuf-query-loaders/d" build-aux/post-install.sh
 # Ensure meson can find libjpeg when cross-compiling
 sed -i'.bak' "s/has_header('jpeglib.h')/has_header('jpeglib.h', args: '-I\/target\/include')/g" meson.build
 sed -i'.bak' "s/cc.find_library('jpeg'/dependency('libjpeg'/g" meson.build
+if [ $DARWIN_ARM = true ]; then
+# When cross compiling for arm64 darwin, we need a libffi
+# The libffi we build doesn't work
+# When meson 0.56.1 comes out, this can be removed as it will be auto promoted
+cp ${DEPS}/glib/subprojects/libffi.wrap subprojects/
+# We also need to compile using gnu99 so that libffi's arm() works
+sed -i'.bak' "s/c_std=c99/c_std=gnu99/g" meson.build
+fi
 LDFLAGS=${LDFLAGS/\$/} meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   -Dtiff=false -Dintrospection=disabled -Dinstalled_tests=false -Dgio_sniffing=false -Dman=false -Dbuiltin_loaders=png,jpeg
 ninja -C _build
@@ -367,11 +383,19 @@ $CURL https://download.gnome.org/sources/pango/$(without_patch $VERSION_PANGO)/p
 cd ${DEPS}/pango
 # Disable utils, examples, tests and tools
 sed -i'.bak' "/subdir('utils')/{N;N;N;d;}" meson.build
+if [ $DARWIN_ARM = true ]; then
+# Just like gdkpixbuf
+cp ${DEPS}/glib/subprojects/libffi.wrap subprojects/
+fi
 LDFLAGS=${LDFLAGS/\$/} meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   -Dgtk_doc=false -Dintrospection=disabled -Dfontconfig=enabled
 ninja -C _build
 ninja -C _build install
 
+# Disable SVG on arm64 darwin due to rust
+# Reverting to a pre rust rsvg would work, but we need to compile another dependency (libcroco)
+# https://github.com/macports/macports-ports/blob/0f4f4f445f5784d69cbc0f9abe8c71cd7a5a5b47/graphics/librsvg/Portfile#L58
+if [ $DARWIN_ARM != true ]; then
 mkdir ${DEPS}/svg
 $CURL https://download.gnome.org/sources/librsvg/$(without_patch $VERSION_SVG)/librsvg-${VERSION_SVG}.tar.xz | tar xJC ${DEPS}/svg --strip-components=1
 cd ${DEPS}/svg
@@ -385,6 +409,7 @@ sed -i'.bak' "/PROGRAMS = /d" Makefile.in
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
   --disable-introspection --disable-tools --disable-pixbuf-loader ${DARWIN:+--disable-Bsymbolic}
 make install-strip
+fi
 
 mkdir ${DEPS}/gif
 $CURL https://downloads.sourceforge.net/project/giflib/giflib-${VERSION_GIF}.tar.gz | tar xzC ${DEPS}/gif --strip-components=1

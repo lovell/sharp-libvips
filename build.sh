@@ -28,27 +28,40 @@ PLATFORM="${2:-all}"
 
 # macOS
 # Note: we intentionally don't build these binaries inside a Docker container
-if [ $PLATFORM = "darwin-x64" ] && [ "$(uname)" == "Darwin" ]; then
-  # Use Clang provided by XCode
-  export CC="clang"
-  export CXX="clang++"
+for flavour in darwin-x64 darwin-arm64; do
+  if [ $PLATFORM = $flavour ] && [ "$(uname)" == "Darwin" ]; then
+    echo "Building $flavour..."
+    
+    # Use Clang provided by XCode
+    export CC="clang"
+    export CXX="clang++"
 
-  export VERSION_VIPS
-  export PLATFORM
+    export VERSION_VIPS
+    export PLATFORM
 
-  # 10.9 should be a good minimal release target
-  export MACOSX_DEPLOYMENT_TARGET="10.9"
+    # 10.9 should be a good minimal release target
+    export MACOSX_DEPLOYMENT_TARGET="10.9"
 
-  # Added -fno-stack-check to workaround a stack misalignment bug on macOS 10.15
-  # See:
-  # https://forums.developer.apple.com/thread/121887
-  # https://trac.ffmpeg.org/ticket/8073#comment:12
-  export FLAGS="-O3 -fPIC -fno-stack-check"
+    # Added -fno-stack-check to workaround a stack misalignment bug on macOS 10.15
+    # See:
+    # https://forums.developer.apple.com/thread/121887
+    # https://trac.ffmpeg.org/ticket/8073#comment:12
+    export FLAGS="-O3 -fPIC -fno-stack-check"
 
-  . $PWD/build/mac.sh
+    if [ $PLATFORM = "darwin-arm64" ]; then
+      # arm64 builds work via cross compilation from an x86_64 machine
+      export CHOST="arm-apple-darwin"
+      export FLAGS+=" -target arm64-apple-darwin -arch arm64"
+      export MESON="--cross-file=$PWD/darwin-arm64/meson.ini"
+      # macOS 11 is the first version to support arm macs
+      export MACOSX_DEPLOYMENT_TARGET="11.0"
+    fi
 
-  exit 0
-fi
+    . $PWD/build/mac.sh
+
+    exit 0
+  fi
+done
 
 # Is docker available?
 if ! [ -x "$(command -v docker)" ]; then
