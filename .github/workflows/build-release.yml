@@ -41,7 +41,7 @@ jobs:
           - os: macos-10.15
             platform:
               - 'darwin-x64'
-              - 'darwin-arm64'
+              - 'darwin-arm64v8'
             experimental: true
     steps:
     - name: Checkout
@@ -50,7 +50,7 @@ jobs:
       run: |
         pip3 install meson ninja
         brew install advancecomp automake brotli nasm pkg-config
-      if: matrix.platform == 'darwin-x64' || matrix.platform == 'darwin-arm64'
+      if: matrix.platform == 'darwin-x64' || matrix.platform == 'darwin-arm64v8'
     - name: Build ${{ matrix.platform }}
       id: build-release
       run: |

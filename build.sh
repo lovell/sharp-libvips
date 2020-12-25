@@ -28,7 +28,7 @@ PLATFORM="${2:-all}"
 
 # macOS
 # Note: we intentionally don't build these binaries inside a Docker container
-for flavour in darwin-x64 darwin-arm64; do
+for flavour in darwin-x64 darwin-arm64v8; do
   if [ $PLATFORM = $flavour ] && [ "$(uname)" == "Darwin" ]; then
     echo "Building $flavour..."
     
@@ -48,13 +48,13 @@ for flavour in darwin-x64 darwin-arm64; do
     # https://trac.ffmpeg.org/ticket/8073#comment:12
     export FLAGS="-O3 -fPIC -fno-stack-check"
 
-    if [ $PLATFORM = "darwin-arm64" ]; then
+    if [ $PLATFORM = "darwin-arm64v8" ]; then
       # arm64 builds work via cross compilation from an x86_64 machine
       export CHOST="aarch64-apple-darwin"
       # aarch64-apple-darwin doesn't work properly as configure scripts
       # will try to run the binary, and fail
       export FLAGS+=" -target arm64-apple-darwin -arch arm64"
-      export MESON="--cross-file=$PWD/darwin-arm64/meson.ini"
+      export MESON="--cross-file=$PWD/darwin-arm64v8/meson.ini"
       # macOS 11 is the first version to support arm macs
       export MACOSX_DEPLOYMENT_TARGET="11.0"
     fi

@@ -45,7 +45,7 @@ fi
 # On macOS, we need to explicitly link against the system libraries
 if [ "$DARWIN" = true ]; then
   export LDFLAGS+=" -framework CoreServices -framework CoreFoundation -framework Foundation -framework AppKit"
-  if [ "$PLATFORM" == "darwin-arm64" ]; then
+  if [ "$PLATFORM" == "darwin-arm64v8" ]; then
     export DARWIN_ARM=true
     # We need to explicitly tell meson about pkg-config when cross compiling on macOS
     # TODO: improve this by using brew --prefix, and patch meson.ini with the prefix
@@ -161,7 +161,7 @@ if [ "$ALL_AT_VERSION_LATEST" = "false" ]; then exit 1; fi
 # Download and build dependencies from source
 
 if [ $DARWIN_ARM = true ]; then
-# As of writing, we need a beta rust to compile for darwin-arm64
+# As of writing, we need a beta rust to compile for darwin-arm64v8
 # Remove this once Rust 1.49 stable is out
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain beta -y
 ${CARGO_HOME}/bin/rustup target add aarch64-apple-darwin
@@ -182,7 +182,7 @@ cd ${DEPS}/zlib
 ./configure --prefix=${TARGET} ${LINUX:+--uname=linux} ${DARWIN:+--uname=darwin} --static
 make install
 
-# Do not build ffi on darwin-arm64 so that meson will build it itself properly
+# Do not build ffi on darwin-arm64v8 so that meson will build it itself properly
 if [ $DARWIN_ARM != true ]; then
 mkdir ${DEPS}/ffi
 $CURL https://github.com/libffi/libffi/releases/download/v${VERSION_FFI}/libffi-${VERSION_FFI}.tar.gz | tar xzC ${DEPS}/ffi --strip-components=1
