@@ -47,6 +47,9 @@ if [ "$DARWIN" = true ]; then
   export LDFLAGS+=" -framework CoreServices -framework CoreFoundation -framework Foundation -framework AppKit"
   if [ "$PLATFORM" == "darwin-arm64" ]; then
     export DARWIN_ARM=true
+    # We need to explicitly tell meson about pkg-config when cross compiling on macOS
+    # TODO: improve this by using brew --prefix, and patch meson.ini with the prefix
+    export PKG_CONFIG="/usr/local/bin/pkg-config"
   fi
 fi
 
