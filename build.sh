@@ -50,7 +50,9 @@ for flavour in darwin-x64 darwin-arm64; do
 
     if [ $PLATFORM = "darwin-arm64" ]; then
       # arm64 builds work via cross compilation from an x86_64 machine
-      export CHOST="arm-apple-darwin"
+      export CHOST="aarch64-apple-darwin"
+      # aarch64-apple-darwin doesn't work properly as configure scripts
+      # will try to run the binary, and fail
       export FLAGS+=" -target arm64-apple-darwin -arch arm64"
       export MESON="--cross-file=$PWD/darwin-arm64/meson.ini"
       # macOS 11 is the first version to support arm macs

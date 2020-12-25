@@ -50,6 +50,12 @@ if [ "$DARWIN" = true ]; then
     # We need to explicitly tell meson about pkg-config when cross compiling on macOS
     # TODO: improve this by using brew --prefix, and patch meson.ini with the prefix
     export PKG_CONFIG="/usr/local/bin/pkg-config"
+    # Local rust installation
+    export CARGO_HOME="${DEPS}/cargo"
+    export RUSTUP_HOME="${DEPS}/rustup"
+    mkdir -p $CARGO_HOME
+    mkdir -p $RUSTUP_HOME
+    export PATH="${CARGO_HOME}/bin:${PATH}"
   fi
 fi
 
@@ -153,6 +159,13 @@ version_latest "heif" "$VERSION_HEIF" "64439"
 if [ "$ALL_AT_VERSION_LATEST" = "false" ]; then exit 1; fi
 
 # Download and build dependencies from source
+
+if [ $DARWIN_ARM = true ]; then
+# As of writing, we need a beta rust to compile for darwin-arm64
+# Remove this once Rust 1.49 stable is out
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain beta -y
+${CARGO_HOME}/bin/rustup target add aarch64-apple-darwin
+fi
 
 if [ "${PLATFORM%-*}" == "linuxmusl" ] || [ "$DARWIN" = true ]; then
   mkdir ${DEPS}/gettext
@@ -395,10 +408,6 @@ LDFLAGS=${LDFLAGS/\$/} meson setup _build --default-library=static --buildtype=r
 ninja -C _build
 ninja -C _build install
 
-# Disable SVG on arm64 darwin due to rust
-# Reverting to a pre rust rsvg would work, but we need to compile another dependency (libcroco)
-# https://github.com/macports/macports-ports/blob/0f4f4f445f5784d69cbc0f9abe8c71cd7a5a5b47/graphics/librsvg/Portfile#L58
-if [ $DARWIN_ARM != true ]; then
 mkdir ${DEPS}/svg
 $CURL https://download.gnome.org/sources/librsvg/$(without_patch $VERSION_SVG)/librsvg-${VERSION_SVG}.tar.xz | tar xJC ${DEPS}/svg --strip-components=1
 cd ${DEPS}/svg
@@ -412,7 +421,6 @@ sed -i'.bak' "/PROGRAMS = /d" Makefile.in
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
   --disable-introspection --disable-tools --disable-pixbuf-loader ${DARWIN:+--disable-Bsymbolic}
 make install-strip
-fi
 
 mkdir ${DEPS}/gif
 $CURL https://downloads.sourceforge.net/project/giflib/giflib-${VERSION_GIF}.tar.gz | tar xzC ${DEPS}/gif --strip-components=1
