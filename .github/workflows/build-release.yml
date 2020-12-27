@@ -50,7 +50,7 @@ jobs:
       run: |
         pip3 install meson ninja
         brew install advancecomp automake brotli nasm pkg-config
-      if: matrix.platform == 'darwin-x64' || matrix.platform == 'darwin-arm64v8'
+      if: contains(matrix.platform, 'darwin')
     - name: Build ${{ matrix.platform }}
       id: build-release
       run: |
