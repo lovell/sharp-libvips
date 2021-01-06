@@ -159,11 +159,11 @@ if [ "$ALL_AT_VERSION_LATEST" = "false" ]; then exit 1; fi
 
 # Download and build dependencies from source
 
-if [ $DARWIN_ARM = true ]; then
-# As of writing, we need a beta rust to compile for darwin-arm64v8
-# Remove this once Rust 1.49 stable is out
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --no-modify-path --default-toolchain beta -y
-${CARGO_HOME}/bin/rustup target add aarch64-apple-darwin
+if [ $DARWIN = true ]; then
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --no-modify-path -y
+  if [ $DARWIN_ARM = true ]; then
+    ${CARGO_HOME}/bin/rustup target add aarch64-apple-darwin
+  fi
 fi
 
 if [ "${PLATFORM%-*}" == "linuxmusl" ] || [ "$DARWIN" = true ]; then
