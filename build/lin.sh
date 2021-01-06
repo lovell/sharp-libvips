@@ -317,12 +317,8 @@ sed -i'.bak' "/gdk-pixbuf-query-loaders/d" build-aux/post-install.sh
 sed -i'.bak' "s/has_header('jpeglib.h')/has_header('jpeglib.h', args: '-I\/target\/include')/g" meson.build
 sed -i'.bak' "s/cc.find_library('jpeg'/dependency('libjpeg'/g" meson.build
 if [ $DARWIN_ARM = true ]; then
-# When cross compiling for arm64 darwin, we need a libffi
-# The libffi we build doesn't work
-# When meson 0.56.1 comes out, this can be removed as it will be auto promoted
-cp ${DEPS}/glib/subprojects/libffi.wrap subprojects/
-# We also need to compile using gnu99 so that libffi's arm() works
-sed -i'.bak' "s/c_std=c99/c_std=gnu99/g" meson.build
+  # We need to compile using gnu99 so that libffi's arm() works
+  sed -i'.bak' "s/c_std=c99/c_std=gnu99/g" meson.build
 fi
 LDFLAGS=${LDFLAGS/\$/} meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   -Dtiff=false -Dintrospection=disabled -Dinstalled_tests=false -Dgio_sniffing=false -Dman=false -Dbuiltin_loaders=png,jpeg
@@ -398,10 +394,6 @@ $CURL https://download.gnome.org/sources/pango/$(without_patch $VERSION_PANGO)/p
 cd ${DEPS}/pango
 # Disable utils, examples, tests and tools
 sed -i'.bak' "/subdir('utils')/{N;N;N;d;}" meson.build
-if [ $DARWIN_ARM = true ]; then
-# Just like gdkpixbuf
-cp ${DEPS}/glib/subprojects/libffi.wrap subprojects/
-fi
 LDFLAGS=${LDFLAGS/\$/} meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   -Dgtk_doc=false -Dintrospection=disabled -Dfontconfig=enabled
 ninja -C _build
