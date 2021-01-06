@@ -45,16 +45,16 @@ fi
 # On macOS, we need to explicitly link against the system libraries
 if [ "$DARWIN" = true ]; then
   export LDFLAGS+=" -framework CoreServices -framework CoreFoundation -framework Foundation -framework AppKit"
+  # Local rust installation
+  export CARGO_HOME="${DEPS}/cargo"
+  export RUSTUP_HOME="${DEPS}/rustup"
+  mkdir -p $CARGO_HOME
+  mkdir -p $RUSTUP_HOME
+  export PATH="${CARGO_HOME}/bin:${PATH}"
   if [ "$PLATFORM" == "darwin-arm64v8" ]; then
     export DARWIN_ARM=true
     # We need to explicitly tell meson about pkg-config when cross compiling on macOS
     export PKG_CONFIG="$(brew --prefix)/bin/pkg-config"
-    # Local rust installation
-    export CARGO_HOME="${DEPS}/cargo"
-    export RUSTUP_HOME="${DEPS}/rustup"
-    mkdir -p $CARGO_HOME
-    mkdir -p $RUSTUP_HOME
-    export PATH="${CARGO_HOME}/bin:${PATH}"
   fi
 fi
 
