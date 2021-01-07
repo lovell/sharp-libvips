@@ -41,7 +41,7 @@ RUN \
     --profile minimal \
     && \
   rustup target add aarch64-unknown-linux-gnu && \
-  pip3 install meson==0.55.3
+  pip3 install meson
 
 # Compiler settings
 ENV \
