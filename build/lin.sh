@@ -280,7 +280,7 @@ sed -i'.bak' "/\[ 'bmp'/{N;N;N;d;}" gdk-pixbuf/meson.build
 sed -i'.bak' "/\[ 'pnm'/d" gdk-pixbuf/meson.build
 sed -i'.bak' "/\[ 'xpm'/{N;N;N;N;d;}" gdk-pixbuf/meson.build
 # Skip executables
-sed -i'.bak' "/gdk-pixbuf-csource/,+2d" gdk-pixbuf/meson.build
+sed -i'.bak' "/gdk-pixbuf-csource/{N;N;d;}" gdk-pixbuf/meson.build
 sed -i'.bak' "/gdk-pixbuf-query-loaders/d" build-aux/post-install.sh
 # Ensure meson can find libjpeg when cross-compiling
 sed -i'.bak' "s/has_header('jpeglib.h')/has_header('jpeglib.h', args: '-I\/target\/include')/g" meson.build
