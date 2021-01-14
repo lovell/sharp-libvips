@@ -42,11 +42,13 @@ RUN \
     --no-modify-path \
     --profile minimal \
     && \
+  rustup target add aarch64-unknown-linux-musl && \
   pip3 install meson==0.55.3
 
 # Compiler settings
 ENV \
   PLATFORM="linuxmusl-arm64" \
+  RUST_TARGET="aarch64-unknown-linux-musl" \
   FLAGS="-O3 -fPIC"
 
 # Musl defaults to static libs but we need them to be dynamic for host toolchain.
