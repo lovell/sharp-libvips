@@ -49,7 +49,9 @@ RUN \
 ENV \
   PLATFORM="linuxmusl-arm64" \
   RUST_TARGET="aarch64-unknown-linux-musl" \
-  FLAGS="-O3 -fPIC"
+  FLAGS="-O3 -fPIC" \
+  ARFLAGS="cr" \
+  AR_FLAGS="cr"
 
 # Musl defaults to static libs but we need them to be dynamic for host toolchain.
 # The toolchain will produce static libs by default.
