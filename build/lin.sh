@@ -171,14 +171,11 @@ make install-strip
 mkdir ${DEPS}/glib
 $CURL https://download.gnome.org/sources/glib/$(without_patch $VERSION_GLIB)/glib-${VERSION_GLIB}.tar.xz | tar xJC ${DEPS}/glib --strip-components=1
 cd ${DEPS}/glib
-# Disable tests
-sed -i'.bak' "/build_tests =/ s/= .*/= false/" meson.build
 if [ "${PLATFORM%-*}" == "linuxmusl" ]; then
-  #$CURL https://git.alpinelinux.org/aports/plain/main/glib/musl-libintl.patch | patch -p1 # not compatible with glib 2.65.0
-  $CURL https://gist.github.com/kleisauke/f4bda6fc3030cf7b8a4fdb88e2ce8e13/raw/246ac97dfba72ad7607c69eed1810b2354cd2e86/musl-libintl.patch | patch -p1
+  $CURL https://git.alpinelinux.org/aports/plain/main/glib/musl-libintl.patch | patch -p1
 fi
 LDFLAGS=${LDFLAGS/\$/} meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
-  -Dinternal_pcre=true -Dinstalled_tests=false -Dlibmount=disabled -Dlibelf=disabled ${DARWIN:+-Dbsymbolic_functions=false}
+  -Dinternal_pcre=true -Dtests=false -Dinstalled_tests=false -Dlibmount=disabled -Dlibelf=disabled ${DARWIN:+-Dbsymbolic_functions=false}
 ninja -C _build
 ninja -C _build install
 
