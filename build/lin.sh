@@ -60,6 +60,12 @@ export CARGO_PROFILE_RELEASE_LTO=true
 export CARGO_PROFILE_RELEASE_OPT_LEVEL=s
 export CARGO_PROFILE_RELEASE_PANIC=abort
 
+# Workaround for https://github.com/rust-lang/compiler-builtins/issues/353
+# (applies only to ARMv6 and ARMv7)
+if [[ $PLATFORM == "linux-armv"* ]]; then
+  export LDFLAGS+=" -Wl,--allow-multiple-definition"
+fi
+
 # We don't want to use any native libraries, so unset PKG_CONFIG_PATH
 unset PKG_CONFIG_PATH
 
