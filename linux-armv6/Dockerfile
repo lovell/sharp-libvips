@@ -41,8 +41,6 @@ RUN \
     --no-modify-path \
     --profile minimal \
     && \
-  # Downgrade to 1.43.0, see: https://github.com/rust-lang/compiler-builtins/issues/353
-  rustup toolchain install 1.43.0 && rustup default 1.43.0 && \
   rustup target add arm-unknown-linux-gnueabihf && \
   pip3 install meson
 
