@@ -159,9 +159,9 @@ if [ "$ALL_AT_VERSION_LATEST" = "false" ]; then exit 1; fi
 
 # Download and build dependencies from source
 
-if [ $DARWIN = true ]; then
+if [ "$DARWIN" = true ]; then
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --no-modify-path -y
-  if [ $DARWIN_ARM = true ]; then
+  if [ "$DARWIN_ARM" = true ]; then
     ${CARGO_HOME}/bin/rustup target add aarch64-apple-darwin
   fi
 fi
@@ -184,7 +184,7 @@ make install
 mkdir ${DEPS}/ffi
 $CURL https://github.com/libffi/libffi/releases/download/v${VERSION_FFI}/libffi-${VERSION_FFI}.tar.gz | tar xzC ${DEPS}/ffi --strip-components=1
 cd ${DEPS}/ffi
-if [ $DARWIN_ARM = true ]; then
+if [ "$DARWIN_ARM" = true ]; then
   # Thanks Homebrew for the libffi patch
   # See https://github.com/libffi/libffi/pull/565
   $CURL https://raw.githubusercontent.com/Homebrew/formula-patches/a4a91e61/libffi/libffi-3.3-arm64.patch | patch -p1
