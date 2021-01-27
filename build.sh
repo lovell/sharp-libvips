@@ -20,6 +20,7 @@ if [ $# -lt 1 ]; then
   echo "- linux-armv7"
   echo "- linux-arm64v8"
   echo "- darwin-x64"
+  echo "- darwin-arm64v8"
   echo
   exit 1
 fi
