@@ -32,7 +32,7 @@ PLATFORM="${2:-all}"
 for flavour in darwin-x64 darwin-arm64v8; do
   if [ $PLATFORM = $flavour ] && [ "$(uname)" == "Darwin" ]; then
     echo "Building $flavour..."
-    
+
     # Use Clang provided by XCode
     export CC="clang"
     export CXX="clang++"
@@ -50,13 +50,11 @@ for flavour in darwin-x64 darwin-arm64v8; do
     export FLAGS="-O3 -fPIC -fno-stack-check"
 
     if [ $PLATFORM = "darwin-arm64v8" ]; then
-      # arm64 builds work via cross compilation from an x86_64 machine
+      # ARM64 builds work via cross compilation from an x86_64 machine
       export CHOST="aarch64-apple-darwin"
-      # aarch64-apple-darwin doesn't work properly as configure scripts
-      # will try to run the binary, and fail
-      export FLAGS+=" -target arm64-apple-darwin -arch arm64"
-      export MESON="--cross-file=$PWD/darwin-arm64v8/meson.ini"
-      # macOS 11 is the first version to support arm macs
+      export FLAGS+=" -arch arm64"
+      export MESON="--cross-file=$PWD/$PLATFORM/meson.ini"
+      # macOS 11 Big Sur is the first version to support ARM-based macs
       export MACOSX_DEPLOYMENT_TARGET="11.0"
       # Set SDKROOT to the latest SDK available
       export SDKROOT=$(xcrun -sdk macosx --show-sdk-path)
