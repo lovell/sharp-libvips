@@ -1,8 +1,7 @@
 name: Build Release
 on:
-  push:
-    tags:
-      - v*
+  - push
+  - pull_request
 jobs:
   create-release:
     runs-on: 'ubuntu-latest'
@@ -11,6 +10,7 @@ jobs:
     steps:
     - name: Create Release
       id: create-release
+      if: startsWith(github.ref, 'refs/tags/v')
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -57,6 +57,7 @@ jobs:
         echo "::set-output name=asset_file_name_br::libvips-$(cat LIBVIPS_VERSION)-${{ matrix.platform }}.tar.br"
     - name: Upload Release Asset (.tar.gz)
       id: upload-release-asset-gz
+      if: startsWith(github.ref, 'refs/tags/v')
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -67,6 +68,7 @@ jobs:
         asset_content_type: application/gzip
     - name: Upload Release Asset (.tar.br)
       id: upload-release-asset-br
+      if: startsWith(github.ref, 'refs/tags/v')
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
