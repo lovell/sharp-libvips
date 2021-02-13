@@ -16,7 +16,7 @@ case ${PLATFORM} in
     DEPS=$PWD/deps
     TARGET=$PWD/target
     PACKAGE=$PWD
-    ROOT=$PWD/darwin-x64
+    ROOT=$PWD/$PLATFORM
     VIPS_CPP_DEP=libvips-cpp.42.dylib
     ;;
 esac
@@ -32,6 +32,8 @@ export LIBRARY_PATH="${TARGET}/lib"
 export LD_LIBRARY_PATH="${TARGET}/lib"
 export CFLAGS="${FLAGS}"
 export CXXFLAGS="${FLAGS}"
+export OBJCFLAGS="${FLAGS}"
+export OBJCXXFLAGS="${FLAGS}"
 export LDFLAGS="-L${TARGET}/lib"
 
 # On Linux, we need to create a relocatable library
@@ -43,6 +45,17 @@ fi
 # On macOS, we need to explicitly link against the system libraries
 if [ "$DARWIN" = true ]; then
   export LDFLAGS+=" -framework CoreServices -framework CoreFoundation -framework Foundation -framework AppKit"
+  # Local rust installation
+  export CARGO_HOME="${DEPS}/cargo"
+  export RUSTUP_HOME="${DEPS}/rustup"
+  mkdir -p $CARGO_HOME
+  mkdir -p $RUSTUP_HOME
+  export PATH="${CARGO_HOME}/bin:${PATH}"
+  if [ "$PLATFORM" == "darwin-arm64v8" ]; then
+    export DARWIN_ARM=true
+    # We need to explicitly tell meson about pkg-config when cross compiling on macOS
+    export PKG_CONFIG="$(brew --prefix)/bin/pkg-config"
+  fi
 fi
 
 # Run as many parallel jobs as there are available CPU cores
@@ -146,6 +159,13 @@ if [ "$ALL_AT_VERSION_LATEST" = "false" ]; then exit 1; fi
 
 # Download and build dependencies from source
 
+if [ "$DARWIN" = true ]; then
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --no-modify-path -y
+  if [ "$DARWIN_ARM" = true ]; then
+    ${CARGO_HOME}/bin/rustup target add aarch64-apple-darwin
+  fi
+fi
+
 if [ "${PLATFORM%-*}" == "linuxmusl" ] || [ "$DARWIN" = true ]; then
   mkdir ${DEPS}/gettext
   $CURL https://ftp.gnu.org/pub/gnu/gettext/gettext-${VERSION_GETTEXT}.tar.xz | tar xJC ${DEPS}/gettext --strip-components=1
@@ -164,6 +184,11 @@ make install
 mkdir ${DEPS}/ffi
 $CURL https://github.com/libffi/libffi/releases/download/v${VERSION_FFI}/libffi-${VERSION_FFI}.tar.gz | tar xzC ${DEPS}/ffi --strip-components=1
 cd ${DEPS}/ffi
+if [ "$DARWIN_ARM" = true ]; then
+  # Thanks Homebrew for the libffi patch
+  # See https://github.com/libffi/libffi/pull/565
+  $CURL https://raw.githubusercontent.com/Homebrew/formula-patches/a4a91e61/libffi/libffi-3.3-arm64.patch | patch -p1
+fi
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
   --disable-builddir --disable-multi-os-directory --disable-raw-api --disable-structs
 make install-strip
@@ -218,7 +243,7 @@ cd aom_build
 AOM_AS_FLAGS="${FLAGS}" LDFLAGS=${LDFLAGS/\$/} cmake -G"Unix Makefiles" \
   -DCMAKE_TOOLCHAIN_FILE=${ROOT}/Toolchain.cmake -DCMAKE_INSTALL_PREFIX=${TARGET} -DCMAKE_INSTALL_LIBDIR=lib \
   -DBUILD_SHARED_LIBS=FALSE -DENABLE_DOCS=0 -DENABLE_TESTS=0 -DENABLE_TESTDATA=0 -DENABLE_TOOLS=0 -DENABLE_EXAMPLES=0 \
-  -DCONFIG_PIC=1 -DENABLE_NASM=1 ${WITHOUT_NEON:+-DENABLE_NEON=0} \
+  -DCONFIG_PIC=1 -DENABLE_NASM=1 ${WITHOUT_NEON:+-DENABLE_NEON=0} ${DARWIN_ARM:+-DCONFIG_RUNTIME_CPU_DETECT=0} \
   ..
 make install/strip
 

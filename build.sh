@@ -20,6 +20,7 @@ if [ $# -lt 1 ]; then
   echo "- linux-armv7"
   echo "- linux-arm64v8"
   echo "- darwin-x64"
+  echo "- darwin-arm64v8"
   echo
   exit 1
 fi
@@ -28,27 +29,42 @@ PLATFORM="${2:-all}"
 
 # macOS
 # Note: we intentionally don't build these binaries inside a Docker container
-if [ $PLATFORM = "darwin-x64" ] && [ "$(uname)" == "Darwin" ]; then
-  # Use Clang provided by XCode
-  export CC="clang"
-  export CXX="clang++"
+for flavour in darwin-x64 darwin-arm64v8; do
+  if [ $PLATFORM = $flavour ] && [ "$(uname)" == "Darwin" ]; then
+    echo "Building $flavour..."
 
-  export VERSION_VIPS
-  export PLATFORM
+    # Use Clang provided by XCode
+    export CC="clang"
+    export CXX="clang++"
 
-  # 10.9 should be a good minimal release target
-  export MACOSX_DEPLOYMENT_TARGET="10.9"
+    export VERSION_VIPS
+    export PLATFORM
 
-  # Added -fno-stack-check to workaround a stack misalignment bug on macOS 10.15
-  # See:
-  # https://forums.developer.apple.com/thread/121887
-  # https://trac.ffmpeg.org/ticket/8073#comment:12
-  export FLAGS="-O3 -fPIC -fno-stack-check"
+    # 10.9 should be a good minimal release target
+    export MACOSX_DEPLOYMENT_TARGET="10.9"
 
-  . $PWD/build/mac.sh
+    # Added -fno-stack-check to workaround a stack misalignment bug on macOS 10.15
+    # See:
+    # https://forums.developer.apple.com/thread/121887
+    # https://trac.ffmpeg.org/ticket/8073#comment:12
+    export FLAGS="-O3 -fPIC -fno-stack-check"
 
-  exit 0
-fi
+    if [ $PLATFORM = "darwin-arm64v8" ]; then
+      # ARM64 builds work via cross compilation from an x86_64 machine
+      export CHOST="aarch64-apple-darwin"
+      export FLAGS+=" -arch arm64"
+      export MESON="--cross-file=$PWD/$PLATFORM/meson.ini"
+      # macOS 11 Big Sur is the first version to support ARM-based macs
+      export MACOSX_DEPLOYMENT_TARGET="11.0"
+      # Set SDKROOT to the latest SDK available
+      export SDKROOT=$(xcrun -sdk macosx --show-sdk-path)
+    fi
+
+    . $PWD/build/mac.sh
+
+    exit 0
+  fi
+done
 
 # Is docker available?
 if ! [ -x "$(command -v docker)" ]; then

@@ -41,6 +41,9 @@ jobs:
           - os: macos-10.15
             platform: 'darwin-x64'
             experimental: true
+          - os: macos-10.15
+            platform: 'darwin-arm64v8'
+            experimental: true
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -48,7 +51,7 @@ jobs:
       run: |
         pip3 install meson ninja
         brew install advancecomp automake brotli nasm pkg-config
-      if: matrix.platform == 'darwin-x64'
+      if: contains(matrix.platform, 'darwin')
     - name: Build ${{ matrix.platform }}
       id: build-release
       run: |
