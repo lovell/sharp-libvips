@@ -79,11 +79,11 @@ VERSION_GLIB=2.67.2
 VERSION_XML2=2.9.10
 VERSION_GSF=1.14.47
 VERSION_EXIF=0.6.22
-VERSION_LCMS2=2.11
+VERSION_LCMS2=2.12
 VERSION_JPEG=2.0.6
 VERSION_PNG16=1.6.37
-VERSION_SPNG=0.6.1
-VERSION_WEBP=1.1.0
+VERSION_SPNG=0.6.2
+VERSION_WEBP=1.2.0
 VERSION_TIFF=4.2.0
 VERSION_ORC=0.4.32
 VERSION_GETTEXT=0.21
@@ -95,11 +95,11 @@ VERSION_HARFBUZZ=2.7.4
 VERSION_PIXMAN=0.40.0
 VERSION_CAIRO=1.17.4
 VERSION_FRIBIDI=1.0.10
-VERSION_PANGO=1.48.1
-VERSION_SVG=2.50.2
+VERSION_PANGO=1.48.2
+VERSION_SVG=2.50.3
 VERSION_GIF=5.1.4
 VERSION_AOM=2.0.1
-VERSION_HEIF=1.10.0
+VERSION_HEIF=1.11.0
 
 # Remove patch version component
 without_patch() {
@@ -117,7 +117,7 @@ version_latest() {
 }
 version_latest "zlib" "$VERSION_ZLIB" "5303"
 version_latest "ffi" "$VERSION_FFI" "1611"
-version_latest "glib" "$VERSION_GLIB" "10024"
+#version_latest "glib" "$VERSION_GLIB" "10024" # latest version requires libvips v8.10.6 - see https://github.com/libvips/libvips/issues/1987
 version_latest "xml2" "$VERSION_XML2" "1783"
 version_latest "gsf" "$VERSION_GSF" "1980"
 version_latest "exif" "$VERSION_EXIF" "1607"
@@ -138,7 +138,7 @@ version_latest "pixman" "$VERSION_PIXMAN" "3648"
 version_latest "cairo" "$VERSION_CAIRO" "247"
 version_latest "fribidi" "$VERSION_FRIBIDI" "857"
 version_latest "pango" "$VERSION_PANGO" "11783"
-version_latest "svg" "$VERSION_SVG" "5420"
+#version_latest "svg" "$VERSION_SVG" "5420" # latest version requires libvips v8.10.6 - see https://github.com/lovell/sharp-libvips/issues/87
 #version_latest "gif" "$VERSION_GIF" "1158" # v5.1.5+ provides a Makefile only so will require custom cross-compilation setup
 #version_latest "aom" "$VERSION_AOM" "17628" # latest version in release monitoring does not exist
 version_latest "heif" "$VERSION_HEIF" "64439"
