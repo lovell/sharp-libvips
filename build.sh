@@ -47,7 +47,7 @@ for flavour in darwin-x64 darwin-arm64v8; do
     # See:
     # https://forums.developer.apple.com/thread/121887
     # https://trac.ffmpeg.org/ticket/8073#comment:12
-    export FLAGS="-O3 -fPIC -fno-stack-check"
+    export FLAGS="-fno-stack-check"
 
     if [ $PLATFORM = "darwin-arm64v8" ]; then
       # ARM64 builds work via cross compilation from an x86_64 machine
