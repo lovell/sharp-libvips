@@ -49,7 +49,7 @@ jobs:
       uses: actions/checkout@v2
     - name: Install dependencies (macOS)
       run: |
-        pip3 install meson ninja
+        pip3 install meson==0.56.2 ninja
         brew install advancecomp automake brotli nasm pkg-config
       if: contains(matrix.platform, 'darwin')
     - name: Build ${{ matrix.platform }}

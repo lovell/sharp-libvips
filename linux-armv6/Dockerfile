@@ -42,7 +42,7 @@ RUN \
     --profile minimal \
     && \
   rustup target add arm-unknown-linux-gnueabihf && \
-  pip3 install meson
+  pip3 install meson==0.56.2
 
 # Compiler settings
 ENV \
