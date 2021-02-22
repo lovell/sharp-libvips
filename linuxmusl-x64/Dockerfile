@@ -46,7 +46,7 @@ RUN \
 # Compiler settings
 ENV \
   PLATFORM="linuxmusl-x64" \
-  FLAGS="-O3 -fPIC"
+  FLAGS="-march=westmere"
 
 # Musl defaults to static libs but we need them to be dynamic for host toolchain.
 # The toolchain will produce static libs by default.

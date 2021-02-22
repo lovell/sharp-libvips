@@ -40,7 +40,7 @@ RUN \
 # Compiler settings
 ENV \
   PLATFORM="linux-x64" \
-  FLAGS="-O3 -fPIC" \
+  FLAGS="-march=westmere" \
   MESON="--cross-file=/root/meson.ini"
 
 COPY Toolchain.cmake /root/
