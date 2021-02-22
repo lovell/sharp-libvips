@@ -412,6 +412,16 @@ ninja -C _build install
 mkdir ${DEPS}/svg
 $CURL https://download.gnome.org/sources/librsvg/$(without_patch $VERSION_SVG)/librsvg-${VERSION_SVG}.tar.xz | tar xJC ${DEPS}/svg --strip-components=1
 cd ${DEPS}/svg
+# Allow building vendored sources with `-Zbuild-std`, see:
+# https://github.com/rust-lang/wg-cargo-std-aware/issues/23#issuecomment-720455524
+if [ "$PLATFORM" == "linuxmusl-arm64v8" ]; then
+  RUST_SRC=$(rustc +nightly --print sysroot)/lib/rustlib/src/rust
+  RUST_TEST=$RUST_SRC/library/test
+  # Copy the Cargo.lock for Rust to places `vendor` will see
+  cp $RUST_SRC/Cargo.lock $RUST_TEST
+  # Actually do the vendor
+  cargo +nightly vendor -s $RUST_TEST/Cargo.toml
+fi
 sed -i'.bak' "s/^\(Requires:.*\)/\1 cairo-gobject pangocairo/" librsvg.pc.in
 # Do not include debugging symbols
 sed -i'.bak' "/debug =/ s/= .*/= false/" Cargo.toml

@@ -7,7 +7,7 @@ LABEL maintainer="Lovell Fuller <npm@lovell.info>"
 ENV \
   RUSTUP_HOME="/usr/local/rustup" \
   CARGO_HOME="/usr/local/cargo" \
-  PATH="/usr/local/cargo/bin:/root/tools/aarch64-linux-musl-cross/bin:$PATH"
+  PATH="/usr/local/cargo/bin:$PATH"
 
 # Build dependencies
 RUN \
@@ -38,19 +38,28 @@ RUN \
     texinfo \
     && \
   apk --update --no-cache --repository https://alpine.global.ssl.fastly.net/alpine/edge/community/ add advancecomp && \
-  mkdir /root/tools && \
-  curl -Ls https://github.com/lovell/aarch64-linux-musl-crosstools/archive/main.tar.gz | tar xzC /root/tools --strip-components=1 && \
-  ln -s /usr/bin/pkg-config /usr/bin/aarch64-linux-musl-pkg-config && \
+  curl -Ls https://github.com/lovell/aarch64-linux-musl-crosstools/archive/main.tar.gz | tar -hxzC / --strip-components=2 \
+    --exclude='aarch64-linux-musl-crosstools-main/aarch64-linux-musl-cross/usr' && \
+  ln -s /usr/bin/pkg-config /bin/aarch64-linux-musl-pkg-config && \
   curl https://sh.rustup.rs -sSf | sh -s -- -y \
     --no-modify-path \
     --profile minimal \
+    --default-toolchain nightly \
     && \
+  rustup component add rust-src && \
   rustup target add aarch64-unknown-linux-musl && \
   pip3 install meson==0.56.2
 
+# Rebuild the standard library of Rust to avoid collisions with system libraries.
+# See: https://github.com/lovell/sharp-libvips/pull/73#issuecomment-783403636
+RUN \
+  printf "[unstable]\n\
+build-std = [\"std\", \"panic_abort\"]\n\
+build-std-features = [\"panic_immediate_abort\"]" > /usr/local/cargo/config.toml
+
 # Compiler settings
 ENV \
-  PKG_CONFIG="/usr/bin/aarch64-linux-musl-pkg-config" \
+  PKG_CONFIG="/bin/aarch64-linux-musl-pkg-config" \
   PLATFORM="linuxmusl-arm64v8" \
   CHOST="aarch64-linux-musl" \
   RUST_TARGET="aarch64-unknown-linux-musl" \
@@ -59,8 +68,9 @@ ENV \
 
 # Musl defaults to static libs but we need them to be dynamic for host toolchain.
 # The toolchain will produce static libs by default.
+# We also need to add the directory containing libc.a to the library search path.
 ENV \
-  RUSTFLAGS="-C target-feature=-crt-static"
+  RUSTFLAGS="-C target-feature=-crt-static -L/aarch64-linux-musl/lib"
 
 COPY Toolchain.cmake /root/
 COPY meson.ini /root/
