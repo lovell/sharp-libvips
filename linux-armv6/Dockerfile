@@ -29,6 +29,7 @@ RUN \
     intltool \
     jq \
     libglib2.0-dev \
+    libssl-dev \
     libtool \
     nasm \
     ninja-build \
@@ -42,6 +43,7 @@ RUN \
     --profile minimal \
     && \
   rustup target add arm-unknown-linux-gnueabihf && \
+  cargo install cargo-c && \
   pip3 install meson==0.56.2
 
 # Compiler settings

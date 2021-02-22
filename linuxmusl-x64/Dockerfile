@@ -32,6 +32,7 @@ RUN \
     linux-headers \
     nasm \
     ninja \
+    openssl-dev \
     python3 \
     shared-mime-info \
     texinfo \
@@ -41,6 +42,7 @@ RUN \
     --no-modify-path \
     --profile minimal \
     && \
+  cargo install cargo-c && \
   pip3 install meson==0.56.2
 
 # Compiler settings

@@ -32,6 +32,7 @@ RUN \
     linux-headers \
     nasm \
     ninja \
+    openssl-dev \
     python3 \
     py3-pip \
     shared-mime-info \
@@ -47,6 +48,7 @@ RUN \
     && \
   rustup component add rust-src && \
   rustup target add aarch64-unknown-linux-musl && \
+  cargo install cargo-c --target=x86_64-unknown-linux-musl && \
   pip3 install meson==0.56.2
 
 # Rebuild the standard library of Rust to avoid collisions with system libraries.

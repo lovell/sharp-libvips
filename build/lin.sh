@@ -120,7 +120,8 @@ VERSION_FRIBIDI=1.0.10
 VERSION_PANGO=1.48.2
 VERSION_SVG=2.50.3
 VERSION_GIF=5.1.4
-VERSION_AOM=2.0.2
+VERSION_DAV1D=0.8.2
+VERSION_RAV1E=0.4.0
 VERSION_HEIF=1.11.0
 
 # Remove patch version component
@@ -161,7 +162,8 @@ version_latest "fribidi" "$VERSION_FRIBIDI" "857"
 version_latest "pango" "$VERSION_PANGO" "11783"
 #version_latest "svg" "$VERSION_SVG" "5420" # latest version requires libvips v8.10.6 - see https://github.com/lovell/sharp-libvips/issues/87
 #version_latest "gif" "$VERSION_GIF" "1158" # v5.1.5+ provides a Makefile only so will require custom cross-compilation setup
-#version_latest "aom" "$VERSION_AOM" "17628" # latest version in release monitoring does not exist
+version_latest "dav1d" "$VERSION_DAV1D" "18920"
+version_latest "rav1e" "$VERSION_RAV1E" "75048"
 version_latest "heif" "$VERSION_HEIF" "64439"
 if [ "$ALL_AT_VERSION_LATEST" = "false" ]; then exit 1; fi
 
@@ -172,6 +174,7 @@ if [ "$DARWIN" = true ]; then
   if [ "$DARWIN_ARM" = true ]; then
     ${CARGO_HOME}/bin/rustup target add aarch64-apple-darwin
   fi
+  cargo install cargo-c --target=x86_64-apple-darwin
 fi
 
 if [ "${PLATFORM%-*}" == "linuxmusl" ] || [ "$DARWIN" = true ]; then
@@ -243,17 +246,18 @@ cd ${DEPS}/lcms2
 CFLAGS="${CFLAGS} -O3" ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking
 make install-strip
 
-mkdir ${DEPS}/aom
-$CURL https://storage.googleapis.com/aom-releases/libaom-${VERSION_AOM}.tar.gz | tar xzC ${DEPS}/aom
-cd ${DEPS}/aom
-mkdir aom_build
-cd aom_build
-AOM_AS_FLAGS="${FLAGS}" LDFLAGS=${LDFLAGS/\$/} cmake -G"Unix Makefiles" \
-  -DCMAKE_TOOLCHAIN_FILE=${ROOT}/Toolchain.cmake -DCMAKE_INSTALL_PREFIX=${TARGET} -DCMAKE_INSTALL_LIBDIR=lib \
-  -DBUILD_SHARED_LIBS=FALSE -DENABLE_DOCS=0 -DENABLE_TESTS=0 -DENABLE_TESTDATA=0 -DENABLE_TOOLS=0 -DENABLE_EXAMPLES=0 \
-  -DCONFIG_PIC=1 -DENABLE_NASM=1 ${WITHOUT_NEON:+-DENABLE_NEON=0} ${DARWIN_ARM:+-DCONFIG_RUNTIME_CPU_DETECT=0} \
-  ..
-make install/strip
+mkdir ${DEPS}/dav1d
+$CURL https://downloads.videolan.org/pub/videolan/dav1d/${VERSION_DAV1D}/dav1d-${VERSION_DAV1D}.tar.xz | tar xJC ${DEPS}/dav1d --strip-components=1
+cd ${DEPS}/dav1d
+LDFLAGS=${LDFLAGS/\$/} meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
+  -Denable_tools=false -Denable_examples=false -Denable_tests=false
+ninja -C _build
+ninja -C _build install
+
+mkdir ${DEPS}/rav1e
+$CURL https://github.com/xiph/rav1e/archive/v${VERSION_RAV1E}.tar.gz | tar xzC ${DEPS}/rav1e --strip-components=1
+cd ${DEPS}/rav1e
+CARGO_PROFILE_RELEASE_OPT_LEVEL=3 cargo cinstall --release --prefix=${TARGET} --library-type=staticlib
 
 mkdir ${DEPS}/heif
 $CURL https://github.com/strukturag/libheif/releases/download/v${VERSION_HEIF}/libheif-${VERSION_HEIF}.tar.gz | tar xzC ${DEPS}/heif --strip-components=1
@@ -455,7 +459,7 @@ PKG_CONFIG="pkg-config --static" CFLAGS="${CFLAGS} -O3" CXXFLAGS="${CXXFLAGS} -O
 sed -i'.bak' 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
 # Link libvips.so.42 statically into libvips-cpp.so.42
 make -C 'libvips' install-strip LDFLAGS="-static $LDFLAGS"
-make -C 'cplusplus' install-strip ${LINUX:+LDFLAGS="$LDFLAGS -Wl,-Bsymbolic-functions -Wl,--version-script=$DEPS/vips/vips.map"}
+make -C 'cplusplus' install-strip ${LINUX:+LDFLAGS="$LDFLAGS -Wl,--allow-multiple-definition -Wl,-Bsymbolic-functions -Wl,--version-script=$DEPS/vips/vips.map"}
 
 # Cleanup
 rm -rf ${TARGET}/lib/{pkgconfig,.libs,*.la,cmake}
@@ -504,8 +508,8 @@ copydeps ${VIPS_CPP_DEP} ${TARGET}/lib-filtered
 # Create JSON file of version numbers
 cd ${TARGET}
 printf "{\n\
-  \"aom\": \"${VERSION_AOM}\",\n\
   \"cairo\": \"${VERSION_CAIRO}\",\n\
+  \"dav1d\": \"${VERSION_DAV1D}\",\n\
   \"exif\": \"${VERSION_EXIF}\",\n\
   \"expat\": \"${VERSION_EXPAT}\",\n\
   \"ffi\": \"${VERSION_FFI}\",\n\
@@ -525,6 +529,7 @@ printf "{\n\
   \"pango\": \"${VERSION_PANGO}\",\n\
   \"pixman\": \"${VERSION_PIXMAN}\",\n\
   \"png\": \"${VERSION_PNG16}\",\n\
+  \"rav1e\": \"${VERSION_RAV1E}\",\n\
   \"svg\": \"${VERSION_SVG}\",\n\
   \"spng\": \"${VERSION_SPNG}\",\n\
   \"tiff\": \"${VERSION_TIFF}\",\n\
@@ -540,6 +545,7 @@ printf "\"${PLATFORM}\"" >platform.json
 $CURL -O https://raw.githubusercontent.com/lovell/sharp-libvips/master/THIRD-PARTY-NOTICES.md
 
 # Create the tarball
+ls -al lib
 rm -rf lib
 mv lib-filtered lib
 tar chzf ${PACKAGE}/libvips-${VERSION_VIPS}-${PLATFORM}.tar.gz \

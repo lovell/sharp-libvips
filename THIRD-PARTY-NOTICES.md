@@ -5,8 +5,8 @@ used under the terms of the following licences:
 
 | Library       | Used under the terms of                                                                                   |
 |---------------|-----------------------------------------------------------------------------------------------------------|
-| aom           | BSD 2-Clause + [Alliance for Open Media Patent License 1.0](https://aomedia.org/license/patent-license/)  |
 | cairo         | Mozilla Public License 2.0                                                                                |
+| dav1d         | BSD 2-Clause + [Alliance for Open Media Patent License 1.0](https://aomedia.org/license/patent-license/)  |
 | expat         | MIT Licence                                                                                               |
 | fontconfig    | [fontconfig Licence](https://gitlab.freedesktop.org/fontconfig/fontconfig/blob/master/COPYING) (BSD-like) |
 | freetype      | [freetype Licence](https://git.savannah.gnu.org/cgit/freetype/freetype2.git/tree/docs/FTL.TXT) (BSD-like) |
@@ -32,6 +32,7 @@ used under the terms of the following licences:
 | orc           | [orc License](https://gitlab.freedesktop.org/gstreamer/orc/blob/master/COPYING) (BSD-like)                |
 | pango         | LGPLv3                                                                                                    |
 | pixman        | MIT Licence                                                                                               |
+| rav1e         | BSD 2-Clause + [Alliance for Open Media Patent License 1.0](https://aomedia.org/license/patent-license/)  |
 | zlib          | [zlib Licence](https://github.com/madler/zlib/blob/master/zlib.h)                                         |
 
 Use of libraries under the terms of the LGPLv3 is via the
