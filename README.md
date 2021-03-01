@@ -24,9 +24,10 @@ the same shared libraries within multiple containers.
 
 * [x64 glibc](linux-x64/Dockerfile)
 * [x64 musl](linuxmusl-x64/Dockerfile)
-* [ARMv6](linux-armv6/Dockerfile)
-* [ARMv7-A](linux-armv7/Dockerfile)
-* [ARM64v8-A](linux-arm64v8/Dockerfile)
+* [ARMv6 glibc](linux-armv6/Dockerfile)
+* [ARMv7-A glibc](linux-armv7/Dockerfile)
+* [ARM64v8-A glibc](linux-arm64v8/Dockerfile)
+* [ARM64v8-A musl](linuxmusl-arm64v8/Dockerfile)
 
 ### Windows
 
@@ -42,7 +43,10 @@ The output of libvips' [build-win64-mxe](https://github.com/libvips/build-win64-
 Uses a macOS virtual machine hosted by GitHub to compile the shared libraries.
 The dylib files are compiled within the same build script as Linux.
 
-Depedency paths are modified to be the relative `@rpath` using `install_name_tool`.
+* x64 (native)
+* ARM64 (cross-compiled)
+
+Dependency paths are modified to be the relative `@rpath` using `install_name_tool`.
 
 ## Licences
 
