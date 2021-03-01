@@ -105,6 +105,7 @@ VERSION_LCMS2=2.12
 VERSION_MOZJPEG=4.0.3
 VERSION_PNG16=1.6.37
 VERSION_SPNG=0.6.2
+VERSION_IMAGEQUANT=2.4.1
 VERSION_WEBP=1.2.0
 VERSION_TIFF=4.2.0
 VERSION_ORC=0.4.32
@@ -285,6 +286,13 @@ CFLAGS="${CFLAGS} -O3" meson setup _build --default-library=static --buildtype=r
 ninja -C _build
 ninja -C _build install
 
+mkdir ${DEPS}/imagequant
+$CURL https://github.com/lovell/libimagequant/archive/v${VERSION_IMAGEQUANT}.tar.gz | tar xzC ${DEPS}/imagequant --strip-components=1
+cd ${DEPS}/imagequant
+CFLAGS="${CFLAGS} -O3" meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON}
+ninja -C _build
+ninja -C _build install
+
 mkdir ${DEPS}/webp
 $CURL https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-${VERSION_WEBP}.tar.gz | tar xzC ${DEPS}/webp --strip-components=1
 cd ${DEPS}/webp
@@ -449,7 +457,7 @@ local:\n\
 PKG_CONFIG="pkg-config --static" CFLAGS="${CFLAGS} -O3" CXXFLAGS="${CXXFLAGS} -O3" ./configure \
   --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking \
   --disable-debug --disable-deprecated --disable-introspection --without-analyze --without-cfitsio --without-fftw \
-  --without-imagequant --without-magick --without-matio --without-nifti --without-OpenEXR \
+  --without-magick --without-matio --without-nifti --without-OpenEXR \
   --without-openslide --without-pdfium --without-poppler --without-ppm --without-radiance
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/#_removing_rpath
 sed -i'.bak' 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
@@ -519,6 +527,7 @@ printf "{\n\
   \"gsf\": \"${VERSION_GSF}\",\n\
   \"harfbuzz\": \"${VERSION_HARFBUZZ}\",\n\
   \"heif\": \"${VERSION_HEIF}\",\n\
+  \"imagequant\": \"${VERSION_IMAGEQUANT}\",\n\
   \"lcms\": \"${VERSION_LCMS2}\",\n\
   \"mozjpeg\": \"${VERSION_MOZJPEG}\",\n\
   \"orc\": \"${VERSION_ORC}\",\n\
