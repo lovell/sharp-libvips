@@ -19,6 +19,7 @@ if [ $# -lt 1 ]; then
   echo "- linux-armv6"
   echo "- linux-armv7"
   echo "- linux-arm64v8"
+  echo "- linuxmusl-arm64v8"
   echo "- darwin-x64"
   echo "- darwin-arm64v8"
   echo
@@ -87,7 +88,7 @@ for flavour in win32-ia32 win32-x64 win32-arm64v8; do
 done
 
 # Linux (x64, ARMv6, ARMv7, ARM64v8)
-for flavour in linux-x64 linuxmusl-x64 linux-armv6 linux-armv7 linux-arm64v8; do
+for flavour in linux-x64 linuxmusl-x64 linux-armv6 linux-armv7 linux-arm64v8 linuxmusl-arm64v8; do
   if [ $PLATFORM = "all" ] || [ $PLATFORM = $flavour ]; then
     echo "Building $flavour..."
     docker build -t vips-dev-$flavour $flavour
