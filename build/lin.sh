@@ -216,9 +216,10 @@ ninja -C _build install
 mkdir ${DEPS}/xml2
 $CURL http://xmlsoft.org/sources/libxml2-${VERSION_XML2}.tar.gz | tar xzC ${DEPS}/xml2 --strip-components=1
 cd ${DEPS}/xml2
+# Remove --with-regexps flag from v2.10.0+
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
-  --without-python --without-debug --without-docbook --without-ftp --without-html --without-legacy \
-  --without-push --without-schematron --without-lzma --with-zlib=${TARGET}
+  --with-minimum --with-reader --with-writer --with-valid --with-http --with-tree --with-regexps \
+  --without-python --without-lzma --with-zlib=${TARGET}
 make install-strip
 
 mkdir ${DEPS}/gsf
