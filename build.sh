@@ -96,5 +96,6 @@ for flavour in linux-x64 linuxmusl-x64 linux-armv6 linux-armv7 linux-arm64v8 lin
   fi
 done
 
-# Display checksums
+# Display checksums and file sizes
 sha256sum *.tar.{br,gz}
+ls -al *.tar.{br,gz}
