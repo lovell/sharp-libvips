@@ -132,7 +132,7 @@ without_patch() {
 # Check for newer versions
 ALL_AT_VERSION_LATEST=true
 version_latest() {
-  VERSION_LATEST=$($CURL https://release-monitoring.org/api/project/$3 | jq -r '.versions[]' | grep -E -m1 '^[0-9]+(.[0-9]+)*$')
+  VERSION_LATEST=$($CURL "https://release-monitoring.org/api/v2/versions/?project_id=$3" | jq -j ".stable_versions[0]")
   if [ "$VERSION_LATEST" != "$2" ]; then
     ALL_AT_VERSION_LATEST=false
     echo "$1 version $2 has been superseded by $VERSION_LATEST"
