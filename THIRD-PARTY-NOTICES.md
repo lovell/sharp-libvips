@@ -21,7 +21,7 @@ used under the terms of the following licences:
 | libffi        | MIT Licence                                                                                               |
 | libgsf        | LGPLv3                                                                                                    |
 | libheif       | LGPLv3                                                                                                    |
-| libimagequant | [BSD-3-Clause](https://github.com/lovell/libimagequant/blob/main/COPYRIGHT)                               |
+| libimagequant | [BSD 2-Clause](https://github.com/lovell/libimagequant/blob/main/COPYRIGHT)                               |
 | mozjpeg       | [zlib License, IJG License, BSD-3-Clause](https://github.com/mozilla/mozjpeg/blob/master/LICENSE.md)      |
 | libpng        | [libpng License](https://github.com/glennrp/libpng/blob/master/LICENSE)                                   |
 | librsvg       | LGPLv3                                                                                                    |
