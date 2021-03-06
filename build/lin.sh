@@ -95,7 +95,7 @@ unset PKG_CONFIG_PATH
 CURL="curl --silent --location --retry 3 --retry-max-time 30"
 
 # Dependency version numbers
-VERSION_ZLIB=1.2.11
+VERSION_ZLIB_NG=2.0.0-RC2
 VERSION_FFI=3.3
 VERSION_GLIB=2.67.2
 VERSION_XML2=2.9.10
@@ -138,7 +138,7 @@ version_latest() {
     echo "$1 version $2 has been superseded by $VERSION_LATEST"
   fi
 }
-version_latest "zlib" "$VERSION_ZLIB" "5303"
+#version_latest "zlib-ng" "$VERSION_ZLIB_NG" "115592" # release candidates only
 version_latest "ffi" "$VERSION_FFI" "1611"
 #version_latest "glib" "$VERSION_GLIB" "10024" # latest version requires libvips v8.10.6 - see https://github.com/libvips/libvips/issues/1987
 version_latest "xml2" "$VERSION_XML2" "1783"
@@ -184,11 +184,12 @@ if [ "${PLATFORM%-*}" == "linuxmusl" ] || [ "$DARWIN" = true ]; then
   make install-strip
 fi
 
-mkdir ${DEPS}/zlib
-$CURL https://zlib.net/zlib-${VERSION_ZLIB}.tar.xz | tar xJC ${DEPS}/zlib --strip-components=1
-cd ${DEPS}/zlib
-CFLAGS="${CFLAGS} -O3" ./configure --prefix=${TARGET} ${LINUX:+--uname=linux} ${DARWIN:+--uname=darwin} --static
-make install
+mkdir ${DEPS}/zlib-ng
+$CURL https://github.com/zlib-ng/zlib-ng/archive/v${VERSION_ZLIB_NG}.tar.gz | tar xzC ${DEPS}/zlib-ng --strip-components=1
+cd ${DEPS}/zlib-ng
+CFLAGS="${CFLAGS} -O3" LDFLAGS=${LDFLAGS/\$/} cmake -G"Unix Makefiles" \
+  -DCMAKE_TOOLCHAIN_FILE=${ROOT}/Toolchain.cmake -DCMAKE_INSTALL_PREFIX=${TARGET} -DBUILD_SHARED_LIBS=FALSE -DZLIB_COMPAT=TRUE
+make install/strip
 
 mkdir ${DEPS}/ffi
 $CURL https://github.com/libffi/libffi/releases/download/v${VERSION_FFI}/libffi-${VERSION_FFI}.tar.gz | tar xzC ${DEPS}/ffi --strip-components=1
@@ -542,7 +543,7 @@ printf "{\n\
   \"vips\": \"${VERSION_VIPS}\",\n\
   \"webp\": \"${VERSION_WEBP}\",\n\
   \"xml\": \"${VERSION_XML2}\",\n\
-  \"zlib\": \"${VERSION_ZLIB}\"\n\
+  \"zlib-ng\": \"${VERSION_ZLIB_NG}\"\n\
 }" >versions.json
 
 printf "\"${PLATFORM}\"" >platform.json
