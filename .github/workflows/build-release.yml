@@ -4,7 +4,7 @@ on:
   - pull_request
 jobs:
   create-release:
-    runs-on: 'ubuntu-latest'
+    runs-on: 'ubuntu-20.04'
     outputs:
       upload_url: ${{ steps.create-release.outputs.upload_url }}
     steps:
@@ -21,32 +21,26 @@ jobs:
         prerelease: true
   build:
     runs-on: ${{ matrix.os }}
-    continue-on-error: ${{ matrix.experimental }}
     needs: create-release
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-20.04]
         platform:
           - 'linux-x64'
-          - 'linuxmusl-x64'
           - 'linux-armv6'
           - 'linux-armv7'
           - 'linux-arm64v8'
+          - 'linuxmusl-x64'
+          - 'linuxmusl-arm64v8'
           - 'win32-ia32'
           - 'win32-x64'
           - 'win32-arm64v8'
-        experimental: [false]
         include:
-          - os: ubuntu-latest
-            platform: 'linuxmusl-arm64v8'
-            experimental: true
           - os: macos-10.15
             platform: 'darwin-x64'
-            experimental: true
           - os: macos-10.15
             platform: 'darwin-arm64v8'
-            experimental: true
     steps:
     - name: Checkout
       uses: actions/checkout@v2
