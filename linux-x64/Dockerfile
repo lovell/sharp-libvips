@@ -30,6 +30,7 @@ RUN \
     prelink \
     python3 \
     && \
+  yum install -y https://www.nasm.us/pub/nasm/releasebuilds/2.14.02/linux/nasm-2.14.02-0.fc27.x86_64.rpm && \
   curl https://sh.rustup.rs -sSf | sh -s -- -y \
     --no-modify-path \
     --profile minimal \

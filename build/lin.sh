@@ -125,6 +125,7 @@ VERSION_SVG=2.52.5
 VERSION_AOM=3.2.0
 VERSION_HEIF=1.12.0
 VERSION_CGIF=0.1.0
+VERSION_DAV1D=0.9.2
 
 # Remove patch version component
 without_patch() {
@@ -176,6 +177,7 @@ version_latest "svg" "$VERSION_SVG" "5420"
 version_latest "aom" "$VERSION_AOM" "17628"
 version_latest "heif" "$VERSION_HEIF" "64439"
 #version_latest "cgif" "$VERSION_CGIF" "" # not yet in release monitoring
+version_latest "dav1d" "$VERSION_DAV1D" "18920"
 if [ "$ALL_AT_VERSION_LATEST" = "false" ]; then exit 1; fi
 
 # Download and build dependencies from source
@@ -254,6 +256,14 @@ cd ${DEPS}/lcms2
 CFLAGS="${CFLAGS} -O3" ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking
 make install-strip
 
+mkdir ${DEPS}/dav1d
+$CURL https://downloads.videolan.org/pub/videolan/dav1d/${VERSION_DAV1D}/dav1d-${VERSION_DAV1D}.tar.xz | tar xJC ${DEPS}/dav1d --strip-components=1
+cd ${DEPS}/dav1d
+LDFLAGS=${LDFLAGS/\$/} meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
+  -Denable_tools=false -Denable_examples=false -Denable_tests=false
+ninja -C _build
+ninja -C _build install
+
 mkdir ${DEPS}/aom
 $CURL https://storage.googleapis.com/aom-releases/libaom-${VERSION_AOM}.tar.gz | tar xzC ${DEPS}/aom
 cd ${DEPS}/aom
@@ -263,7 +273,7 @@ AOM_AS_FLAGS="${FLAGS}" cmake -G"Unix Makefiles" \
   -DCMAKE_TOOLCHAIN_FILE=${ROOT}/Toolchain.cmake -DCMAKE_INSTALL_PREFIX=${TARGET} -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=MinSizeRel \
   -DBUILD_SHARED_LIBS=FALSE -DENABLE_DOCS=0 -DENABLE_TESTS=0 -DENABLE_TESTDATA=0 -DENABLE_TOOLS=0 -DENABLE_EXAMPLES=0 \
   -DCONFIG_PIC=1 -DENABLE_NASM=1 ${WITHOUT_NEON:+-DENABLE_NEON=0} ${DARWIN_ARM:+-DCONFIG_RUNTIME_CPU_DETECT=0} \
-  -DCONFIG_AV1_HIGHBITDEPTH=0 -DCONFIG_WEBM_IO=0 \
+  -DCONFIG_AV1_HIGHBITDEPTH=0 -DCONFIG_WEBM_IO=0 -DCONFIG_AV1_DECODER=0 \
   ..
 make install/strip
 
@@ -533,6 +543,7 @@ printf "{\n\
   \"aom\": \"${VERSION_AOM}\",\n\
   \"cairo\": \"${VERSION_CAIRO}\",\n\
   \"cgif\": \"${VERSION_CGIF}\",\n\
+  \"dav1d\": \"${VERSION_DAV1D}\",\n\
   \"exif\": \"${VERSION_EXIF}\",\n\
   \"expat\": \"${VERSION_EXPAT}\",\n\
   \"ffi\": \"${VERSION_FFI}\",\n\
