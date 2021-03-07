@@ -97,7 +97,7 @@ CURL="curl --silent --location --retry 3 --retry-max-time 30"
 # Dependency version numbers
 VERSION_ZLIB_NG=2.0.0-RC2
 VERSION_FFI=3.3
-VERSION_GLIB=2.67.2
+VERSION_GLIB=2.67.5
 VERSION_XML2=2.9.10
 VERSION_GSF=1.14.47
 VERSION_EXIF=0.6.22
@@ -140,7 +140,7 @@ version_latest() {
 }
 #version_latest "zlib-ng" "$VERSION_ZLIB_NG" "115592" # release candidates only
 version_latest "ffi" "$VERSION_FFI" "1611"
-#version_latest "glib" "$VERSION_GLIB" "10024" # latest version requires libvips v8.10.6 - see https://github.com/libvips/libvips/issues/1987
+version_latest "glib" "$VERSION_GLIB" "10024"
 version_latest "xml2" "$VERSION_XML2" "1783"
 version_latest "gsf" "$VERSION_GSF" "1980"
 version_latest "exif" "$VERSION_EXIF" "1607"
