@@ -119,7 +119,7 @@ VERSION_PIXMAN=0.40.0
 VERSION_CAIRO=1.17.4
 VERSION_FRIBIDI=1.0.10
 VERSION_PANGO=1.48.2
-VERSION_SVG=2.50.3
+VERSION_SVG=2.51.0
 VERSION_GIF=5.1.4
 VERSION_AOM=2.0.2
 VERSION_HEIF=1.11.0
@@ -160,7 +160,7 @@ version_latest "pixman" "$VERSION_PIXMAN" "3648"
 version_latest "cairo" "$VERSION_CAIRO" "247"
 version_latest "fribidi" "$VERSION_FRIBIDI" "857"
 version_latest "pango" "$VERSION_PANGO" "11783"
-#version_latest "svg" "$VERSION_SVG" "5420" # latest version requires libvips v8.10.6 - see https://github.com/lovell/sharp-libvips/issues/87
+version_latest "svg" "$VERSION_SVG" "5420"
 #version_latest "gif" "$VERSION_GIF" "1158" # v5.1.5+ provides a Makefile only so will require custom cross-compilation setup
 #version_latest "aom" "$VERSION_AOM" "17628" # latest version in release monitoring does not exist
 version_latest "heif" "$VERSION_HEIF" "64439"
@@ -433,12 +433,10 @@ if [ "$PLATFORM" == "linuxmusl-arm64v8" ]; then
   cargo +nightly vendor -s $RUST_TEST/Cargo.toml
 fi
 sed -i'.bak' "s/^\(Requires:.*\)/\1 cairo-gobject pangocairo/" librsvg.pc.in
-# Do not include debugging symbols
-sed -i'.bak' "/debug =/ s/= .*/= false/" Cargo.toml
 # LTO optimization does not work for staticlib+rlib compilation
-sed -i'.bak' "s/, \"rlib\"//" librsvg/Cargo.toml
+sed -i'.bak' "s/, \"rlib\"//" Cargo.toml
 # Skip executables
-sed -i'.bak' "/PROGRAMS = /d" Makefile.in
+sed -i'.bak' "/SCRIPTS = /d" Makefile.in
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
   --disable-introspection --disable-tools --disable-pixbuf-loader ${DARWIN:+--disable-Bsymbolic}
 make install-strip
