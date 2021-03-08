@@ -50,7 +50,7 @@ ENV \
   PLATFORM="linux-armv6" \
   CHOST="arm-rpi-linux-gnueabihf" \
   RUST_TARGET="arm-unknown-linux-gnueabihf" \
-  FLAGS="-marm -mcpu=arm1176jzf-s -mfpu=vfp -mfloat-abi=hard -D_GLIBCXX_USE_CXX11_ABI=0" \
+  FLAGS="-marm -mcpu=arm1176jzf-s -mfpu=vfp -mfloat-abi=hard" \
   WITHOUT_NEON="true" \
   MESON="--cross-file=/root/meson.ini"
 

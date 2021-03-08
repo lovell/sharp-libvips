@@ -49,7 +49,7 @@ ENV \
   PLATFORM="linux-arm64v8" \
   CHOST="aarch64-linux-gnu" \
   RUST_TARGET="aarch64-unknown-linux-gnu" \
-  FLAGS="-march=armv8-a -D_GLIBCXX_USE_CXX11_ABI=0" \
+  FLAGS="-march=armv8-a" \
   MESON="--cross-file=/root/meson.ini"
 
 COPY Toolchain.cmake /root/

@@ -28,9 +28,10 @@ mkdir ${TARGET}
 # Overriden to performance (-O3) for select dependencies that benefit
 export FLAGS+=" -Os -fPIC"
 
+# Force "new" C++11 ABI compliance
 # Allow linker to remove unused sections
 if [ "$LINUX" = true ]; then
-  export FLAGS+=" -ffunction-sections -fdata-sections"
+  export FLAGS+=" -D_GLIBCXX_USE_CXX11_ABI=1 -ffunction-sections -fdata-sections"
 fi
 
 # Common build paths and flags
