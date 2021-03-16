@@ -186,7 +186,7 @@ if [ "${PLATFORM%-*}" == "linuxmusl" ] || [ "$DARWIN" = true ]; then
 fi
 
 mkdir ${DEPS}/zlib-ng
-$CURL https://github.com/zlib-ng/zlib-ng/archive/v${VERSION_ZLIB_NG}.tar.gz | tar xzC ${DEPS}/zlib-ng --strip-components=1
+$CURL https://github.com/zlib-ng/zlib-ng/archive/${VERSION_ZLIB_NG}.tar.gz | tar xzC ${DEPS}/zlib-ng --strip-components=1
 cd ${DEPS}/zlib-ng
 CFLAGS="${CFLAGS} -O3" LDFLAGS=${LDFLAGS/\$/} cmake -G"Unix Makefiles" \
   -DCMAKE_TOOLCHAIN_FILE=${ROOT}/Toolchain.cmake -DCMAKE_INSTALL_PREFIX=${TARGET} -DBUILD_SHARED_LIBS=FALSE -DZLIB_COMPAT=TRUE
