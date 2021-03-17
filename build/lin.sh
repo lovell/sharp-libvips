@@ -96,7 +96,7 @@ unset PKG_CONFIG_PATH
 CURL="curl --silent --location --retry 3 --retry-max-time 30"
 
 # Dependency version numbers
-VERSION_ZLIB_NG=2.0.0
+VERSION_ZLIB_NG=2.0.1
 VERSION_FFI=3.3
 VERSION_GLIB=2.67.6
 VERSION_XML2=2.9.10
@@ -122,7 +122,7 @@ VERSION_FRIBIDI=1.0.10
 VERSION_PANGO=1.48.3
 VERSION_SVG=2.51.0
 VERSION_GIF=5.1.4
-VERSION_AOM=2.0.2
+VERSION_AOM=2.1.0
 VERSION_HEIF=1.11.0
 
 # Remove patch version component
@@ -139,7 +139,7 @@ version_latest() {
     echo "$1 version $2 has been superseded by $VERSION_LATEST"
   fi
 }
-#version_latest "zlib-ng" "$VERSION_ZLIB_NG" "115592" # latest version not yet in release monitoring
+version_latest "zlib-ng" "$VERSION_ZLIB_NG" "115592"
 version_latest "ffi" "$VERSION_FFI" "1611"
 version_latest "glib" "$VERSION_GLIB" "10024"
 version_latest "xml2" "$VERSION_XML2" "1783"
@@ -163,7 +163,7 @@ version_latest "fribidi" "$VERSION_FRIBIDI" "857"
 version_latest "pango" "$VERSION_PANGO" "11783"
 version_latest "svg" "$VERSION_SVG" "5420"
 #version_latest "gif" "$VERSION_GIF" "1158" # v5.1.5+ provides a Makefile only so will require custom cross-compilation setup
-#version_latest "aom" "$VERSION_AOM" "17628" # latest version in release monitoring does not exist
+version_latest "aom" "$VERSION_AOM" "17628"
 version_latest "heif" "$VERSION_HEIF" "64439"
 if [ "$ALL_AT_VERSION_LATEST" = "false" ]; then exit 1; fi
 
