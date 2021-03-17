@@ -29,9 +29,10 @@ mkdir ${TARGET}
 export FLAGS+=" -Os -fPIC"
 
 # Force "new" C++11 ABI compliance
+# Remove async exception unwind/backtrace tables
 # Allow linker to remove unused sections
 if [ "$LINUX" = true ]; then
-  export FLAGS+=" -D_GLIBCXX_USE_CXX11_ABI=1 -ffunction-sections -fdata-sections"
+  export FLAGS+=" -D_GLIBCXX_USE_CXX11_ABI=1 -fno-asynchronous-unwind-tables -ffunction-sections -fdata-sections"
 fi
 
 # Common build paths and flags
