@@ -122,7 +122,7 @@ VERSION_FRIBIDI=1.0.10
 VERSION_PANGO=1.48.3
 VERSION_SVG=2.51.0
 VERSION_GIF=5.1.4
-VERSION_AOM=2.1.0
+VERSION_AOM=2.0.2
 VERSION_HEIF=1.11.0
 
 # Remove patch version component
@@ -163,7 +163,7 @@ version_latest "fribidi" "$VERSION_FRIBIDI" "857"
 version_latest "pango" "$VERSION_PANGO" "11783"
 version_latest "svg" "$VERSION_SVG" "5420"
 #version_latest "gif" "$VERSION_GIF" "1158" # v5.1.5+ provides a Makefile only so will require custom cross-compilation setup
-version_latest "aom" "$VERSION_AOM" "17628"
+#version_latest "aom" "$VERSION_AOM" "17628" # latest version in release monitoring is a release candidate
 version_latest "heif" "$VERSION_HEIF" "64439"
 if [ "$ALL_AT_VERSION_LATEST" = "false" ]; then exit 1; fi
 
