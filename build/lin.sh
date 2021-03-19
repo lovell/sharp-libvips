@@ -99,7 +99,7 @@ CURL="curl --silent --location --retry 3 --retry-max-time 30"
 # Dependency version numbers
 VERSION_ZLIB_NG=2.0.1
 VERSION_FFI=3.3
-VERSION_GLIB=2.67.6
+VERSION_GLIB=2.68.0
 VERSION_XML2=2.9.10
 VERSION_GSF=1.14.47
 VERSION_EXIF=0.6.22
