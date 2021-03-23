@@ -95,7 +95,3 @@ for flavour in linux-x64 linuxmusl-x64 linux-armv6 linux-armv7 linux-arm64v8 lin
     docker run --rm -e "VERSION_VIPS=${VERSION_VIPS}" -v $PWD:/packaging vips-dev-$flavour sh -c "/packaging/build/lin.sh"
   fi
 done
-
-# Display checksums and file sizes
-sha256sum *.tar.{br,gz}
-ls -al *.tar.{br,gz}
