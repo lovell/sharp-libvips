@@ -11,14 +11,11 @@ jobs:
     - name: Create Release
       id: create-release
       if: startsWith(github.ref, 'refs/tags/v')
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: ncipollo/release-action@v1
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        draft: false
+        omitBody: true
         prerelease: true
+        token: ${{ secrets.GITHUB_TOKEN }}
   build:
     runs-on: ${{ matrix.os }}
     needs: create-release
@@ -51,29 +48,30 @@ jobs:
       if: contains(matrix.platform, 'darwin')
     - name: Build ${{ matrix.platform }}
       id: build-release
-      run: |
-        ./build.sh $(cat LIBVIPS_VERSION) ${{ matrix.platform }}
-        echo "::set-output name=asset_file_name_gz::libvips-$(cat LIBVIPS_VERSION)-${{ matrix.platform }}.tar.gz"
-        echo "::set-output name=asset_file_name_br::libvips-$(cat LIBVIPS_VERSION)-${{ matrix.platform }}.tar.br"
+      run: ./build.sh $(cat LIBVIPS_VERSION) ${{ matrix.platform }}
     - name: Upload Release Asset (.tar.gz)
       id: upload-release-asset-gz
       if: startsWith(github.ref, 'refs/tags/v')
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: ncipollo/release-action@v1
       with:
-        upload_url: ${{ needs.create-release.outputs.upload_url }}
-        asset_path: ${{ steps.build-release.outputs.asset_file_name_gz }}
-        asset_name: ${{ steps.build-release.outputs.asset_file_name_gz }}
-        asset_content_type: application/gzip
+        allowUpdates: true
+        artifact: libvips-*-${{ matrix.platform }}.tar.gz
+        artifactContentType: application/gzip
+        artifactErrorsFailBuild: true
+        omitBodyDuringUpdate: true
+        omitNameDuringUpdate: true
+        prerelease: true
+        token: ${{ secrets.GITHUB_TOKEN }}
     - name: Upload Release Asset (.tar.br)
       id: upload-release-asset-br
       if: startsWith(github.ref, 'refs/tags/v')
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: ncipollo/release-action@v1
       with:
-        upload_url: ${{ needs.create-release.outputs.upload_url }}
-        asset_path: ${{ steps.build-release.outputs.asset_file_name_br }}
-        asset_name: ${{ steps.build-release.outputs.asset_file_name_br }}
-        asset_content_type: application/x-brotli
+        allowUpdates: true
+        artifact: libvips-*-${{ matrix.platform }}.tar.br
+        artifactContentType: application/x-brotli
+        artifactErrorsFailBuild: true
+        omitBodyDuringUpdate: true
+        omitNameDuringUpdate: true
+        prerelease: true
+        token: ${{ secrets.GITHUB_TOKEN }}
