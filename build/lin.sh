@@ -97,7 +97,7 @@ unset PKG_CONFIG_PATH
 CURL="curl --silent --location --retry 3 --retry-max-time 30"
 
 # Dependency version numbers
-VERSION_ZLIB_NG=2.0.1
+VERSION_ZLIB_NG=2.0.2
 VERSION_FFI=3.3
 VERSION_GLIB=2.68.0
 VERSION_XML2=2.9.10
@@ -114,7 +114,7 @@ VERSION_ORC=0.4.32
 VERSION_GETTEXT=0.21
 VERSION_GDKPIXBUF=2.42.4
 VERSION_FREETYPE=2.10.4
-VERSION_EXPAT=2.2.10
+VERSION_EXPAT=2.3.0
 VERSION_FONTCONFIG=2.13.93
 VERSION_HARFBUZZ=2.8.0
 VERSION_PIXMAN=0.40.0
@@ -359,7 +359,8 @@ mkdir ${DEPS}/expat
 $CURL https://github.com/libexpat/libexpat/releases/download/R_${VERSION_EXPAT//./_}/expat-${VERSION_EXPAT}.tar.xz | tar xJC ${DEPS}/expat --strip-components=1
 cd ${DEPS}/expat
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared \
-  --disable-dependency-tracking --without-xmlwf --without-docbook --without-getrandom --without-sys-getrandom
+  --disable-dependency-tracking --without-xmlwf --without-docbook --without-getrandom --without-sys-getrandom \
+  --without-libbsd --without-examples --without-tests
 make install
 
 mkdir ${DEPS}/fontconfig
