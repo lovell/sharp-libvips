@@ -44,6 +44,7 @@ jobs:
     - name: Install dependencies (macOS)
       run: |
         pip3 install meson==0.56.2 ninja
+        brew update
         brew install advancecomp automake brotli nasm pkg-config
       if: contains(matrix.platform, 'darwin')
     - name: Build ${{ matrix.platform }}
@@ -58,7 +59,7 @@ jobs:
       uses: ncipollo/release-action@v1
       with:
         allowUpdates: true
-        artifact: libvips-*-${{ matrix.platform }}.tar.gz
+        artifacts: libvips-*-${{ matrix.platform }}.tar.gz
         artifactContentType: application/gzip
         artifactErrorsFailBuild: true
         omitBodyDuringUpdate: true
@@ -71,7 +72,7 @@ jobs:
       uses: ncipollo/release-action@v1
       with:
         allowUpdates: true
-        artifact: libvips-*-${{ matrix.platform }}.tar.br
+        artifacts: libvips-*-${{ matrix.platform }}.tar.br
         artifactContentType: application/x-brotli
         artifactErrorsFailBuild: true
         omitBodyDuringUpdate: true
