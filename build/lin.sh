@@ -329,9 +329,8 @@ cd ${DEPS}/gdkpixbuf
 sed -i'.bak' "/subdir('tests')/{N;d;}" meson.build
 sed -i'.bak' "/post-install/{N;N;N;N;d;}" meson.build
 # Disable the built-in loaders for BMP, GIF, ICO, PNM, XPM, XBM, TGA, ICNS and QTIF
-sed -i'.bak' "/\[ 'bmp'/{N;N;N;d;}" gdk-pixbuf/meson.build
-sed -i'.bak' "/\[ 'pnm'/d" gdk-pixbuf/meson.build
-sed -i'.bak' "/\[ 'xpm'/{N;N;N;N;d;}" gdk-pixbuf/meson.build
+sed -i'.bak' "/'bmp':/{N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;d;}" gdk-pixbuf/meson.build
+sed -i'.bak' "/'pnm':/{N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;d;}" gdk-pixbuf/meson.build
 # Skip executables
 sed -i'.bak' "/gdk-pixbuf-csource/{N;N;d;}" gdk-pixbuf/meson.build
 sed -i'.bak' "/loaders_cache = custom/{N;N;N;N;N;N;N;N;N;c\\
