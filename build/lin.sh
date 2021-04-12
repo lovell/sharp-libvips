@@ -327,6 +327,7 @@ $CURL https://download.gnome.org/sources/gdk-pixbuf/$(without_patch $VERSION_GDK
 cd ${DEPS}/gdkpixbuf
 # Disable tests and thumbnailer
 sed -i'.bak' "/subdir('tests')/{N;d;}" meson.build
+sed -i'.bak' "/post-install/{N;N;N;N;d;}" meson.build
 # Disable the built-in loaders for BMP, GIF, ICO, PNM, XPM, XBM, TGA, ICNS and QTIF
 sed -i'.bak' "/\[ 'bmp'/{N;N;N;d;}" gdk-pixbuf/meson.build
 sed -i'.bak' "/\[ 'pnm'/d" gdk-pixbuf/meson.build
@@ -337,7 +338,6 @@ sed -i'.bak' "/loaders_cache = custom/{N;N;N;N;N;N;N;N;N;c\\
   loaders_cache = []\\
   loaders_dep = declare_dependency()
 }" gdk-pixbuf/meson.build
-sed -i'.bak' "/import/Q" build-aux/post-install.py
 # Ensure meson can find libjpeg when cross-compiling
 sed -i'.bak' "s/has_header('jpeglib.h')/has_header('jpeglib.h', args: '-I\/target\/include')/g" meson.build
 sed -i'.bak' "s/cc.find_library('jpeg'/dependency('libjpeg'/g" meson.build
