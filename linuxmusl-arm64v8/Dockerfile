@@ -47,7 +47,7 @@ RUN \
     && \
   rustup component add rust-src && \
   rustup target add aarch64-unknown-linux-musl && \
-  pip3 install meson==0.56.2
+  pip3 install meson
 
 # Rebuild the standard library of Rust to avoid collisions with system libraries.
 # See: https://github.com/lovell/sharp-libvips/pull/73#issuecomment-783403636
