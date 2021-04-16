@@ -111,7 +111,7 @@ VERSION_IMAGEQUANT=2.4.1
 VERSION_WEBP=1.2.0
 VERSION_TIFF=4.2.0
 VERSION_ORC=0.4.32
-VERSION_GETTEXT=0.21
+VERSION_PROXY_LIBINTL=50bd252
 VERSION_GDKPIXBUF=2.42.6
 VERSION_FREETYPE=2.10.4
 VERSION_EXPAT=2.3.0
@@ -152,7 +152,6 @@ version_latest "spng" "$VERSION_SPNG" "24289"
 version_latest "webp" "$VERSION_WEBP" "1761"
 version_latest "tiff" "$VERSION_TIFF" "1738"
 version_latest "orc" "$VERSION_ORC" "2573"
-version_latest "gettext" "$VERSION_GETTEXT" "898"
 version_latest "gdkpixbuf" "$VERSION_GDKPIXBUF" "9533"
 version_latest "freetype" "$VERSION_FREETYPE" "854"
 version_latest "expat" "$VERSION_EXPAT" "770"
@@ -178,12 +177,12 @@ if [ "$DARWIN" = true ]; then
 fi
 
 if [ "${PLATFORM%-*}" == "linuxmusl" ] || [ "$DARWIN" = true ]; then
-  mkdir ${DEPS}/gettext
-  $CURL https://ftp.gnu.org/pub/gnu/gettext/gettext-${VERSION_GETTEXT}.tar.xz | tar xJC ${DEPS}/gettext --strip-components=1
-  cd ${DEPS}/gettext/gettext-runtime
-  ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
-    --disable-libasprintf --disable-java --disable-native-java --disable-csharp
-  make install-strip
+  mkdir ${DEPS}/proxy-libintl
+  $CURL https://github.com/frida/proxy-libintl/archive/${VERSION_PROXY_LIBINTL}.tar.gz | tar xzC ${DEPS}/proxy-libintl --strip-components=1
+  cd ${DEPS}/proxy-libintl
+  LDFLAGS=${LDFLAGS/\$/} meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON}
+  ninja -C _build
+  ninja -C _build install
 fi
 
 mkdir ${DEPS}/zlib-ng
@@ -524,7 +523,6 @@ printf "{\n\
   \"freetype\": \"${VERSION_FREETYPE}\",\n\
   \"fribidi\": \"${VERSION_FRIBIDI}\",\n\
   \"gdkpixbuf\": \"${VERSION_GDKPIXBUF}\",\n\
-  \"gettext\": \"${VERSION_GETTEXT}\",\n\
   \"gif\": \"${VERSION_GIF}\",\n\
   \"glib\": \"${VERSION_GLIB}\",\n\
   \"gsf\": \"${VERSION_GSF}\",\n\
@@ -537,6 +535,7 @@ printf "{\n\
   \"pango\": \"${VERSION_PANGO}\",\n\
   \"pixman\": \"${VERSION_PIXMAN}\",\n\
   \"png\": \"${VERSION_PNG16}\",\n\
+  \"proxy-libintl\": \"${VERSION_PROXY_LIBINTL}\",\n\
   \"svg\": \"${VERSION_SVG}\",\n\
   \"spng\": \"${VERSION_SPNG}\",\n\
   \"tiff\": \"${VERSION_TIFF}\",\n\
