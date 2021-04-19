@@ -238,7 +238,8 @@ $CURL https://github.com/libexif/libexif/releases/download/libexif-${VERSION_EXI
 cd ${DEPS}/exif
 autoreconf -fiv
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
-  --disable-nls --without-libiconv-prefix --without-libintl-prefix
+  --disable-nls --without-libiconv-prefix --without-libintl-prefix \
+  CPPFLAGS="-DNO_VERBOSE_TAG_STRINGS -DNO_VERBOSE_TAG_DATA"
 make install-strip
 
 mkdir ${DEPS}/lcms2
