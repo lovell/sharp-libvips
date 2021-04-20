@@ -132,8 +132,13 @@ without_patch() {
 }
 
 # Check for newer versions
+# Skip by setting the VERSION_LATEST_REQUIRED environment variable to "false"
 ALL_AT_VERSION_LATEST=true
 version_latest() {
+  if [ "$VERSION_LATEST_REQUIRED" == "false" ]; then
+    echo "Skipping latest version check for $1"
+    return
+  fi
   VERSION_LATEST=$($CURL "https://release-monitoring.org/api/v2/versions/?project_id=$3" | jq -j ".stable_versions[0]")
   if [ "$VERSION_LATEST" != "$2" ]; then
     ALL_AT_VERSION_LATEST=false
