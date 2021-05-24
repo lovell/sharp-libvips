@@ -269,6 +269,12 @@ make install/strip
 mkdir ${DEPS}/heif
 $CURL https://github.com/strukturag/libheif/releases/download/v${VERSION_HEIF}/libheif-${VERSION_HEIF}.tar.gz | tar xzC ${DEPS}/heif --strip-components=1
 cd ${DEPS}/heif
+# [PATCH] aom encoder: improve performance by ~2x using new 'all intra'
+$CURL https://github.com/lovell/libheif/commit/de0c159a60c2c50931321f06e36a3b6640c5c807.patch | patch -p1
+# [PATCH] aom: expose decoder error messages
+$CURL https://github.com/lovell/libheif/commit/7e1c1888023f6dd68cf33e537e7eb8e4d5e17588.patch | patch -p1
+# [PATCH] Detect and prevent negative overflow of clap box dimensions
+$CURL https://github.com/lovell/libheif/commit/e625a702ec7d46ce042922547d76045294af71d6.patch | patch -p1
 CFLAGS="${CFLAGS} -O3" CXXFLAGS="${CXXFLAGS} -O3" ./configure \
   --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
   --disable-gdk-pixbuf --disable-go --disable-examples --disable-libde265 --disable-x265
