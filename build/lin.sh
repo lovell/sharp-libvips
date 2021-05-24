@@ -274,7 +274,7 @@ $CURL https://github.com/lovell/libheif/commit/de0c159a60c2c50931321f06e36a3b664
 # [PATCH] aom: expose decoder error messages
 $CURL https://github.com/lovell/libheif/commit/7e1c1888023f6dd68cf33e537e7eb8e4d5e17588.patch | patch -p1
 # [PATCH] Detect and prevent negative overflow of clap box dimensions
-$CURL https://github.com/lovell/libheif/commit/e625a702ec7d46ce042922547d76045294af71d6.patch | patch -p1
+$CURL https://github.com/lovell/libheif/commit/e625a702ec7d46ce042922547d76045294af71d6.patch | git apply -
 CFLAGS="${CFLAGS} -O3" CXXFLAGS="${CXXFLAGS} -O3" ./configure \
   --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
   --disable-gdk-pixbuf --disable-go --disable-examples --disable-libde265 --disable-x265
