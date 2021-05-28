@@ -121,7 +121,7 @@ VERSION_PIXMAN=0.40.0
 VERSION_CAIRO=1.17.4
 VERSION_FRIBIDI=1.0.10
 VERSION_PANGO=1.48.5
-VERSION_SVG=2.51.0
+VERSION_SVG=2.51.2
 VERSION_GIF=5.1.4
 VERSION_AOM=3.1.0
 VERSION_HEIF=1.12.0
@@ -166,9 +166,9 @@ version_latest "pixman" "$VERSION_PIXMAN" "3648"
 version_latest "cairo" "$VERSION_CAIRO" "247"
 version_latest "fribidi" "$VERSION_FRIBIDI" "857"
 version_latest "pango" "$VERSION_PANGO" "11783"
-#version_latest "svg" "$VERSION_SVG" "5420" # v2.51.1 fails on 32-bit - https://gitlab.gnome.org/GNOME/librsvg/-/merge_requests/506
+version_latest "svg" "$VERSION_SVG" "5420"
 #version_latest "gif" "$VERSION_GIF" "1158" # v5.1.5+ provides a Makefile only so will require custom cross-compilation setup
-#version_latest "aom" "$VERSION_AOM" "17628" # latest version in release monitoring is a release candidate
+version_latest "aom" "$VERSION_AOM" "17628"
 version_latest "heif" "$VERSION_HEIF" "64439"
 if [ "$ALL_AT_VERSION_LATEST" = "false" ]; then exit 1; fi
 
