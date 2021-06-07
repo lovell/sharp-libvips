@@ -122,7 +122,6 @@ VERSION_CAIRO=1.17.4
 VERSION_FRIBIDI=1.0.10
 VERSION_PANGO=1.48.5
 VERSION_SVG=2.51.2
-VERSION_GIF=5.1.4
 VERSION_AOM=3.1.0
 VERSION_HEIF=1.12.0
 
@@ -167,7 +166,6 @@ version_latest "cairo" "$VERSION_CAIRO" "247"
 version_latest "fribidi" "$VERSION_FRIBIDI" "857"
 version_latest "pango" "$VERSION_PANGO" "11783"
 version_latest "svg" "$VERSION_SVG" "5420"
-#version_latest "gif" "$VERSION_GIF" "1158" # v5.1.5+ provides a Makefile only so will require custom cross-compilation setup
 version_latest "aom" "$VERSION_AOM" "17628"
 version_latest "heif" "$VERSION_HEIF" "64439"
 if [ "$ALL_AT_VERSION_LATEST" = "false" ]; then exit 1; fi
@@ -243,7 +241,7 @@ cd ${DEPS}/exif
 autoreconf -fiv
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
   --disable-nls --without-libiconv-prefix --without-libintl-prefix \
-  CPPFLAGS="-DNO_VERBOSE_TAG_STRINGS -DNO_VERBOSE_TAG_DATA"
+  CPPFLAGS="-DNO_VERBOSE_TAG_DATA"
 make install-strip
 
 mkdir ${DEPS}/lcms2
@@ -454,14 +452,8 @@ sed -i'.bak' "/SCRIPTS = /d" Makefile.in
   ${DARWIN:+--disable-Bsymbolic}
 make install-strip
 
-mkdir ${DEPS}/gif
-$CURL https://downloads.sourceforge.net/project/giflib/giflib-${VERSION_GIF}.tar.gz | tar xzC ${DEPS}/gif --strip-components=1
-cd ${DEPS}/gif
-CFLAGS="${CFLAGS} -O3" ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking
-make install-strip
-
 mkdir ${DEPS}/vips
-$CURL https://github.com/libvips/libvips/releases/download/v${VERSION_VIPS}/vips-${VERSION_VIPS}.tar.gz | tar xzC ${DEPS}/vips --strip-components=1
+$CURL https://github.com/libvips/libvips/releases/download/v${VERSION_VIPS}-rc1/vips-${VERSION_VIPS}-rc1.tar.gz | tar xzC ${DEPS}/vips --strip-components=1
 cd ${DEPS}/vips
 # Prevent exporting the g_param_spec_types symbol to avoid collisions with shared libraries
 printf "{\n\
@@ -470,7 +462,8 @@ local:\n\
 };" > vips.map
 PKG_CONFIG="pkg-config --static" CFLAGS="${CFLAGS} -O3" CXXFLAGS="${CXXFLAGS} -O3" ./configure \
   --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking \
-  --disable-debug --disable-deprecated --disable-introspection --without-analyze --without-cfitsio --without-fftw \
+  --disable-debug --disable-deprecated --disable-introspection --disable-modules \
+  --without-analyze --without-cfitsio --without-fftw --without-libjxl --without-libopenjp2 \
   --without-magick --without-matio --without-nifti --without-OpenEXR \
   --without-openslide --without-pdfium --without-poppler --without-ppm --without-radiance
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/#_removing_rpath
@@ -535,7 +528,6 @@ printf "{\n\
   \"freetype\": \"${VERSION_FREETYPE}\",\n\
   \"fribidi\": \"${VERSION_FRIBIDI}\",\n\
   \"gdkpixbuf\": \"${VERSION_GDKPIXBUF}\",\n\
-  \"gif\": \"${VERSION_GIF}\",\n\
   \"glib\": \"${VERSION_GLIB}\",\n\
   \"gsf\": \"${VERSION_GSF}\",\n\
   \"harfbuzz\": \"${VERSION_HARFBUZZ}\",\n\

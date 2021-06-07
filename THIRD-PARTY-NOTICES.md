@@ -12,7 +12,6 @@ used under the terms of the following licences:
 | freetype      | [freetype Licence](https://git.savannah.gnu.org/cgit/freetype/freetype2.git/tree/docs/FTL.TXT) (BSD-like) |
 | fribidi       | LGPLv3                                                                                                    |
 | gdk-pixbuf    | LGPLv3                                                                                                    |
-| giflib        | MIT Licence                                                                                               |
 | glib          | LGPLv3                                                                                                    |
 | harfbuzz      | MIT Licence                                                                                               |
 | lcms          | MIT Licence                                                                                               |
