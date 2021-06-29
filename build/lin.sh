@@ -198,11 +198,6 @@ make install/strip
 mkdir ${DEPS}/ffi
 $CURL https://github.com/libffi/libffi/releases/download/v${VERSION_FFI}/libffi-${VERSION_FFI}.tar.gz | tar xzC ${DEPS}/ffi --strip-components=1
 cd ${DEPS}/ffi
-if [ "$DARWIN_ARM" = true ]; then
-  # Thanks Homebrew for the libffi patch
-  # See https://github.com/libffi/libffi/pull/565
-  $CURL https://raw.githubusercontent.com/Homebrew/formula-patches/a4a91e61/libffi/libffi-3.3-arm64.patch | patch -p1
-fi
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
   --disable-builddir --disable-multi-os-directory --disable-raw-api --disable-structs
 make install-strip
