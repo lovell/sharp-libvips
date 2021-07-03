@@ -275,7 +275,7 @@ make install-strip
 mkdir ${DEPS}/jpeg
 $CURL https://github.com/mozilla/mozjpeg/archive/v${VERSION_MOZJPEG}.tar.gz | tar xzC ${DEPS}/jpeg --strip-components=1
 cd ${DEPS}/jpeg
-CFLAGS="${CFLAGS} -O3" LDFLAGS=${LDFLAGS/\$/} cmake -G"Unix Makefiles" \
+LDFLAGS=${LDFLAGS/\$/} cmake -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel \
   -DCMAKE_TOOLCHAIN_FILE=${ROOT}/Toolchain.cmake -DCMAKE_INSTALL_PREFIX=${TARGET} -DCMAKE_INSTALL_LIBDIR=${TARGET}/lib \
   -DENABLE_STATIC=TRUE -DENABLE_SHARED=FALSE -DWITH_JPEG8=1 -DWITH_TURBOJPEG=FALSE -DPNG_SUPPORTED=FALSE
 make install/strip
