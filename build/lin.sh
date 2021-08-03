@@ -122,7 +122,7 @@ VERSION_CAIRO=1.17.4
 VERSION_FRIBIDI=1.0.10
 VERSION_PANGO=1.48.7
 VERSION_SVG=2.51.4
-VERSION_AOM=3.1.1
+VERSION_AOM=3.1.2
 VERSION_HEIF=1.12.0
 
 # Remove patch version component
@@ -146,7 +146,7 @@ version_latest() {
 }
 version_latest "zlib-ng" "$VERSION_ZLIB_NG" "115592"
 version_latest "ffi" "$VERSION_FFI" "1611"
-version_latest "glib" "$VERSION_GLIB" "10024"
+#version_latest "glib" "$VERSION_GLIB" "10024" # 2.69.0 is pre-release
 version_latest "xml2" "$VERSION_XML2" "1783"
 version_latest "gsf" "$VERSION_GSF" "1980"
 version_latest "exif" "$VERSION_EXIF" "1607"
