@@ -138,7 +138,11 @@ version_latest() {
     echo "Skipping latest version check for $1"
     return
   fi
-  VERSION_LATEST=$($CURL "https://release-monitoring.org/api/v2/versions/?project_id=$3" | jq -j ".stable_versions[0]")
+  VERSION_SELECTOR="stable_versions"
+  if [[ "$4" == *"unstable"* ]]; then
+    VERSION_SELECTOR="versions"
+  fi
+  VERSION_LATEST=$($CURL "https://release-monitoring.org/api/v2/versions/?project_id=$3" | jq -j ".$VERSION_SELECTOR[0]")
   if [ "$VERSION_LATEST" != "$2" ]; then
     ALL_AT_VERSION_LATEST=false
     echo "$1 version $2 has been superseded by $VERSION_LATEST"
@@ -146,7 +150,7 @@ version_latest() {
 }
 version_latest "zlib-ng" "$VERSION_ZLIB_NG" "115592"
 version_latest "ffi" "$VERSION_FFI" "1611"
-#version_latest "glib" "$VERSION_GLIB" "10024" # 2.69.0 is pre-release
+version_latest "glib" "$VERSION_GLIB" "10024" "unstable"
 version_latest "xml2" "$VERSION_XML2" "1783"
 version_latest "gsf" "$VERSION_GSF" "1980"
 version_latest "exif" "$VERSION_EXIF" "1607"
