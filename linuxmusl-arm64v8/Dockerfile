@@ -50,11 +50,11 @@ RUN \
   pip3 install meson
 
 # Rebuild the standard library of Rust to avoid collisions with system libraries.
-# See: https://github.com/lovell/sharp-libvips/pull/73#issuecomment-783403636
+# See: https://github.com/lovell/sharp-libvips/issues/109
 RUN \
   printf "[unstable]\n\
 build-std = [\"std\", \"panic_abort\"]\n\
-build-std-features = [\"panic_immediate_abort\"]" > /usr/local/cargo/config.toml
+build-std-features = [\"panic_immediate_abort\"]" > $CARGO_HOME/config.toml
 
 # Compiler settings
 ENV \
@@ -69,7 +69,7 @@ ENV \
 # The toolchain will produce static libs by default.
 # We also need to add the directory containing libc.a to the library search path.
 ENV \
-  RUSTFLAGS="-C target-feature=-crt-static -L/aarch64-linux-musl/lib"
+  RUSTFLAGS="-C target-feature=-crt-static -Lnative=/aarch64-linux-musl/lib"
 
 COPY Toolchain.cmake /root/
 COPY meson.ini /root/

@@ -39,9 +39,18 @@ RUN \
   curl https://sh.rustup.rs -sSf | sh -s -- -y \
     --no-modify-path \
     --profile minimal \
+    --default-toolchain nightly \
     && \
+  rustup component add rust-src && \
   rustup target add aarch64-unknown-linux-gnu && \
   pip3 install meson
+
+# Rebuild the standard library of Rust to avoid collisions with system libraries.
+# See: https://github.com/lovell/sharp-libvips/issues/109
+RUN \
+  printf "[unstable]\n\
+build-std = [\"std\", \"panic_abort\"]\n\
+build-std-features = [\"panic_immediate_abort\"]" > $CARGO_HOME/config.toml
 
 # Compiler settings
 ENV \
