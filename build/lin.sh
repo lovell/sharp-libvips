@@ -560,7 +560,7 @@ printf "{\n\
 printf "\"${PLATFORM}\"" >platform.json
 
 # Add third-party notices
-$CURL -O https://raw.githubusercontent.com/lovell/sharp-libvips/master/THIRD-PARTY-NOTICES.md
+$CURL -O https://raw.githubusercontent.com/lovell/sharp-libvips/main/THIRD-PARTY-NOTICES.md
 
 # Create the tarball
 ls -al lib
