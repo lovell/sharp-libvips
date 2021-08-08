@@ -32,11 +32,7 @@ the same shared libraries within multiple containers.
 ### Windows
 
 The output of libvips' [build-win64-mxe](https://github.com/libvips/build-win64-mxe)
-"web" target is [post-processed](build/win.sh) within multiple containers.
-
-* [win32-ia32](win32-ia32/Dockerfile)
-* [win32-x64](win32-x64/Dockerfile)
-* [win32-arm64v8](win32-arm64v8/Dockerfile)
+static "web" releases are [post-processed](build/win.sh) within a [container](win32/Dockerfile).
 
 ### macOS
 
@@ -46,7 +42,7 @@ The dylib files are compiled within the same build script as Linux.
 * x64 (native)
 * ARM64 (cross-compiled)
 
-Dependency paths are modified to be the relative `@rpath` using `install_name_tool`.
+Dependency paths are modified to use the relative `@rpath` with `install_name_tool`.
 
 ## Licences
 
