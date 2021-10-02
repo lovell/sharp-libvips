@@ -99,14 +99,14 @@ CURL="curl --silent --location --retry 3 --retry-max-time 30"
 # Dependency version numbers
 VERSION_ZLIB_NG=2.0.5
 VERSION_FFI=3.4.2
-VERSION_GLIB=2.69.1
+VERSION_GLIB=2.70.0
 VERSION_XML2=2.9.12
 VERSION_GSF=1.14.47
-VERSION_EXIF=0.6.22
+VERSION_EXIF=0.6.23
 VERSION_LCMS2=2.12
 VERSION_MOZJPEG=4.0.3
 VERSION_PNG16=1.6.37
-VERSION_SPNG=0.6.3
+VERSION_SPNG=0.7.0
 VERSION_IMAGEQUANT=2.4.1
 VERSION_WEBP=1.2.1
 VERSION_TIFF=4.3.0
@@ -116,12 +116,12 @@ VERSION_GDKPIXBUF=2.42.6
 VERSION_FREETYPE=2.10.4
 VERSION_EXPAT=2.4.1
 VERSION_FONTCONFIG=2.13.93
-VERSION_HARFBUZZ=2.8.2
+VERSION_HARFBUZZ=3.0.0
 VERSION_PIXMAN=0.40.0
 VERSION_CAIRO=1.17.4
-VERSION_FRIBIDI=1.0.10
-VERSION_PANGO=1.48.8
-VERSION_SVG=2.51.4
+VERSION_FRIBIDI=1.0.11
+VERSION_PANGO=1.49.1
+VERSION_SVG=2.52.0
 VERSION_AOM=3.1.2
 VERSION_HEIF=1.12.0
 
@@ -244,9 +244,8 @@ sed -i'.bak' "s/ doc tools tests thumbnailer python//" Makefile.in
 make install-strip
 
 mkdir ${DEPS}/exif
-$CURL https://github.com/libexif/libexif/releases/download/libexif-${VERSION_EXIF//./_}-release/libexif-${VERSION_EXIF}.tar.xz | tar xJC ${DEPS}/exif --strip-components=1
+$CURL https://github.com/libexif/libexif/releases/download/v${VERSION_EXIF}/libexif-${VERSION_EXIF}.tar.xz | tar xJC ${DEPS}/exif --strip-components=1
 cd ${DEPS}/exif
-autoreconf -fiv
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
   --disable-nls --without-libiconv-prefix --without-libintl-prefix \
   CPPFLAGS="-DNO_VERBOSE_TAG_DATA"
@@ -470,7 +469,7 @@ local:\n\
 };" > vips.map
 PKG_CONFIG="pkg-config --static" CFLAGS="${CFLAGS} -O3" CXXFLAGS="${CXXFLAGS} -O3" ./configure \
   --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking \
-  --disable-debug --disable-deprecated --disable-introspection --disable-modules \
+  --disable-debug --disable-deprecated --disable-introspection --disable-modules --without-doxygen \
   --without-analyze --without-cfitsio --without-fftw --without-libjxl --without-libopenjp2 \
   --without-magick --without-matio --without-nifti --without-OpenEXR \
   --without-openslide --without-pdfium --without-poppler --without-ppm --without-radiance
