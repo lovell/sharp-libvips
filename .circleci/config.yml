@@ -1,0 +1,26 @@
+version: 2.1
+orbs:
+  github-cli: circleci/github-cli@1.0
+
+workflows:
+  build:
+    jobs:
+      - linux-arm64v8:
+          filters:
+            tags:
+              only: /^v.*/
+
+jobs:
+  linux-arm64v8:
+    resource_class: arm.medium
+    machine:
+      image: ubuntu-2004:202101-01
+    steps:
+      - checkout
+      - github-cli/setup
+      - run: ./build.sh $(cat LIBVIPS_VERSION) linux-arm64v8
+      - run: ./integrity.sh
+      - when:
+          condition: <<pipeline.git.tag>>
+          steps:
+            - run: gh release upload --repo lovell/sharp-libvips $CIRCLE_TAG *.tar.gz *.tar.br *.integrity
