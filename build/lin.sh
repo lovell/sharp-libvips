@@ -111,9 +111,9 @@ VERSION_IMAGEQUANT=2.4.1
 VERSION_WEBP=1.2.1
 VERSION_TIFF=4.3.0
 VERSION_ORC=0.4.32
-VERSION_PROXY_LIBINTL=ef9fe6d
+VERSION_PROXY_LIBINTL=0.2
 VERSION_GDKPIXBUF=2.42.6
-VERSION_FREETYPE=2.10.4
+VERSION_FREETYPE=2.11.0
 VERSION_EXPAT=2.4.1
 VERSION_FONTCONFIG=2.13.93
 VERSION_HARFBUZZ=3.0.0
@@ -161,7 +161,7 @@ version_latest "webp" "$VERSION_WEBP" "1761"
 version_latest "tiff" "$VERSION_TIFF" "1738"
 version_latest "orc" "$VERSION_ORC" "2573"
 version_latest "gdkpixbuf" "$VERSION_GDKPIXBUF" "9533"
-version_latest "freetype" "$VERSION_FREETYPE" "854"
+#version_latest "freetype" "$VERSION_FREETYPE" "854" # latest version in release monitoring is out of sync
 version_latest "expat" "$VERSION_EXPAT" "770"
 #version_latest "fontconfig" "$VERSION_FONTCONFIG" "827" # 2.13.94 fails to build on macOS
 version_latest "harfbuzz" "$VERSION_HARFBUZZ" "1299"
@@ -195,7 +195,7 @@ if [ "${PLATFORM%-*}" == "linuxmusl" ] || [ "$DARWIN" = true ]; then
   mkdir ${DEPS}/proxy-libintl
   $CURL https://github.com/frida/proxy-libintl/archive/${VERSION_PROXY_LIBINTL}.tar.gz | tar xzC ${DEPS}/proxy-libintl --strip-components=1
   cd ${DEPS}/proxy-libintl
-  LDFLAGS=${LDFLAGS/\$/} meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON}
+  meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON}
   ninja -C _build
   ninja -C _build install
 fi
@@ -203,7 +203,7 @@ fi
 mkdir ${DEPS}/zlib-ng
 $CURL https://github.com/zlib-ng/zlib-ng/archive/${VERSION_ZLIB_NG}.tar.gz | tar xzC ${DEPS}/zlib-ng --strip-components=1
 cd ${DEPS}/zlib-ng
-CFLAGS="${CFLAGS} -O3" LDFLAGS=${LDFLAGS/\$/} cmake -G"Unix Makefiles" \
+CFLAGS="${CFLAGS} -O3" cmake -G"Unix Makefiles" \
   -DCMAKE_TOOLCHAIN_FILE=${ROOT}/Toolchain.cmake -DCMAKE_INSTALL_PREFIX=${TARGET} -DBUILD_SHARED_LIBS=FALSE -DZLIB_COMPAT=TRUE
 make install/strip
 
@@ -221,7 +221,7 @@ if [ "${PLATFORM%-*}" == "linuxmusl" ] || [ "$DARWIN" = true ]; then
   $CURL https://gist.github.com/kleisauke/f6dcbf02a9aa43fd582272c3d815e7a8/raw/9cd8625c6374e0d201e6fc56010008dbb64eb8cf/glib-proxy-libintl.patch | patch -p1
 fi
 $CURL https://gist.githubusercontent.com/lovell/7e0ce65249b951d5be400fb275de3924/raw/1a833ef4263271d299587524198b024eb5cc4f34/glib-without-gregex.patch | patch -p1
-LDFLAGS=${LDFLAGS/\$/} meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
+meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   --force-fallback-for=libpcre -Dtests=false -Dinstalled_tests=false -Dlibmount=disabled -Dlibelf=disabled ${DARWIN:+-Dbsymbolic_functions=false}
 ninja -C _build
 ninja -C _build install
@@ -262,7 +262,7 @@ $CURL https://storage.googleapis.com/aom-releases/libaom-${VERSION_AOM}.tar.gz |
 cd ${DEPS}/aom
 mkdir aom_build
 cd aom_build
-AOM_AS_FLAGS="${FLAGS}" LDFLAGS=${LDFLAGS/\$/} cmake -G"Unix Makefiles" \
+AOM_AS_FLAGS="${FLAGS}" cmake -G"Unix Makefiles" \
   -DCMAKE_TOOLCHAIN_FILE=${ROOT}/Toolchain.cmake -DCMAKE_INSTALL_PREFIX=${TARGET} -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=MinSizeRel \
   -DBUILD_SHARED_LIBS=FALSE -DENABLE_DOCS=0 -DENABLE_TESTS=0 -DENABLE_TESTDATA=0 -DENABLE_TOOLS=0 -DENABLE_EXAMPLES=0 \
   -DCONFIG_PIC=1 -DENABLE_NASM=1 ${WITHOUT_NEON:+-DENABLE_NEON=0} ${DARWIN_ARM:+-DCONFIG_RUNTIME_CPU_DETECT=0} \
@@ -287,7 +287,7 @@ make install-strip
 mkdir ${DEPS}/jpeg
 $CURL https://github.com/mozilla/mozjpeg/archive/v${VERSION_MOZJPEG}.tar.gz | tar xzC ${DEPS}/jpeg --strip-components=1
 cd ${DEPS}/jpeg
-LDFLAGS=${LDFLAGS/\$/} cmake -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel \
+cmake -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel \
   -DCMAKE_TOOLCHAIN_FILE=${ROOT}/Toolchain.cmake -DCMAKE_INSTALL_PREFIX=${TARGET} -DCMAKE_INSTALL_LIBDIR=${TARGET}/lib \
   -DENABLE_STATIC=TRUE -DENABLE_SHARED=FALSE -DWITH_JPEG8=1 -DWITH_TURBOJPEG=FALSE -DPNG_SUPPORTED=FALSE
 make install/strip
@@ -332,7 +332,7 @@ make install-strip
 mkdir ${DEPS}/orc
 $CURL https://gstreamer.freedesktop.org/data/src/orc/orc-${VERSION_ORC}.tar.xz | tar xJC ${DEPS}/orc --strip-components=1
 cd ${DEPS}/orc
-LDFLAGS=${LDFLAGS/\$/} meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
+meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   -Dorc-test=disabled -Dbenchmarks=disabled -Dexamples=disabled -Dgtk_doc=disabled -Dtests=disabled -Dtools=disabled
 ninja -C _build
 ninja -C _build install
@@ -355,7 +355,7 @@ sed -i'.bak' "/loaders_cache = custom/{N;N;N;N;N;N;N;N;N;c\\
 # Ensure meson can find libjpeg when cross-compiling
 sed -i'.bak' "s/has_header('jpeglib.h')/has_header('jpeglib.h', args: '-I\/target\/include')/g" meson.build
 sed -i'.bak' "s/cc.find_library('jpeg'/dependency('libjpeg'/g" meson.build
-LDFLAGS=${LDFLAGS/\$/} meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
+meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   -Dtiff=false -Dintrospection=disabled -Dinstalled_tests=false -Dgio_sniffing=false -Dman=false -Dbuiltin_loaders=png,jpeg
 ninja -C _build
 ninja -C _build install
@@ -365,9 +365,10 @@ sed -i'.bak' "s/^\(Requires:.*\)/\1 libjpeg, libpng16/" ${TARGET}/lib/pkgconfig/
 mkdir ${DEPS}/freetype
 $CURL https://download.savannah.gnu.org/releases/freetype/freetype-${VERSION_FREETYPE}.tar.xz | tar xJC ${DEPS}/freetype --strip-components=1
 cd ${DEPS}/freetype
-./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
-  --without-bzip2 --without-png
-make install
+meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
+  -Dzlib=enabled -Dpng=disabled -Dharfbuzz=disabled -Dbrotli=disabled -Dbzip2=disabled
+ninja -C _build
+ninja -C _build install
 
 mkdir ${DEPS}/expat
 $CURL https://github.com/libexpat/libexpat/releases/download/R_${VERSION_EXPAT//./_}/expat-${VERSION_EXPAT}.tar.xz | tar xJC ${DEPS}/expat --strip-components=1
@@ -390,7 +391,7 @@ $CURL https://github.com/harfbuzz/harfbuzz/archive/${VERSION_HARFBUZZ}.tar.gz | 
 cd ${DEPS}/harfbuzz
 # Disable utils
 sed -i'.bak' "/subdir('util')/d" meson.build
-LDFLAGS=${LDFLAGS/\$/} meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
+meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   -Dgobject=disabled -Dicu=disabled -Dtests=disabled -Dintrospection=disabled -Ddocs=disabled -Dbenchmark=disabled ${DARWIN:+-Dcoretext=enabled}
 ninja -C _build
 ninja -C _build install
@@ -400,7 +401,7 @@ $CURL https://cairographics.org/releases/pixman-${VERSION_PIXMAN}.tar.gz | tar x
 cd ${DEPS}/pixman
 # Disable tests and demos
 sed -i'.bak' "/subdir('test')/{N;d;}" meson.build
-LDFLAGS=${LDFLAGS/\$/} meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
+meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   -Dlibpng=disabled -Diwmmxt=disabled -Dgtk=disabled -Dopenmp=disabled
 ninja -C _build
 ninja -C _build install
@@ -421,7 +422,7 @@ $CURL https://github.com/fribidi/fribidi/releases/download/v${VERSION_FRIBIDI}/f
 cd ${DEPS}/fribidi
 # Disable tests
 sed -i'.bak' "/subdir('test')/d" meson.build
-LDFLAGS=${LDFLAGS/\$/} meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
+meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   -Ddocs=false
 ninja -C _build
 ninja -C _build install
@@ -431,7 +432,7 @@ $CURL https://download.gnome.org/sources/pango/$(without_patch $VERSION_PANGO)/p
 cd ${DEPS}/pango
 # Disable utils, examples, tests and tools
 sed -i'.bak' "/subdir('utils')/{N;N;N;d;}" meson.build
-LDFLAGS=${LDFLAGS/\$/} meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
+meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   -Dgtk_doc=false -Dintrospection=disabled -Dfontconfig=enabled
 ninja -C _build
 ninja -C _build install
