@@ -121,8 +121,8 @@ VERSION_PIXMAN=0.40.0
 VERSION_CAIRO=1.17.4
 VERSION_FRIBIDI=1.0.11
 VERSION_PANGO=1.49.1
-VERSION_SVG=2.52.1
-VERSION_AOM=3.1.3
+VERSION_SVG=2.52.2
+VERSION_AOM=3.2.0
 VERSION_HEIF=1.12.0
 
 # Remove patch version component
@@ -142,7 +142,7 @@ version_latest() {
   if [[ "$4" == *"unstable"* ]]; then
     VERSION_SELECTOR="versions"
   fi
-  VERSION_LATEST=$($CURL "https://release-monitoring.org/api/v2/versions/?project_id=$3" | jq -j ".$VERSION_SELECTOR[0]")
+  VERSION_LATEST=$($CURL "https://release-monitoring.org/api/v2/versions/?project_id=$3" | jq -j ".$VERSION_SELECTOR[0]" | tr '_' '.')
   if [ "$VERSION_LATEST" != "$2" ]; then
     ALL_AT_VERSION_LATEST=false
     echo "$1 version $2 has been superseded by $VERSION_LATEST"
