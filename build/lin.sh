@@ -99,7 +99,7 @@ CURL="curl --silent --location --retry 3 --retry-max-time 30"
 # Dependency version numbers
 VERSION_ZLIB_NG=2.0.5
 VERSION_FFI=3.4.2
-VERSION_GLIB=2.70.0
+VERSION_GLIB=2.70.1
 VERSION_XML2=2.9.12
 VERSION_GSF=1.14.47
 VERSION_EXIF=0.6.23
@@ -116,12 +116,12 @@ VERSION_GDKPIXBUF=2.42.6
 VERSION_FREETYPE=2.11.0
 VERSION_EXPAT=2.4.1
 VERSION_FONTCONFIG=2.13.93
-VERSION_HARFBUZZ=3.0.0
+VERSION_HARFBUZZ=3.1.0
 VERSION_PIXMAN=0.40.0
 VERSION_CAIRO=1.17.4
 VERSION_FRIBIDI=1.0.11
-VERSION_PANGO=1.49.1
-VERSION_SVG=2.52.2
+VERSION_PANGO=1.49.2
+VERSION_SVG=2.52.3
 VERSION_AOM=3.2.0
 VERSION_HEIF=1.12.0
 
@@ -221,6 +221,8 @@ if [ "${PLATFORM%-*}" == "linuxmusl" ] || [ "$DARWIN" = true ]; then
   $CURL https://gist.github.com/kleisauke/f6dcbf02a9aa43fd582272c3d815e7a8/raw/9cd8625c6374e0d201e6fc56010008dbb64eb8cf/glib-proxy-libintl.patch | patch -p1
 fi
 $CURL https://gist.githubusercontent.com/lovell/7e0ce65249b951d5be400fb275de3924/raw/1a833ef4263271d299587524198b024eb5cc4f34/glib-without-gregex.patch | patch -p1
+# Fix pcre URL, can be removed after 2.70.2
+$CURL https://gitlab.gnome.org/GNOME/glib/-/commit/3be95baee7d03035525b5f015fe5f7cdcc42f36a.patch | patch -p1
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   --force-fallback-for=libpcre -Dtests=false -Dinstalled_tests=false -Dlibmount=disabled -Dlibelf=disabled ${DARWIN:+-Dbsymbolic_functions=false}
 ninja -C _build
