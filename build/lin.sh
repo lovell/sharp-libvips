@@ -393,6 +393,8 @@ make install-strip
 mkdir ${DEPS}/harfbuzz
 $CURL https://github.com/harfbuzz/harfbuzz/archive/${VERSION_HARFBUZZ}.tar.gz | tar xzC ${DEPS}/harfbuzz --strip-components=1
 cd ${DEPS}/harfbuzz
+# https://github.com/harfbuzz/harfbuzz/issues/3283
+$CURL https://github.com/harfbuzz/harfbuzz/commit/07dc34bdaf977a3be97ab5a68455ed7a67f80a06.patch | patch -p1
 # Disable utils
 sed -i'.bak' "/subdir('util')/d" meson.build
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
