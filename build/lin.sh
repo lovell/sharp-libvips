@@ -221,8 +221,8 @@ if [ "${PLATFORM%-*}" == "linuxmusl" ] || [ "$DARWIN" = true ]; then
   $CURL https://gist.github.com/kleisauke/f6dcbf02a9aa43fd582272c3d815e7a8/raw/9cd8625c6374e0d201e6fc56010008dbb64eb8cf/glib-proxy-libintl.patch | patch -p1
 fi
 $CURL https://gist.githubusercontent.com/lovell/7e0ce65249b951d5be400fb275de3924/raw/1a833ef4263271d299587524198b024eb5cc4f34/glib-without-gregex.patch | patch -p1
-# Fix pcre URL, can be removed after 2.70.2
-$CURL https://gitlab.gnome.org/GNOME/glib/-/commit/3be95baee7d03035525b5f015fe5f7cdcc42f36a.patch | patch -p1
+# Use pcre from sourceforge
+sed -i'.bak' "s|ftp.pcre.org/pub/pcre|downloads.sourceforge.net/project/pcre/pcre/8.37|" subprojects/libpcre.wrap
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   --force-fallback-for=libpcre -Dtests=false -Dinstalled_tests=false -Dlibmount=disabled -Dlibelf=disabled ${DARWIN:+-Dbsymbolic_functions=false}
 ninja -C _build
