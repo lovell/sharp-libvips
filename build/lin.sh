@@ -116,12 +116,12 @@ VERSION_GDKPIXBUF=2.42.6
 VERSION_FREETYPE=2.11.0
 VERSION_EXPAT=2.4.1
 VERSION_FONTCONFIG=2.13.93
-VERSION_HARFBUZZ=3.1.0
+VERSION_HARFBUZZ=3.1.1
 VERSION_PIXMAN=0.40.0
 VERSION_CAIRO=1.17.4
 VERSION_FRIBIDI=1.0.11
-VERSION_PANGO=1.49.2
-VERSION_SVG=2.52.3
+VERSION_PANGO=1.49.3
+VERSION_SVG=2.52.4
 VERSION_AOM=3.2.0
 VERSION_HEIF=1.12.0
 
@@ -393,8 +393,6 @@ make install-strip
 mkdir ${DEPS}/harfbuzz
 $CURL https://github.com/harfbuzz/harfbuzz/archive/${VERSION_HARFBUZZ}.tar.gz | tar xzC ${DEPS}/harfbuzz --strip-components=1
 cd ${DEPS}/harfbuzz
-# https://github.com/harfbuzz/harfbuzz/issues/3283
-$CURL https://github.com/harfbuzz/harfbuzz/commit/07dc34bdaf977a3be97ab5a68455ed7a67f80a06.patch | patch -p1
 # Disable utils
 sed -i'.bak' "/subdir('util')/d" meson.build
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
