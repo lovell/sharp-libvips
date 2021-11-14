@@ -124,6 +124,7 @@ VERSION_PANGO=1.49.3
 VERSION_SVG=2.52.4
 VERSION_AOM=3.2.0
 VERSION_HEIF=1.12.0
+VERSION_CGIF=0.0.2
 
 # Remove patch version component
 without_patch() {
@@ -172,6 +173,7 @@ version_latest "pango" "$VERSION_PANGO" "11783"
 version_latest "svg" "$VERSION_SVG" "5420"
 version_latest "aom" "$VERSION_AOM" "17628"
 version_latest "heif" "$VERSION_HEIF" "64439"
+#version_latest "cgif" "$VERSION_CGIF" "" # not yet in release monitoring
 if [ "$ALL_AT_VERSION_LATEST" = "false" ]; then exit 1; fi
 
 # Download and build dependencies from source
@@ -468,6 +470,14 @@ fi
   ${DARWIN:+--disable-Bsymbolic}
 make install-strip
 
+mkdir ${DEPS}/cgif
+$CURL https://github.com/dloebl/cgif/archive/V${VERSION_CGIF}.tar.gz | tar xzC ${DEPS}/cgif --strip-components=1
+cd ${DEPS}/cgif
+CFLAGS="${CFLAGS} -O3" meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
+  -Dtests=false
+ninja -C _build
+ninja -C _build install
+
 mkdir ${DEPS}/vips
 $CURL https://github.com/libvips/libvips/releases/download/v${VERSION_VIPS}/vips-${VERSION_VIPS}.tar.gz | tar xzC ${DEPS}/vips --strip-components=1
 cd ${DEPS}/vips
@@ -537,6 +547,7 @@ cd ${TARGET}
 printf "{\n\
   \"aom\": \"${VERSION_AOM}\",\n\
   \"cairo\": \"${VERSION_CAIRO}\",\n\
+  \"cgif\": \"${VERSION_CGIF}\",\n\
   \"exif\": \"${VERSION_EXIF}\",\n\
   \"expat\": \"${VERSION_EXPAT}\",\n\
   \"ffi\": \"${VERSION_FFI}\",\n\
