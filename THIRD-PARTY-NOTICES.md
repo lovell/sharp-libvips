@@ -7,8 +7,9 @@ used under the terms of the following licences:
 |---------------|-----------------------------------------------------------------------------------------------------------|
 | aom           | BSD 2-Clause + [Alliance for Open Media Patent License 1.0](https://aomedia.org/license/patent-license/)  |
 | cairo         | Mozilla Public License 2.0                                                                                |
+| cgif          | MIT Licence                                                                                               |
 | expat         | MIT Licence                                                                                               |
-| fontconfig    | [fontconfig Licence](https://gitlab.freedesktop.org/fontconfig/fontconfig/blob/main/COPYING) (BSD-like) |
+| fontconfig    | [fontconfig Licence](https://gitlab.freedesktop.org/fontconfig/fontconfig/blob/main/COPYING) (BSD-like)   |
 | freetype      | [freetype Licence](https://git.savannah.gnu.org/cgit/freetype/freetype2.git/tree/docs/FTL.TXT) (BSD-like) |
 | fribidi       | LGPLv3                                                                                                    |
 | gdk-pixbuf    | LGPLv3                                                                                                    |
