@@ -102,11 +102,11 @@ VERSION_FFI=3.4.2
 VERSION_GLIB=2.70.1
 VERSION_XML2=2.9.12
 VERSION_GSF=1.14.47
-VERSION_EXIF=0.6.23
+VERSION_EXIF=0.6.24
 VERSION_LCMS2=2.12
 VERSION_MOZJPEG=4.0.3
 VERSION_PNG16=1.6.37
-VERSION_SPNG=0.7.0
+VERSION_SPNG=0.7.1
 VERSION_IMAGEQUANT=2.4.1
 VERSION_WEBP=1.2.1
 VERSION_TIFF=4.3.0
@@ -156,13 +156,15 @@ version_latest "xml2" "$VERSION_XML2" "1783"
 version_latest "gsf" "$VERSION_GSF" "1980"
 version_latest "exif" "$VERSION_EXIF" "1607"
 version_latest "lcms2" "$VERSION_LCMS2" "9815"
+#version_latest "mozjpeg" "$VERSION_MOZJPEG" "" # not yet in release monitoring
 version_latest "png" "$VERSION_PNG16" "1705"
-version_latest "spng" "$VERSION_SPNG" "24289"
+#version_latest "spng" "$VERSION_SPNG" "24289" # release monitoring still has 0.7.0
 version_latest "webp" "$VERSION_WEBP" "1761"
 version_latest "tiff" "$VERSION_TIFF" "1738"
 version_latest "orc" "$VERSION_ORC" "2573"
+#version_latest "proxy-libintl" "$VERSION_PROXY_LIBINTL" "" # not yet in release monitoring
 version_latest "gdkpixbuf" "$VERSION_GDKPIXBUF" "9533"
-#version_latest "freetype" "$VERSION_FREETYPE" "854" # latest version in release monitoring is out of sync
+version_latest "freetype" "$VERSION_FREETYPE" "854"
 version_latest "expat" "$VERSION_EXPAT" "770"
 #version_latest "fontconfig" "$VERSION_FONTCONFIG" "827" # 2.13.94 fails to build on macOS
 version_latest "harfbuzz" "$VERSION_HARFBUZZ" "1299"
