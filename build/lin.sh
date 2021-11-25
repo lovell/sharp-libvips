@@ -250,7 +250,7 @@ sed -i'.bak' "s/ doc tools tests thumbnailer python//" Makefile.in
 make install-strip
 
 mkdir ${DEPS}/exif
-$CURL https://github.com/libexif/libexif/releases/download/v${VERSION_EXIF}/libexif-${VERSION_EXIF}.tar.xz | tar xJC ${DEPS}/exif --strip-components=1
+$CURL https://github.com/libexif/libexif/archive/v${VERSION_EXIF}.tar.gz | tar xzC ${DEPS}/exif --strip-components=1
 cd ${DEPS}/exif
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
   --disable-nls --without-libiconv-prefix --without-libintl-prefix \
