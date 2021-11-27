@@ -116,7 +116,7 @@ VERSION_GDKPIXBUF=2.42.6
 VERSION_FREETYPE=2.11.0
 VERSION_EXPAT=2.4.1
 VERSION_FONTCONFIG=2.13.93
-VERSION_HARFBUZZ=3.1.1
+VERSION_HARFBUZZ=3.1.2
 VERSION_PIXMAN=0.40.0
 VERSION_CAIRO=1.17.4
 VERSION_FRIBIDI=1.0.11
@@ -124,7 +124,7 @@ VERSION_PANGO=1.49.3
 VERSION_SVG=2.52.4
 VERSION_AOM=3.2.0
 VERSION_HEIF=1.12.0
-VERSION_CGIF=0.0.2
+VERSION_CGIF=0.0.3
 
 # Remove patch version component
 without_patch() {
@@ -158,7 +158,7 @@ version_latest "exif" "$VERSION_EXIF" "1607"
 version_latest "lcms2" "$VERSION_LCMS2" "9815"
 #version_latest "mozjpeg" "$VERSION_MOZJPEG" "" # not yet in release monitoring
 version_latest "png" "$VERSION_PNG16" "1705"
-#version_latest "spng" "$VERSION_SPNG" "24289" # release monitoring still has 0.7.0
+version_latest "spng" "$VERSION_SPNG" "24289"
 version_latest "webp" "$VERSION_WEBP" "1761"
 version_latest "tiff" "$VERSION_TIFF" "1738"
 version_latest "orc" "$VERSION_ORC" "2573"
