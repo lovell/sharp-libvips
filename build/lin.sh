@@ -99,7 +99,7 @@ CURL="curl --silent --location --retry 3 --retry-max-time 30"
 # Dependency version numbers
 VERSION_ZLIB_NG=2.0.5
 VERSION_FFI=3.4.2
-VERSION_GLIB=2.70.2
+VERSION_GLIB=2.71.0
 VERSION_XML2=2.9.12
 VERSION_GSF=1.14.47
 VERSION_EXIF=0.6.24
@@ -120,8 +120,8 @@ VERSION_HARFBUZZ=3.2.0
 VERSION_PIXMAN=0.40.0
 VERSION_CAIRO=1.17.4
 VERSION_FRIBIDI=1.0.11
-VERSION_PANGO=1.50.1
-VERSION_SVG=2.52.4
+VERSION_PANGO=1.50.2
+VERSION_SVG=2.52.5
 VERSION_AOM=3.2.0
 VERSION_HEIF=1.12.0
 VERSION_CGIF=0.0.4
@@ -222,7 +222,7 @@ mkdir ${DEPS}/glib
 $CURL https://download.gnome.org/sources/glib/$(without_patch $VERSION_GLIB)/glib-${VERSION_GLIB}.tar.xz | tar xJC ${DEPS}/glib --strip-components=1
 cd ${DEPS}/glib
 if [ "${PLATFORM%-*}" == "linuxmusl" ] || [ "$DARWIN" = true ]; then
-  $CURL https://gist.github.com/kleisauke/f6dcbf02a9aa43fd582272c3d815e7a8/raw/9cd8625c6374e0d201e6fc56010008dbb64eb8cf/glib-proxy-libintl.patch | patch -p1
+  $CURL https://gist.github.com/kleisauke/f6dcbf02a9aa43fd582272c3d815e7a8/raw/7b606ec015dd6f4dfd464b3ccf879082e740ce74/glib-proxy-libintl.patch | patch -p1
 fi
 $CURL https://gist.githubusercontent.com/lovell/7e0ce65249b951d5be400fb275de3924/raw/1a833ef4263271d299587524198b024eb5cc4f34/glib-without-gregex.patch | patch -p1
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
