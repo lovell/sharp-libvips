@@ -184,14 +184,7 @@ if [ "$DARWIN" = true ]; then
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \
     | sh -s -- -y --no-modify-path --profile minimal ${DARWIN_ARM:+--default-toolchain nightly}
   if [ "$DARWIN_ARM" = true ]; then
-    ${CARGO_HOME}/bin/rustup component add rust-src 
     ${CARGO_HOME}/bin/rustup target add aarch64-apple-darwin
-
-    # Rebuild the standard library of Rust to avoid collisions with system libraries.
-    # See: https://github.com/lovell/sharp-libvips/issues/109
-    printf "[unstable]\n\
-build-std = [\"std\", \"panic_abort\"]\n\
-build-std-features = [\"panic_immediate_abort\"]" > ${CARGO_HOME}/config.toml
   fi
 fi
 
@@ -446,16 +439,6 @@ ninja -C _build install
 mkdir ${DEPS}/svg
 $CURL https://download.gnome.org/sources/librsvg/$(without_patch $VERSION_SVG)/librsvg-${VERSION_SVG}.tar.xz | tar xJC ${DEPS}/svg --strip-components=1
 cd ${DEPS}/svg
-# Allow building vendored sources with `-Zbuild-std`, see:
-# https://github.com/rust-lang/wg-cargo-std-aware/issues/23#issuecomment-720455524
-if [[ $PLATFORM == *"-arm64v8" ]]; then
-  RUST_SRC=$(rustc +nightly --print sysroot)/lib/rustlib/src/rust
-  RUST_TEST=$RUST_SRC/library/test
-  # Copy the Cargo.lock for Rust to places `vendor` will see
-  cp $RUST_SRC/Cargo.lock $RUST_TEST
-  # Actually do the vendor
-  cargo +nightly vendor -s $RUST_TEST/Cargo.toml
-fi
 sed -i'.bak' "s/^\(Requires:.*\)/\1 cairo-gobject pangocairo/" librsvg.pc.in
 # LTO optimization does not work for staticlib+rlib compilation
 sed -i'.bak' "s/, \"rlib\"//" Cargo.toml
