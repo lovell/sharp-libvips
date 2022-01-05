@@ -278,6 +278,8 @@ $CURL https://github.com/lovell/libheif/commit/7e1c1888023f6dd68cf33e537e7eb8e4d
 $CURL https://github.com/lovell/libheif/commit/e625a702ec7d46ce042922547d76045294af71d6.patch | git apply -
 # [PATCH] Avoid lroundf
 $CURL https://github.com/strukturag/libheif/pull/551/commits/e9004e96fbaf45b97d73e2469afd8ecfc9930ad0.patch | patch -p1
+# [PATCH] aom: verify NCLX values against known bounds
+$CURL https://github.com/strukturag/libheif/pull/583/commits/7da30e57498b2b67434abd4767377ee7b3d93ee4.patch | patch -p1
 CFLAGS="${CFLAGS} -O3" CXXFLAGS="${CXXFLAGS} -O3" ./configure \
   --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
   --disable-gdk-pixbuf --disable-go --disable-examples --disable-libde265 --disable-x265
