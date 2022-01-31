@@ -23,7 +23,7 @@ case ${PLATFORM} in
 esac
 
 FILENAME="vips-dev-${ARCH}-web-${VERSION_VIPS}-static.zip"
-URL="https://github.com/libvips/build-win64-mxe/releases/download/v${VERSION_VIPS}/${FILENAME}"
+URL="https://github.com/libvips/build-win64-mxe/releases/download/v${VERSION_VIPS}-build2/${FILENAME}"
 echo "Downloading $URL"
 $CURL -O $URL
 unzip $FILENAME
