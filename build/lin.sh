@@ -115,7 +115,7 @@ VERSION_PROXY_LIBINTL=0.3
 VERSION_GDKPIXBUF=2.42.6
 VERSION_FREETYPE=2.11.1
 VERSION_EXPAT=2.4.4
-VERSION_FONTCONFIG=2.13.93
+VERSION_FONTCONFIG=2.13.94
 VERSION_HARFBUZZ=3.2.0
 VERSION_PIXMAN=0.40.0
 VERSION_CAIRO=1.17.4
@@ -166,7 +166,7 @@ version_latest "orc" "$VERSION_ORC" "2573"
 version_latest "gdkpixbuf" "$VERSION_GDKPIXBUF" "9533"
 version_latest "freetype" "$VERSION_FREETYPE" "854"
 version_latest "expat" "$VERSION_EXPAT" "770"
-#version_latest "fontconfig" "$VERSION_FONTCONFIG" "827" # 2.13.94 fails to build on macOS
+version_latest "fontconfig" "$VERSION_FONTCONFIG" "827"
 version_latest "harfbuzz" "$VERSION_HARFBUZZ" "1299"
 version_latest "pixman" "$VERSION_PIXMAN" "3648"
 version_latest "cairo" "$VERSION_CAIRO" "247"
@@ -382,10 +382,21 @@ make install-strip
 mkdir ${DEPS}/fontconfig
 $CURL https://www.freedesktop.org/software/fontconfig/release/fontconfig-${VERSION_FONTCONFIG}.tar.xz | tar xJC ${DEPS}/fontconfig --strip-components=1
 cd ${DEPS}/fontconfig
-./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
-  --with-expat-includes=${TARGET}/include --with-expat-lib=${TARGET}/lib ${LINUX:+--sysconfdir=/etc} \
-  ${DARWIN:+--sysconfdir=/usr/local/etc} --disable-docs --disable-nls
-make install-strip
+# [PATCH] Fix FC_DEFAULT_FONTS on macOS and with BSD sed
+$CURL https://gitlab.freedesktop.org/fontconfig/fontconfig/-/commit/889097353ecd7b061ae7cf677e3db56db77a135f.patch | patch -p1
+# [PATCH] Add the option to not build fontconfig cache during
+$CURL https://gitlab.freedesktop.org/fontconfig/fontconfig/-/commit/877d8699047f91975f71fce4498a7ed6cc1dc439.patch | patch -p1
+# [PATCH] Fix a memory leak when trying to open a non-existing file
+$CURL https://gitlab.freedesktop.org/fontconfig/fontconfig/-/commit/57032f489b2cbe98c8e7927f4c18738869831f41.patch | patch -p1
+# [PATCH] Free local FcCache lock on contention
+$CURL https://gitlab.freedesktop.org/fontconfig/fontconfig/-/commit/efc71a3c132be05461ffc872e70390d61f27bc7e.patch | patch -p1
+# [PATCH] Fix possible memory leaks in FcPatternObjectAddWithBinding
+$CURL https://gitlab.freedesktop.org/fontconfig/fontconfig/-/commit/875878efb7ddd57303b75320b4ea10ee2b9cf370.patch | patch -p1
+meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
+  -Dcache-build=disabled -Ddoc=disabled -Dnls=disabled -Dtests=disabled -Dtools=disabled \
+  ${LINUX:+--sysconfdir=/etc} ${DARWIN:+--sysconfdir=/usr/local/etc}
+ninja -C _build
+ninja -C _build install
 
 mkdir ${DEPS}/harfbuzz
 $CURL https://github.com/harfbuzz/harfbuzz/archive/${VERSION_HARFBUZZ}.tar.gz | tar xzC ${DEPS}/harfbuzz --strip-components=1
