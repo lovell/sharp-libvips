@@ -49,7 +49,7 @@ export LDFLAGS="-L${TARGET}/lib"
 # On Linux, we need to create a relocatable library
 # Note: this is handled for macOS using the `install_name_tool` (see below)
 if [ "$LINUX" = true ]; then
-  export LDFLAGS+=" -Wl,--gc-sections -Wl,-rpath='\$\$ORIGIN/'"
+  export LDFLAGS+=" -Wl,--gc-sections -Wl,-rpath=\$ORIGIN/"
 fi
 
 # On macOS, we need to explicitly link against the system libraries
@@ -279,6 +279,9 @@ $CURL https://github.com/strukturag/libheif/commit/e625a702ec7d46ce042922547d760
 $CURL https://github.com/strukturag/libheif/commit/499a0a31d79936042c7abeef2513bb0b56b81489.patch | patch -p1
 # [PATCH] Add API to sanitize enums relating to color profiles
 $CURL https://github.com/kleisauke/libheif/commit/0d44224914946a00d293c08bbaf4553acc985802.patch | patch -p1
+# Fix static build by renaming `Requires.private` to `Requires` (workaround for Meson, see: https://github.com/mesonbuild/meson/pull/9603)
+sed -i'.bak' "/Requires:/d" libheif.pc.in
+sed -i'.bak' "s/Requires.private:/Requires:/" libheif.pc.in
 autoreconf -fiv
 CFLAGS="${CFLAGS} -O3" CXXFLAGS="${CXXFLAGS} -O3" ./configure \
   --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
@@ -459,24 +462,33 @@ ninja -C _build
 ninja -C _build install
 
 mkdir ${DEPS}/vips
-$CURL https://github.com/libvips/libvips/releases/download/v${VERSION_VIPS}/vips-${VERSION_VIPS}.tar.gz | tar xzC ${DEPS}/vips --strip-components=1
+# TODO: Use the tarball for the next release https://github.com/libvips/libvips/issues/2876
+#$CURL https://github.com/libvips/libvips/releases/download/v${VERSION_VIPS}/vips-${VERSION_VIPS}.tar.gz | tar xzC ${DEPS}/vips --strip-components=1
+$CURL https://github.com/libvips/libvips/archive/refs/tags/v${VERSION_VIPS}.tar.gz | tar xzC ${DEPS}/vips --strip-components=1
 cd ${DEPS}/vips
-# Prevent exporting the g_param_spec_types symbol to avoid collisions with shared libraries
-printf "{\n\
-local:\n\
-    g_param_spec_types;\n\
-};" > vips.map
-PKG_CONFIG="pkg-config --static" CFLAGS="${CFLAGS} -O3" CXXFLAGS="${CXXFLAGS} -O3" ./configure \
-  --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking \
-  --disable-debug --disable-deprecated --disable-introspection --disable-modules --without-doxygen \
-  --without-analyze --without-cfitsio --without-fftw --without-libjxl --without-libopenjp2 \
-  --without-magick --without-matio --without-nifti --without-OpenEXR \
-  --without-openslide --without-pdfium --without-poppler --without-ppm --without-radiance
-# https://docs.fedoraproject.org/en-US/packaging-guidelines/#_removing_rpath
-sed -i'.bak' 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
 # Link libvips.so.42 statically into libvips-cpp.so.42
-make -C 'libvips' install-strip LDFLAGS="-static $LDFLAGS"
-make -C 'cplusplus' install-strip ${LINUX:+LDFLAGS="$LDFLAGS -Wl,-Bsymbolic-functions -Wl,--version-script=$DEPS/vips/vips.map"}
+sed -i'.bak' "s/library('vips'/static_&/" libvips/meson.build
+sed -i'.bak' "/version: library_version/{N;d;}" libvips/meson.build
+if [ "$LINUX" = true ]; then
+  # Ensure symbols from external libs (except for libglib-2.0.a and libgobject-2.0.a) are not exposed
+  EXCLUDE_LIBS=$(find ${TARGET}/lib -maxdepth 1 -name '*.a' ! -name 'libglib-2.0.a' ! -name 'libgobject-2.0.a' -printf "-Wl,--exclude-libs=%f ")
+  EXCLUDE_LIBS=${EXCLUDE_LIBS%?}
+  # Localize the g_param_spec_types symbol to avoid collisions with shared libraries
+  # See: https://github.com/lovell/sharp/issues/2535#issuecomment-766400693
+  printf "{local:g_param_spec_types;};" > vips.map
+elif [ "$DARWIN" = true ]; then
+  # https://github.com/pybind/pybind11/issues/595
+  export STRIP="strip -x"
+fi
+# Disable building man pages, gettext po files, tools, and (fuzz-)tests
+sed -i'.bak' "/subdir('man')/{N;N;N;N;d;}" meson.build
+CFLAGS="${CFLAGS} -O3" CXXFLAGS="${CXXFLAGS} -O3" meson setup _build --default-library=shared --buildtype=release --strip --prefix=${TARGET} ${MESON} \
+  -Ddeprecated=false -Dintrospection=false -Dmodules=disabled -Dcfitsio=disabled -Dfftw=disabled -Djpeg-xl=disabled \
+  -Dmagick=disabled -Dmatio=disabled -Dnifti=disabled -Dopenexr=disabled -Dopenjpeg=disabled -Dopenslide=disabled \
+  -Dpdfium=disabled -Dpoppler=disabled -Dquantizr=disabled -Dppm=false -Danalyze=false -Dradiance=false \
+  ${LINUX:+-Dcpp_link_args="$LDFLAGS -Wl,-Bsymbolic-functions -Wl,--version-script=$DEPS/vips/vips.map $EXCLUDE_LIBS"}
+ninja -C _build
+ninja -C _build install
 
 # Cleanup
 rm -rf ${TARGET}/lib/{pkgconfig,.libs,*.la,cmake}
