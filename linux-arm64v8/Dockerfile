@@ -7,7 +7,7 @@ LABEL maintainer="Lovell Fuller <npm@lovell.info>"
 ENV \
   RUSTUP_HOME="/usr/local/rustup" \
   CARGO_HOME="/usr/local/cargo" \
-  PATH="/usr/local/cargo/bin:/opt/rh/devtoolset-11/root/usr/bin:$PATH"
+  PATH="/usr/local/cargo/bin:/opt/rh/devtoolset-10/root/usr/bin:$PATH"
 
 # Build dependencies
 RUN \
@@ -18,8 +18,8 @@ RUN \
     advancecomp \
     brotli \
     cmake3 \
-    devtoolset-11-gcc \
-    devtoolset-11-gcc-c++ \
+    devtoolset-10-gcc \
+    devtoolset-10-gcc-c++ \
     glib2-devel \
     gobject-introspection-devel \
     gperf \
@@ -43,7 +43,7 @@ RUN \
 ENV \
   PLATFORM="linux-arm64v8" \
   CARGO_BUILD_TARGET="aarch64-unknown-linux-gnu" \
-  FLAGS="-march=armv8-a+crc" \
+  FLAGS="-march=armv8-a" \
   MESON="--cross-file=/root/meson.ini"
 
 COPY Toolchain.cmake /root/
