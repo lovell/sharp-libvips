@@ -103,7 +103,7 @@ VERSION_GLIB=2.71.1
 VERSION_XML2=2.9.12
 VERSION_GSF=1.14.48
 VERSION_EXIF=0.6.24
-VERSION_LCMS2=2.13
+VERSION_LCMS2=2.13.1
 VERSION_MOZJPEG=4.0.3
 VERSION_PNG16=1.6.37
 VERSION_SPNG=0.7.1
@@ -115,8 +115,8 @@ VERSION_PROXY_LIBINTL=0.3
 VERSION_GDKPIXBUF=2.42.6
 VERSION_FREETYPE=2.11.1
 VERSION_EXPAT=2.4.4
-VERSION_FONTCONFIG=2.13.94
-VERSION_HARFBUZZ=3.3.1
+VERSION_FONTCONFIG=2.13.96
+VERSION_HARFBUZZ=3.3.2
 VERSION_PIXMAN=0.40.0
 VERSION_CAIRO=1.17.4
 VERSION_FRIBIDI=1.0.11
@@ -249,7 +249,7 @@ cd ${DEPS}/exif
 make install-strip
 
 mkdir ${DEPS}/lcms2
-$CURL https://downloads.sourceforge.net/project/lcms/lcms/${VERSION_LCMS2}/lcms2-${VERSION_LCMS2}.tar.gz | tar xzC ${DEPS}/lcms2 --strip-components=1
+$CURL https://github.com/mm2/Little-CMS/releases/download/lcms${VERSION_LCMS2}/lcms2-${VERSION_LCMS2}.tar.gz | tar xzC ${DEPS}/lcms2 --strip-components=1
 cd ${DEPS}/lcms2
 CFLAGS="${CFLAGS} -O3" ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking
 make install-strip
@@ -382,16 +382,6 @@ make install-strip
 mkdir ${DEPS}/fontconfig
 $CURL https://www.freedesktop.org/software/fontconfig/release/fontconfig-${VERSION_FONTCONFIG}.tar.xz | tar xJC ${DEPS}/fontconfig --strip-components=1
 cd ${DEPS}/fontconfig
-# [PATCH] Fix FC_DEFAULT_FONTS on macOS and with BSD sed
-$CURL https://gitlab.freedesktop.org/fontconfig/fontconfig/-/commit/889097353ecd7b061ae7cf677e3db56db77a135f.patch | patch -p1
-# [PATCH] Add the option to not build fontconfig cache during
-$CURL https://gitlab.freedesktop.org/fontconfig/fontconfig/-/commit/877d8699047f91975f71fce4498a7ed6cc1dc439.patch | patch -p1
-# [PATCH] Fix a memory leak when trying to open a non-existing file
-$CURL https://gitlab.freedesktop.org/fontconfig/fontconfig/-/commit/57032f489b2cbe98c8e7927f4c18738869831f41.patch | patch -p1
-# [PATCH] Free local FcCache lock on contention
-$CURL https://gitlab.freedesktop.org/fontconfig/fontconfig/-/commit/efc71a3c132be05461ffc872e70390d61f27bc7e.patch | patch -p1
-# [PATCH] Fix possible memory leaks in FcPatternObjectAddWithBinding
-$CURL https://gitlab.freedesktop.org/fontconfig/fontconfig/-/commit/875878efb7ddd57303b75320b4ea10ee2b9cf370.patch | patch -p1
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   -Dcache-build=disabled -Ddoc=disabled -Dnls=disabled -Dtests=disabled -Dtools=disabled \
   ${LINUX:+--sysconfdir=/etc} ${DARWIN:+--sysconfdir=/usr/local/etc}
