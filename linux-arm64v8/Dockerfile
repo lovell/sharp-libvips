@@ -43,7 +43,7 @@ RUN \
 ENV \
   PLATFORM="linux-arm64v8" \
   CARGO_BUILD_TARGET="aarch64-unknown-linux-gnu" \
-  FLAGS="-march=armv8-a+crc -mfpu=neon" \
+  FLAGS="-march=armv8-a+crc" \
   MESON="--cross-file=/root/meson.ini"
 
 COPY Toolchain.cmake /root/
