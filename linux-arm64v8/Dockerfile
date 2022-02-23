@@ -41,6 +41,7 @@ RUN \
 
 # Compiler settings
 ENV \
+  PKG_CONFIG="pkg-config --static" \
   PLATFORM="linux-arm64v8" \
   CARGO_BUILD_TARGET="aarch64-unknown-linux-gnu" \
   FLAGS="-march=armv8-a" \

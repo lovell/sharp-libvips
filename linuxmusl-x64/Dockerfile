@@ -47,6 +47,7 @@ RUN \
 
 # Compiler settings
 ENV \
+  PKG_CONFIG="pkg-config --static" \
   PLATFORM="linuxmusl-x64" \
   FLAGS="-march=westmere"
 
