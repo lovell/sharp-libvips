@@ -20,14 +20,9 @@ RUN \
     cmake3 \
     devtoolset-11-gcc \
     devtoolset-11-gcc-c++ \
-    glib2-devel \
-    gobject-introspection-devel \
-    gperf \
-    gtk-doc \
     jq \
     nasm \
     ninja-build \
-    prelink \
     python3 \
     && \
   curl https://sh.rustup.rs -sSf | sh -s -- -y \
