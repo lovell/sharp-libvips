@@ -99,32 +99,32 @@ CURL="curl --silent --location --retry 3 --retry-max-time 30"
 # Dependency version numbers
 VERSION_ZLIB_NG=2.0.6
 VERSION_FFI=3.4.2
-VERSION_GLIB=2.71.1
-VERSION_XML2=2.9.12
-VERSION_GSF=1.14.48
+VERSION_GLIB=2.72.0
+VERSION_XML2=2.9.13
+VERSION_GSF=1.14.49
 VERSION_EXIF=0.6.24
 VERSION_LCMS2=2.13.1
 VERSION_MOZJPEG=4.0.3
 VERSION_PNG16=1.6.37
-VERSION_SPNG=0.7.1
+VERSION_SPNG=0.7.2
 VERSION_IMAGEQUANT=2.4.1
 VERSION_WEBP=1.2.2
 VERSION_TIFF=4.3.0
 VERSION_ORC=0.4.32
 VERSION_PROXY_LIBINTL=0.3
-VERSION_GDKPIXBUF=2.42.6
+VERSION_GDKPIXBUF=2.42.8
 VERSION_FREETYPE=2.11.1
-VERSION_EXPAT=2.4.4
+VERSION_EXPAT=2.4.7
 VERSION_FONTCONFIG=2.13.96
-VERSION_HARFBUZZ=3.3.2
+VERSION_HARFBUZZ=4.1.0
 VERSION_PIXMAN=0.40.0
 VERSION_CAIRO=1.17.4
 VERSION_FRIBIDI=1.0.11
-VERSION_PANGO=1.50.3
+VERSION_PANGO=1.50.6
 VERSION_SVG=2.52.5
-VERSION_AOM=3.2.0
+VERSION_AOM=3.3.0
 VERSION_HEIF=1.12.0
-VERSION_CGIF=0.1.0
+VERSION_CGIF=0.2.1
 
 # Remove patch version component
 without_patch() {
@@ -169,10 +169,10 @@ version_latest "expat" "$VERSION_EXPAT" "770"
 version_latest "fontconfig" "$VERSION_FONTCONFIG" "827"
 version_latest "harfbuzz" "$VERSION_HARFBUZZ" "1299"
 version_latest "pixman" "$VERSION_PIXMAN" "3648"
-version_latest "cairo" "$VERSION_CAIRO" "247"
+#version_latest "cairo" "$VERSION_CAIRO" "247" # TODO: latest switches to meson, snapshot not yet published
 version_latest "fribidi" "$VERSION_FRIBIDI" "857"
 version_latest "pango" "$VERSION_PANGO" "11783"
-version_latest "svg" "$VERSION_SVG" "5420"
+#version_latest "svg" "$VERSION_SVG" "5420" # TODO: latest depends on python3-docutils
 version_latest "aom" "$VERSION_AOM" "17628"
 version_latest "heif" "$VERSION_HEIF" "64439"
 #version_latest "cgif" "$VERSION_CGIF" "" # not yet in release monitoring
@@ -224,7 +224,7 @@ ninja -C _build
 ninja -C _build install
 
 mkdir ${DEPS}/xml2
-$CURL http://xmlsoft.org/sources/libxml2-${VERSION_XML2}.tar.gz | tar xzC ${DEPS}/xml2 --strip-components=1
+$CURL https://download.gnome.org/sources/libxml2/2.9/libxml2-${VERSION_XML2}.tar.xz | tar xJC ${DEPS}/xml2 --strip-components=1
 cd ${DEPS}/xml2
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
   --with-minimum --with-reader --with-writer --with-valid --with-http --with-tree --without-python --without-lzma \
@@ -255,7 +255,7 @@ CFLAGS="${CFLAGS} -O3" ./configure --host=${CHOST} --prefix=${TARGET} --enable-s
 make install-strip
 
 mkdir ${DEPS}/aom
-$CURL https://storage.googleapis.com/aom-releases/libaom-${VERSION_AOM}.tar.gz | tar xzC ${DEPS}/aom
+$CURL https://storage.googleapis.com/aom-releases/libaom-${VERSION_AOM}.tar.gz | tar xzC ${DEPS}/aom --strip-components=1
 cd ${DEPS}/aom
 mkdir aom_build
 cd aom_build
@@ -279,7 +279,7 @@ $CURL https://github.com/lovell/libheif/commit/e625a702ec7d46ce042922547d7604529
 # [PATCH] Avoid lroundf
 $CURL https://github.com/strukturag/libheif/pull/551/commits/e9004e96fbaf45b97d73e2469afd8ecfc9930ad0.patch | patch -p1
 # [PATCH] aom: verify NCLX values against known bounds
-$CURL https://github.com/strukturag/libheif/pull/583/commits/7da30e57498b2b67434abd4767377ee7b3d93ee4.patch | git apply -
+$CURL https://github.com/strukturag/libheif/pull/583/commits/80300f8c8b4edb4e214a94668eeb9b88cba95774.patch | git apply -
 CFLAGS="${CFLAGS} -O3" CXXFLAGS="${CXXFLAGS} -O3" ./configure \
   --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
   --disable-gdk-pixbuf --disable-go --disable-examples --disable-libde265 --disable-x265
@@ -357,7 +357,7 @@ sed -i'.bak' "/loaders_cache = custom/{N;N;N;N;N;N;N;N;N;c\\
 sed -i'.bak' "s/has_header('jpeglib.h')/has_header('jpeglib.h', args: '-I\/target\/include')/g" meson.build
 sed -i'.bak' "s/cc.find_library('jpeg'/dependency('libjpeg'/g" meson.build
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
-  -Dtiff=false -Dintrospection=disabled -Dinstalled_tests=false -Dgio_sniffing=false -Dman=false -Dbuiltin_loaders=png,jpeg
+  -Dtiff=disabled -Dintrospection=disabled -Dinstalled_tests=false -Dgio_sniffing=false -Dman=false -Dbuiltin_loaders=png,jpeg
 ninja -C _build
 ninja -C _build install
 # Include libjpeg and libpng as a dependency of gdk-pixbuf, see: https://gitlab.gnome.org/GNOME/gdk-pixbuf/merge_requests/50
