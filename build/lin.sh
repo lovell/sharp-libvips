@@ -118,7 +118,7 @@ VERSION_EXPAT=2.4.7
 VERSION_FONTCONFIG=2.13.96
 VERSION_HARFBUZZ=4.1.0
 VERSION_PIXMAN=0.40.0
-VERSION_CAIRO=1.17.4
+VERSION_CAIRO=1.17.6
 VERSION_FRIBIDI=1.0.11
 VERSION_PANGO=1.50.6
 VERSION_SVG=2.52.5
@@ -169,7 +169,7 @@ version_latest "expat" "$VERSION_EXPAT" "770"
 version_latest "fontconfig" "$VERSION_FONTCONFIG" "827"
 version_latest "harfbuzz" "$VERSION_HARFBUZZ" "1299"
 version_latest "pixman" "$VERSION_PIXMAN" "3648"
-#version_latest "cairo" "$VERSION_CAIRO" "247" # TODO: latest switches to meson, snapshot not yet published
+version_latest "cairo" "$VERSION_CAIRO" "247"
 version_latest "fribidi" "$VERSION_FRIBIDI" "857"
 version_latest "pango" "$VERSION_PANGO" "11783"
 #version_latest "svg" "$VERSION_SVG" "5420" # TODO: latest depends on python3-docutils
@@ -409,15 +409,13 @@ ninja -C _build
 ninja -C _build install
 
 mkdir ${DEPS}/cairo
-$CURL https://cairographics.org/snapshots/cairo-${VERSION_CAIRO}.tar.xz | tar xJC ${DEPS}/cairo --strip-components=1
+$CURL https://gitlab.freedesktop.org/cairo/cairo/-/archive/${VERSION_CAIRO}/cairo-${VERSION_CAIRO}.tar.bz2 | tar xjC ${DEPS}/cairo --strip-components=1
 cd ${DEPS}/cairo
-sed -i'.bak' "s/^\(Libs:.*\)/\1 @CAIRO_NONPKGCONFIG_LIBS@/" src/cairo.pc.in
-CFLAGS="$CFLAGS ${LINUX:+-fno-function-sections -fno-data-sections}" LDFLAGS="$LDFLAGS ${LINUX:+-Wl,--no-gc-sections}" ./configure \
-  --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
-  --disable-xlib --disable-xcb --disable-win32 --disable-egl --disable-glx --disable-wgl --disable-ps \
-  --disable-trace --disable-interpreter ${LINUX:+--disable-quartz} ${DARWIN:+--enable-quartz-image} \
-  LIBS="-lpixman-1 -lfreetype"
-make install-strip
+meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
+  ${LINUX:+-Dquartz=disabled} ${DARWIN:+-Dquartz=enabled} -Dxcb=disabled -Dxlib=disabled -Dzlib=disabled \
+  -Dtests=disabled -Dspectre=disabled -Dsymbol-lookup=disabled
+ninja -C _build
+ninja -C _build install
 
 mkdir ${DEPS}/fribidi
 $CURL https://github.com/fribidi/fribidi/releases/download/v${VERSION_FRIBIDI}/fribidi-${VERSION_FRIBIDI}.tar.xz | tar xJC ${DEPS}/fribidi --strip-components=1
