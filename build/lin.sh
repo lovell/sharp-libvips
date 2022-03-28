@@ -279,7 +279,7 @@ $CURL https://github.com/lovell/libheif/commit/e625a702ec7d46ce042922547d7604529
 # [PATCH] Avoid lroundf
 $CURL https://github.com/strukturag/libheif/pull/551/commits/e9004e96fbaf45b97d73e2469afd8ecfc9930ad0.patch | patch -p1
 # [PATCH] aom: verify NCLX values against known bounds
-$CURL https://github.com/strukturag/libheif/pull/583/commits/7da30e57498b2b67434abd4767377ee7b3d93ee4.patch | git apply -
+$CURL https://github.com/strukturag/libheif/pull/583/commits/80300f8c8b4edb4e214a94668eeb9b88cba95774.patch | git apply -
 CFLAGS="${CFLAGS} -O3" CXXFLAGS="${CXXFLAGS} -O3" ./configure \
   --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
   --disable-gdk-pixbuf --disable-go --disable-examples --disable-libde265 --disable-x265
@@ -457,7 +457,7 @@ fi
 make install-strip
 
 mkdir ${DEPS}/cgif
-$CURL https://github.com/dloebl/cgif/archive/V${VERSION_CGIF}.tar.gz | tar xzC ${DEPS}/cgif --strip-components=1
+$CURL https://github.com/dloebl/cgif/archive/refs/tags/V${VERSION_CGIF}.tar.gz | tar xzC ${DEPS}/cgif --strip-components=1
 cd ${DEPS}/cgif
 CFLAGS="${CFLAGS} -O3" meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   -Dtests=false
@@ -465,13 +465,14 @@ ninja -C _build
 ninja -C _build install
 
 mkdir ${DEPS}/vips
-$CURL https://github.com/libvips/libvips/releases/download/v${VERSION_VIPS}/vips-${VERSION_VIPS}.tar.gz | tar xzC ${DEPS}/vips --strip-components=1
+$CURL https://github.com/libvips/libvips/archive/refs/tags/${VERSION_VIPS}.tar.gz | tar xzC ${DEPS}/vips --strip-components=1
 cd ${DEPS}/vips
 # Prevent exporting the g_param_spec_types symbol to avoid collisions with shared libraries
 printf "{\n\
 local:\n\
     g_param_spec_types;\n\
 };" > vips.map
+NOCONFIGURE=1 ./autogen.sh
 PKG_CONFIG="pkg-config --static" CFLAGS="${CFLAGS} -O3" CXXFLAGS="${CXXFLAGS} -O3" ./configure \
   --host=${CHOST} --prefix=${TARGET} --enable-shared --disable-static --disable-dependency-tracking \
   --disable-debug --disable-deprecated --disable-introspection --disable-modules --without-doxygen \
