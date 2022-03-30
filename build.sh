@@ -20,11 +20,25 @@ if [ $# -lt 1 ]; then
   echo "- linux-armv7"
   echo "- linux-arm64v8"
   echo "- linuxmusl-arm64v8"
+  echo "- linux-s390x"
   echo "- darwin-x64"
   echo "- darwin-arm64v8"
   echo
   exit 1
 fi
+
+declare -A image
+image[win32-ia32]='debian:buster'
+image[win32-x64]='debian:buster'
+image[win32-arm64v8]='debian:buster'
+image[linux-x64]='centos:7'
+image[linuxmusl-x64]='alpine:3.11'
+image[linuxmusl-arm64v8]='alpine:3.11'
+image[linux-armv6]='debian:buster'
+image[linux-armv7]='debian:buster'
+image[linux-arm64v8]=' arm64v8/centos:7'
+image[linux-s390x]='clefos:7'
+
 VERSION_VIPS="$1"
 PLATFORM="${2:-all}"
 
@@ -74,8 +88,11 @@ if ! [ -x "$(command -v docker)" ]; then
 fi
 
 # Update base images
-for baseimage in centos:7 debian:buster debian:bullseye alpine:3.11; do
-  docker pull $baseimage
+for flavour in "${!image[@]}"; do
+  if [ $PLATFORM = "all" ] || [ $PLATFORM = $flavour ]; then
+    echo "Pulling ${image[$flavour]} for $flavour..."
+    docker pull ${image[$flavour]}
+  fi
 done
 
 # Windows
@@ -87,11 +104,11 @@ for flavour in win32-ia32 win32-x64 win32-arm64v8; do
   fi
 done
 
-# Linux (x64, ARMv6, ARMv7, ARM64v8)
-for flavour in linux-x64 linuxmusl-x64 linux-armv6 linux-armv7 linux-arm64v8 linuxmusl-arm64v8; do
+# Linux (x64, ARMv6, ARMv7, ARM64v8, s390x)
+for flavour in linux-x64 linuxmusl-x64 linux-armv6 linux-armv7 linux-arm64v8 linuxmusl-arm64v8 linux-s390x; do
   if [ $PLATFORM = "all" ] || [ $PLATFORM = $flavour ]; then
     echo "Building $flavour..."
     docker build -t vips-dev-$flavour $flavour
-    docker run --rm -e "VERSION_VIPS=${VERSION_VIPS}" -e VERSION_LATEST_REQUIRED -v $PWD:/packaging vips-dev-$flavour sh -c "/packaging/build/lin.sh"
+    docker run -it --rm -e "VERSION_VIPS=${VERSION_VIPS}" -e VERSION_LATEST_REQUIRED -v $PWD:/packaging:z vips-dev-$flavour sh -c "/packaging/build/lin.sh"
   fi
 done
