@@ -121,7 +121,7 @@ VERSION_PIXMAN=0.40.0
 VERSION_CAIRO=1.17.6
 VERSION_FRIBIDI=1.0.11
 VERSION_PANGO=1.50.6
-VERSION_SVG=2.52.5
+VERSION_SVG=2.54.0
 VERSION_AOM=3.3.0
 VERSION_HEIF=1.12.0
 VERSION_CGIF=0.2.1
@@ -172,7 +172,7 @@ version_latest "pixman" "$VERSION_PIXMAN" "3648"
 version_latest "cairo" "$VERSION_CAIRO" "247"
 version_latest "fribidi" "$VERSION_FRIBIDI" "857"
 version_latest "pango" "$VERSION_PANGO" "11783"
-#version_latest "svg" "$VERSION_SVG" "5420" # TODO: latest depends on python3-docutils
+version_latest "svg" "$VERSION_SVG" "5420"
 version_latest "aom" "$VERSION_AOM" "17628"
 version_latest "heif" "$VERSION_HEIF" "64439"
 #version_latest "cgif" "$VERSION_CGIF" "" # not yet in release monitoring
@@ -440,6 +440,9 @@ ninja -C _build install
 mkdir ${DEPS}/svg
 $CURL https://download.gnome.org/sources/librsvg/$(without_patch $VERSION_SVG)/librsvg-${VERSION_SVG}.tar.xz | tar xJC ${DEPS}/svg --strip-components=1
 cd ${DEPS}/svg
+# [PATCH] (#859): Make rst2man and gi-docgen optional
+$CURL https://gitlab.gnome.org/GNOME/librsvg/-/commit/8eccd72a6b07f624768e734d3eadc3a1cde14f47.patch | patch -p1
+autoreconf -fiv
 sed -i'.bak' "s/^\(Requires:.*\)/\1 cairo-gobject pangocairo/" librsvg.pc.in
 # LTO optimization does not work for staticlib+rlib compilation
 sed -i'.bak' "s/, \"rlib\"//" Cargo.toml
