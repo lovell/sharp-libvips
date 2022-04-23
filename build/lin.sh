@@ -119,12 +119,12 @@ VERSION_FONTCONFIG=2.14.0
 VERSION_HARFBUZZ=4.2.0
 VERSION_PIXMAN=0.40.0
 VERSION_CAIRO=1.17.6
-VERSION_FRIBIDI=1.0.11
+VERSION_FRIBIDI=1.0.12
 VERSION_PANGO=1.50.7
-VERSION_SVG=2.54.0
+VERSION_SVG=2.54.1
 VERSION_AOM=3.3.0
 VERSION_HEIF=1.12.0
-VERSION_CGIF=0.2.1
+VERSION_CGIF=0.3.0
 
 # Remove patch version component
 without_patch() {
@@ -440,8 +440,6 @@ ninja -C _build install
 mkdir ${DEPS}/svg
 $CURL https://download.gnome.org/sources/librsvg/$(without_patch $VERSION_SVG)/librsvg-${VERSION_SVG}.tar.xz | tar xJC ${DEPS}/svg --strip-components=1
 cd ${DEPS}/svg
-# [PATCH] (#859): Make rst2man and gi-docgen optional
-$CURL https://gitlab.gnome.org/GNOME/librsvg/-/commit/8eccd72a6b07f624768e734d3eadc3a1cde14f47.patch | patch -p1
 autoreconf -fiv
 sed -i'.bak' "s/^\(Requires:.*\)/\1 cairo-gobject pangocairo/" librsvg.pc.in
 # LTO optimization does not work for staticlib+rlib compilation
