@@ -440,7 +440,6 @@ ninja -C _build install
 mkdir ${DEPS}/svg
 $CURL https://download.gnome.org/sources/librsvg/$(without_patch $VERSION_SVG)/librsvg-${VERSION_SVG}.tar.xz | tar xJC ${DEPS}/svg --strip-components=1
 cd ${DEPS}/svg
-autoreconf -fiv
 sed -i'.bak' "s/^\(Requires:.*\)/\1 cairo-gobject pangocairo/" librsvg.pc.in
 # LTO optimization does not work for staticlib+rlib compilation
 sed -i'.bak' "s/, \"rlib\"//" Cargo.toml
