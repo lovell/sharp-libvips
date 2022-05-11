@@ -96,6 +96,11 @@ unset PKG_CONFIG_PATH
 # Common options for curl
 CURL="curl --silent --location --retry 3 --retry-max-time 30"
 
+# Use token-based authentication for the GitHub API
+if [[ ! -z "$GITHUB_TOKEN" ]]; then
+  GITHUB_AUTH_HEADER="--header 'Authorization: Bearer ${GITHUB_TOKEN}'"
+fi
+
 # Dependency version numbers
 VERSION_ZLIB_NG=2.0.6
 VERSION_FFI=3.4.2
@@ -144,7 +149,7 @@ version_latest() {
     VERSION_SELECTOR="versions"
   fi
   if [[ "$3" == *"/"* ]]; then
-    VERSION_LATEST=$($CURL "https://api.github.com/repos/$3/tags" | jq -j ".[0].name" | tr -d 'vV')
+    VERSION_LATEST=$($CURL $GITHUB_AUTH_HEADER "https://api.github.com/repos/$3/tags" | jq -j ".[0].name" | tr -d 'vV')
   else
     VERSION_LATEST=$($CURL "https://release-monitoring.org/api/v2/versions/?project_id=$3" | jq -j ".$VERSION_SELECTOR[0]" | tr '_' '.')
   fi
