@@ -96,11 +96,6 @@ unset PKG_CONFIG_PATH
 # Common options for curl
 CURL="curl --silent --location --retry 3 --retry-max-time 30"
 
-# Use token-based authentication for the GitHub API
-if [[ ! -z "$GITHUB_TOKEN" ]]; then
-  GITHUB_AUTH_HEADER="--header 'Authorization: Bearer ${GITHUB_TOKEN}'"
-fi
-
 # Dependency version numbers
 VERSION_ZLIB_NG=2.0.6
 VERSION_FFI=3.4.2

@@ -49,6 +49,8 @@ jobs:
     - name: Build ${{ matrix.platform }}
       id: build-release
       run: ./build.sh $(cat LIBVIPS_VERSION) ${{ matrix.platform }}
+      env:
+        GITHUB_AUTH_HEADER: "--header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}'"
     - name: Generate integrity checksums
       id: integrity
       run: ./integrity.sh
