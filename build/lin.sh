@@ -144,7 +144,7 @@ version_latest() {
     VERSION_SELECTOR="versions"
   fi
   if [[ "$3" == *"/"* ]]; then
-    VERSION_LATEST=$($CURL "https://api.github.com/repos/$3/tags" | jq -r '.[0].name' | tr -d 'vV')
+    VERSION_LATEST=$($CURL "https://api.github.com/repos/$3/tags" | jq -j ".[0].name" | tr -d 'vV')
   else
     VERSION_LATEST=$($CURL "https://release-monitoring.org/api/v2/versions/?project_id=$3" | jq -j ".$VERSION_SELECTOR[0]" | tr '_' '.')
   fi
