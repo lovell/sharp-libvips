@@ -19,6 +19,7 @@ RUN \
     brotli \
     build-base \
     cmake \
+    coreutils \
     curl \
     findutils \
     git \
