@@ -99,7 +99,7 @@ CURL="curl --silent --location --retry 3 --retry-max-time 30"
 # Dependency version numbers
 VERSION_ZLIB_NG=2.0.6
 VERSION_FFI=3.4.2
-VERSION_GLIB=2.72.1
+VERSION_GLIB=2.73.0
 VERSION_XML2=2.9.14
 VERSION_GSF=1.14.49
 VERSION_EXIF=0.6.24
@@ -109,7 +109,7 @@ VERSION_PNG16=1.6.37
 VERSION_SPNG=0.7.2
 VERSION_IMAGEQUANT=2.4.1
 VERSION_WEBP=1.2.2
-VERSION_TIFF=4.3.0
+VERSION_TIFF=4.4.0
 VERSION_ORC=0.4.32
 VERSION_PROXY_LIBINTL=0.4
 VERSION_GDKPIXBUF=2.42.8
@@ -328,7 +328,6 @@ make install-strip
 mkdir ${DEPS}/tiff
 $CURL https://download.osgeo.org/libtiff/tiff-${VERSION_TIFF}.tar.gz | tar xzC ${DEPS}/tiff --strip-components=1
 cd ${DEPS}/tiff
-if [ -n "${CHOST}" ]; then autoreconf -fiv; fi
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
   --disable-mdi --disable-pixarlog --disable-old-jpeg --disable-cxx --disable-lzma --disable-zstd \
   --with-jpeg-include-dir=${TARGET}/include --with-jpeg-lib-dir=${TARGET}/lib
