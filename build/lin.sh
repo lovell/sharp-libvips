@@ -38,13 +38,12 @@ fi
 # Common build paths and flags
 export PKG_CONFIG_LIBDIR="${TARGET}/lib/pkgconfig"
 export PATH="${PATH}:${TARGET}/bin"
-export CPATH="${TARGET}/include"
-export LIBRARY_PATH="${TARGET}/lib"
 export LD_LIBRARY_PATH="${TARGET}/lib"
 export CFLAGS="${FLAGS}"
 export CXXFLAGS="${FLAGS}"
 export OBJCFLAGS="${FLAGS}"
 export OBJCXXFLAGS="${FLAGS}"
+export CPPFLAGS="-I${TARGET}/include"
 export LDFLAGS="-L${TARGET}/lib"
 
 # On Linux, we need to create a relocatable library
@@ -231,8 +230,7 @@ mkdir ${DEPS}/xml2
 $CURL https://download.gnome.org/sources/libxml2/2.9/libxml2-${VERSION_XML2}.tar.xz | tar xJC ${DEPS}/xml2 --strip-components=1
 cd ${DEPS}/xml2
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
-  --with-minimum --with-reader --with-writer --with-valid --with-http --with-tree --without-python --without-lzma \
-  --with-zlib=${TARGET}
+  --with-minimum --with-reader --with-writer --with-valid --with-http --with-tree --with-zlib --without-python --without-lzma
 make install-strip
 
 mkdir ${DEPS}/gsf
@@ -241,7 +239,7 @@ cd ${DEPS}/gsf
 # Skip unused subdirs
 sed -i'.bak' "s/ doc tools tests thumbnailer python//" Makefile.in
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
-  --without-bz2 --without-gdk-pixbuf --disable-nls --without-libiconv-prefix --without-libintl-prefix --with-zlib=${TARGET}
+  --without-bz2 --without-gdk-pixbuf --disable-nls --without-libiconv-prefix --without-libintl-prefix
 make install-strip
 
 mkdir ${DEPS}/exif
@@ -249,7 +247,7 @@ $CURL https://github.com/libexif/libexif/releases/download/v${VERSION_EXIF}/libe
 cd ${DEPS}/exif
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
   --disable-nls --without-libiconv-prefix --without-libintl-prefix \
-  CPPFLAGS="-DNO_VERBOSE_TAG_DATA"
+  CPPFLAGS="${CPPFLAGS} -DNO_VERBOSE_TAG_DATA"
 make install-strip
 
 mkdir ${DEPS}/lcms2
@@ -322,15 +320,15 @@ mkdir ${DEPS}/webp
 $CURL https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-${VERSION_WEBP}.tar.gz | tar xzC ${DEPS}/webp --strip-components=1
 cd ${DEPS}/webp
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
-  --disable-neon --enable-libwebpmux --enable-libwebpdemux
+  --enable-libwebpmux --enable-libwebpdemux ${WITHOUT_NEON:+--disable-neon}
 make install-strip
 
 mkdir ${DEPS}/tiff
 $CURL https://download.osgeo.org/libtiff/tiff-${VERSION_TIFF}.tar.gz | tar xzC ${DEPS}/tiff --strip-components=1
 cd ${DEPS}/tiff
-./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
-  --disable-mdi --disable-pixarlog --disable-old-jpeg --disable-cxx --disable-lzma --disable-zstd \
-  --with-jpeg-include-dir=${TARGET}/include --with-jpeg-lib-dir=${TARGET}/lib
+# Propagate -pthread into CFLAGS to ensure WebP support
+CFLAGS="${CFLAGS} -pthread" ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
+  --disable-mdi --disable-pixarlog --disable-old-jpeg --disable-cxx --disable-lzma --disable-zstd
 make install-strip
 
 mkdir ${DEPS}/orc
@@ -357,7 +355,6 @@ sed -i'.bak' "/loaders_cache = custom/{N;N;N;N;N;N;N;N;N;c\\
   loaders_dep = declare_dependency()
 }" gdk-pixbuf/meson.build
 # Ensure meson can find libjpeg when cross-compiling
-sed -i'.bak' "s/has_header('jpeglib.h')/has_header('jpeglib.h', args: '-I\/target\/include')/g" meson.build
 sed -i'.bak' "s/cc.find_library('jpeg'/dependency('libjpeg'/g" meson.build
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   -Dtiff=disabled -Dintrospection=disabled -Dinstalled_tests=false -Dgio_sniffing=false -Dman=false -Dbuiltin_loaders=png,jpeg
