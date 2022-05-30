@@ -44,7 +44,6 @@ RUN \
   curl https://sh.rustup.rs -sSf | sh -s -- -y \
     --no-modify-path \
     --profile minimal \
-    --default-toolchain nightly \
     && \
   rustup target add aarch64-unknown-linux-musl && \
   pip3 install meson

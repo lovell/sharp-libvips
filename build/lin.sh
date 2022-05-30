@@ -185,7 +185,7 @@ if [ "$ALL_AT_VERSION_LATEST" = "false" ]; then exit 1; fi
 
 if [ "$DARWIN" = true ]; then
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \
-    | sh -s -- -y --no-modify-path --profile minimal ${DARWIN_ARM:+--default-toolchain nightly}
+    | sh -s -- -y --no-modify-path --profile minimal
   if [ "$DARWIN_ARM" = true ]; then
     ${CARGO_HOME}/bin/rustup target add aarch64-apple-darwin
   fi

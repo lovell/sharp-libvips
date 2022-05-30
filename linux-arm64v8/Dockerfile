@@ -32,7 +32,6 @@ RUN \
   curl https://sh.rustup.rs -sSf | sh -s -- -y \
     --no-modify-path \
     --profile minimal \
-    --default-toolchain nightly \
     && \
   rustup target add aarch64-unknown-linux-gnu && \
   ln -s /usr/bin/cmake3 /usr/bin/cmake && \
