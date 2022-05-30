@@ -52,6 +52,6 @@ ENV \
 # Musl defaults to static libs but we need them to be dynamic for host toolchain.
 # The toolchain will produce static libs by default.
 ENV \
-  RUSTFLAGS="-C target-feature=-crt-static"
+  RUSTFLAGS="-Ctarget-feature=-crt-static"
 
 COPY Toolchain.cmake /root/
