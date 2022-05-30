@@ -50,7 +50,7 @@ RUN \
 
 # Compiler settings
 ENV \
-  PKG_CONFIG="/bin/aarch64-linux-musl-pkg-config" \
+  PKG_CONFIG="aarch64-linux-musl-pkg-config" \
   PLATFORM="linuxmusl-arm64v8" \
   CHOST="aarch64-linux-musl" \
   RUST_TARGET="aarch64-unknown-linux-musl" \
