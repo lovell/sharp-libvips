@@ -221,7 +221,7 @@ ninja -C _build
 ninja -C _build install
 
 mkdir ${DEPS}/xml2
-$CURL https://download.gnome.org/sources/libxml2/2.9/libxml2-${VERSION_XML2}.tar.xz | tar xJC ${DEPS}/xml2 --strip-components=1
+$CURL https://download.gnome.org/sources/libxml2/$(without_patch $VERSION_XML2)/libxml2-${VERSION_XML2}.tar.xz | tar xJC ${DEPS}/xml2 --strip-components=1
 cd ${DEPS}/xml2
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
   --with-minimum --with-reader --with-writer --with-valid --with-http --with-tree --with-zlib --without-python --without-lzma
@@ -348,8 +348,6 @@ sed -i'.bak' "/loaders_cache = custom/{N;N;N;N;N;N;N;N;N;c\\
   loaders_cache = []\\
   loaders_dep = declare_dependency()
 }" gdk-pixbuf/meson.build
-# Ensure meson can find libjpeg when cross-compiling
-sed -i'.bak' "s/cc.find_library('jpeg'/dependency('libjpeg'/g" meson.build
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   -Dtiff=disabled -Dintrospection=disabled -Dinstalled_tests=false -Dgio_sniffing=false -Dman=false -Dbuiltin_loaders=png,jpeg
 ninja -C _build
