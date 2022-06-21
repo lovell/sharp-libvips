@@ -1,7 +1,7 @@
-FROM alpine:3.11
+FROM alpine:3.12
 LABEL maintainer="Lovell Fuller <npm@lovell.info>"
 
-# Create Alpine 3.11 (musl 1.1.24) container suitable for building Linux x64 binaries
+# Create Alpine 3.12 (musl 1.1.24) container suitable for building Linux x64 binaries
 
 # Path settings
 ENV \
