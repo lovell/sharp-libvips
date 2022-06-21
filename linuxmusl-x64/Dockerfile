@@ -33,6 +33,7 @@ RUN \
     linux-headers \
     nasm \
     ninja \
+    py3-pip \
     python3 \
     shared-mime-info \
     texinfo \
