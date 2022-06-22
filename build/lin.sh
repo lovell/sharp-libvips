@@ -186,6 +186,9 @@ if [ "$DARWIN" = true ]; then
 fi
 
 if [ "${PLATFORM%-*}" == "linuxmusl" ] || [ "$DARWIN" = true ]; then
+  # musl includes support for gettext by default, but since we have libintl installed, it favors that.
+  # macOS requires the standalone intl support library of gettext, since it's not provided by libc.
+  # In both cases: we use a stub version of gettext instead, since we don't need any of the i18n features.
   mkdir ${DEPS}/proxy-libintl
   $CURL https://github.com/frida/proxy-libintl/archive/${VERSION_PROXY_LIBINTL}.tar.gz | tar xzC ${DEPS}/proxy-libintl --strip-components=1
   cd ${DEPS}/proxy-libintl
