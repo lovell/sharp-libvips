@@ -24,17 +24,12 @@ RUN \
     crossbuild-essential-armhf \
     gettext \
     git \
-    gobject-introspection \
-    gperf \
-    gtk-doc-tools \
-    intltool \
     jq \
-    libglib2.0-dev \
     libtool \
     nasm \
     ninja-build \
+    pkg-config \
     python3-pip \
-    texinfo \
     && \
   curl https://sh.rustup.rs -sSf | sh -s -- -y \
     --no-modify-path \
@@ -45,7 +40,7 @@ RUN \
 
 # Compiler settings
 ENV \
-  PKG_CONFIG="arm-linux-gnueabihf-pkg-config" \
+  PKG_CONFIG="arm-linux-gnueabihf-pkg-config --static" \
   PLATFORM="linux-armv7" \
   CHOST="arm-linux-gnueabihf" \
   RUST_TARGET="arm-unknown-linux-gnueabihf" \

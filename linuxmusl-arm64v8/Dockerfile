@@ -23,20 +23,14 @@ RUN \
     curl \
     findutils \
     git \
-    glib-dev \
-    gobject-introspection-dev \
-    gperf \
-    gtk-doc \
-    intltool \
     jq \
     libtool \
     linux-headers \
     nasm \
     ninja \
-    python3 \
+    pkgconf \
     py3-pip \
-    shared-mime-info \
-    texinfo \
+    python3 \
     && \
   apk --update --no-cache --repository https://alpine.global.ssl.fastly.net/alpine/edge/community/ add advancecomp && \
   curl -Ls https://github.com/lovell/aarch64-linux-musl-crosstools/archive/main.tar.gz | tar -hxzC / --strip-components=2 && \
@@ -50,7 +44,7 @@ RUN \
 
 # Compiler settings
 ENV \
-  PKG_CONFIG="aarch64-linux-musl-pkg-config" \
+  PKG_CONFIG="aarch64-linux-musl-pkg-config --static" \
   PLATFORM="linuxmusl-arm64v8" \
   CHOST="aarch64-linux-musl" \
   RUST_TARGET="aarch64-unknown-linux-musl" \

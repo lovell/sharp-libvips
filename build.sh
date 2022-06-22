@@ -41,6 +41,9 @@ for flavour in darwin-x64 darwin-arm64v8; do
     export VERSION_VIPS
     export PLATFORM
 
+    # Use pkg-config provided by Homebrew
+    export PKG_CONFIG="$(brew --prefix)/bin/pkg-config --static"
+
     # 10.9 should be a good minimal release target
     export MACOSX_DEPLOYMENT_TARGET="10.9"
 

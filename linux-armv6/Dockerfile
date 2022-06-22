@@ -23,17 +23,12 @@ RUN \
     cmake \
     gettext \
     git \
-    gobject-introspection \
-    gperf \
-    gtk-doc-tools \
-    intltool \
     jq \
-    libglib2.0-dev \
     libtool \
     nasm \
     ninja-build \
+    pkg-config \
     python3-pip \
-    texinfo \
     && \
   mkdir /root/tools && \
   curl -Ls https://github.com/rvagg/rpi-newer-crosstools/archive/master.tar.gz | tar xzC /root/tools --strip-components=1 && \
@@ -46,7 +41,7 @@ RUN \
 
 # Compiler settings
 ENV \
-  PKG_CONFIG="arm-linux-gnueabihf-pkg-config" \
+  PKG_CONFIG="arm-linux-gnueabihf-pkg-config --static" \
   PLATFORM="linux-armv6" \
   CHOST="arm-rpi-linux-gnueabihf" \
   RUST_TARGET="arm-unknown-linux-gnueabihf" \
