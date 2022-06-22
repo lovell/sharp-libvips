@@ -52,9 +52,7 @@ if [ "$LINUX" = true ]; then
   export LDFLAGS+=" -Wl,--gc-sections -Wl,-rpath='\$\$ORIGIN/'"
 fi
 
-# On macOS, we need to explicitly link against the system libraries
 if [ "$DARWIN" = true ]; then
-  export LDFLAGS+=" -framework CoreServices -framework CoreFoundation -framework Foundation -framework AppKit"
   # Local rust installation
   export CARGO_HOME="${DEPS}/cargo"
   export RUSTUP_HOME="${DEPS}/rustup"
