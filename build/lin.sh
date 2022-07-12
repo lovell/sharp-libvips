@@ -291,7 +291,7 @@ make install/strip
 mkdir ${DEPS}/png16
 $CURL https://downloads.sourceforge.net/project/libpng/libpng16/${VERSION_PNG16}/libpng-${VERSION_PNG16}.tar.xz | tar xJC ${DEPS}/png16 --strip-components=1
 cd ${DEPS}/png16
-CFLAGS="${CFLAGS} -O3" ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking
+./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking
 make install-strip
 
 mkdir ${DEPS}/spng
