@@ -37,7 +37,9 @@ ENV \
   PKG_CONFIG="pkg-config --static" \
   PLATFORM="linux-x64" \
   FLAGS="-march=westmere" \
-  MESON="--cross-file=/root/meson.ini"
+  MESON="--cross-file=/root/meson.ini" \
+  # https://gitlab.gnome.org/GNOME/glib/-/issues/2693
+  PYTHONIOENCODING="UTF-8"
 
 COPY Toolchain.cmake /root/
 COPY meson.ini /root/
