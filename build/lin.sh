@@ -88,7 +88,7 @@ CURL="curl --silent --location --retry 3 --retry-max-time 30"
 # Dependency version numbers
 VERSION_ZLIB_NG=2.0.6
 VERSION_FFI=3.4.2
-VERSION_GLIB=2.73.1
+VERSION_GLIB=2.73.2
 VERSION_XML2=2.9.14
 VERSION_GSF=1.14.49
 VERSION_EXIF=0.6.24
@@ -210,11 +210,15 @@ mkdir ${DEPS}/glib
 $CURL https://download.gnome.org/sources/glib/$(without_patch $VERSION_GLIB)/glib-${VERSION_GLIB}.tar.xz | tar xJC ${DEPS}/glib --strip-components=1
 cd ${DEPS}/glib
 if [ "$DARWIN" = true ]; then
-  $CURL https://gist.github.com/kleisauke/f6dcbf02a9aa43fd582272c3d815e7a8/raw/7d0e8324ad6c918978337bb6d180a93e01426845/glib-proxy-libintl.patch | patch -p1
+  $CURL https://gist.github.com/kleisauke/f6dcbf02a9aa43fd582272c3d815e7a8/raw/75b1e06250bdb0df067be4a5db54df960f35c46d/glib-proxy-libintl.patch | patch -p1
 fi
-$CURL https://gist.githubusercontent.com/lovell/7e0ce65249b951d5be400fb275de3924/raw/1a833ef4263271d299587524198b024eb5cc4f34/glib-without-gregex.patch | patch -p1
+if [ "${PLATFORM%-*}" == "linuxmusl" ]; then
+  # https://gitlab.gnome.org/GNOME/glib/-/issues/2692
+  $CURL https://gitlab.gnome.org/GNOME/glib/-/commit/871e5708679b96e63ee574f5c74e0e746f4be9a4.patch | patch -p1
+fi
+$CURL https://gist.github.com/kleisauke/284d685efa00908da99ea6afbaaf39ae/raw/af997aa5b6bdb27484c6d9f16d9255d79c86aa77/glib-without-gregex.patch | patch -p1
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
-  --force-fallback-for=libpcre -Dtests=false -Dinstalled_tests=false -Dlibmount=disabled -Dlibelf=disabled ${DARWIN:+-Dbsymbolic_functions=false}
+  --force-fallback-for=gvdb -Dnls=disabled -Dtests=false -Dinstalled_tests=false -Dlibmount=disabled -Dlibelf=disabled ${DARWIN:+-Dbsymbolic_functions=false}
 ninja -C _build
 ninja -C _build install
 
