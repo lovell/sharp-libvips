@@ -464,9 +464,7 @@ ninja -C _build
 ninja -C _build install
 
 mkdir ${DEPS}/vips
-# TODO: Use the tarball for the next release https://github.com/libvips/libvips/issues/2876
-#$CURL https://github.com/libvips/libvips/releases/download/v${VERSION_VIPS}/vips-${VERSION_VIPS}.tar.gz | tar xzC ${DEPS}/vips --strip-components=1
-$CURL https://github.com/libvips/libvips/archive/refs/tags/v${VERSION_VIPS}.tar.gz | tar xzC ${DEPS}/vips --strip-components=1
+$CURL https://github.com/libvips/libvips/releases/download/v${VERSION_VIPS}/vips-${VERSION_VIPS}.tar.gz | tar xzC ${DEPS}/vips --strip-components=1
 cd ${DEPS}/vips
 # Link libvips.so.42 statically into libvips-cpp.so.42
 sed -i'.bak' "s/library('vips'/static_&/" libvips/meson.build
