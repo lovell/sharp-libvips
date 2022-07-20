@@ -20,6 +20,7 @@ RUN \
     cmake3 \
     devtoolset-11-gcc \
     devtoolset-11-gcc-c++ \
+    gperf \
     jq \
     nasm \
     ninja-build \

@@ -23,6 +23,7 @@ RUN \
     curl \
     findutils \
     git \
+    gperf \
     jq \
     libtool \
     linux-headers \
