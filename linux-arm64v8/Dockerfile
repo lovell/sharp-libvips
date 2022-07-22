@@ -7,7 +7,7 @@ LABEL maintainer="Lovell Fuller <npm@lovell.info>"
 ENV \
   RUSTUP_HOME="/usr/local/rustup" \
   CARGO_HOME="/usr/local/cargo" \
-  PATH="/usr/local/cargo/bin:/opt/rh/devtoolset-10/root/usr/bin:$PATH"
+  PATH="/usr/local/cargo/bin:/opt/rh/devtoolset-10/root/usr/bin:/opt/rh/rh-python38/root/usr/bin:/opt/rh/rh-python38/root/usr/local/bin:$PATH"
 
 # Build dependencies
 RUN \
@@ -24,7 +24,7 @@ RUN \
     gperf \
     jq \
     nasm \
-    python3 \
+    rh-python38 \
     && \
   curl https://sh.rustup.rs -sSf | sh -s -- -y \
     --no-modify-path \
@@ -32,7 +32,6 @@ RUN \
     && \
   rustup target add aarch64-unknown-linux-gnu && \
   ln -s /usr/bin/cmake3 /usr/bin/cmake && \
-  pip3 install --upgrade pip && \
   pip3 install meson ninja
 
 # Compiler settings
@@ -41,9 +40,7 @@ ENV \
   PLATFORM="linux-arm64v8" \
   CARGO_BUILD_TARGET="aarch64-unknown-linux-gnu" \
   FLAGS="-march=armv8-a" \
-  MESON="--cross-file=/root/meson.ini" \
-  # https://gitlab.gnome.org/GNOME/glib/-/issues/2693
-  PYTHONIOENCODING="UTF-8"
+  MESON="--cross-file=/root/meson.ini"
 
 COPY Toolchain.cmake /root/
 COPY meson.ini /root/
