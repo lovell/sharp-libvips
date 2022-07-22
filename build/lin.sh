@@ -470,6 +470,8 @@ cd ${DEPS}/vips
 sed -i'.bak' "s/library('vips'/static_&/" libvips/meson.build
 sed -i'.bak' "/version: library_version/{N;d;}" libvips/meson.build
 if [ "$LINUX" = true ]; then
+  # Ensure libvips-cpp.so.42 is linked with -z nodelete
+  sed -i'.bak' "/gnu_symbol_visibility: 'hidden',/a link_args: nodelete_link_args," cplusplus/meson.build
   # Ensure symbols from external libs (except for libglib-2.0.a and libgobject-2.0.a) are not exposed
   EXCLUDE_LIBS=$(find ${TARGET}/lib -maxdepth 1 -name '*.a' ! -name 'libglib-2.0.a' ! -name 'libgobject-2.0.a' -printf "-Wl,--exclude-libs=%f ")
   EXCLUDE_LIBS=${EXCLUDE_LIBS%?}
@@ -532,6 +534,10 @@ function copydeps {
 }
 
 cd ${TARGET}/lib
+if [ "$LINUX" = true ]; then
+  # Check that we really linked with -z nodelete
+  readelf -Wd ${VIPS_CPP_DEP} | grep -qF NODELETE || (echo "$VIPS_CPP_DEP was not linked with -z nodelete" && exit 1)
+fi
 copydeps ${VIPS_CPP_DEP} ${TARGET}/lib-filtered
 
 # Create JSON file of version numbers
