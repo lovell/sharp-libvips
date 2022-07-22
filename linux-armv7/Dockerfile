@@ -24,6 +24,7 @@ RUN \
     crossbuild-essential-armhf \
     gettext \
     git \
+    gperf \
     jq \
     libtool \
     nasm \

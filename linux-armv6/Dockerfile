@@ -23,6 +23,7 @@ RUN \
     cmake \
     gettext \
     git \
+    gperf \
     jq \
     libtool \
     nasm \
