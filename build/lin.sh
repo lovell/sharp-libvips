@@ -105,7 +105,7 @@ VERSION_GDKPIXBUF=2.42.8
 VERSION_FREETYPE=2.12.1
 VERSION_EXPAT=2.4.8
 VERSION_FONTCONFIG=2.14.0
-VERSION_HARFBUZZ=4.4.1
+VERSION_HARFBUZZ=5.0.1
 VERSION_PIXMAN=0.40.0
 VERSION_CAIRO=1.17.6
 VERSION_FRIBIDI=1.0.12
@@ -386,10 +386,6 @@ ninja -C _build install
 mkdir ${DEPS}/harfbuzz
 $CURL https://github.com/harfbuzz/harfbuzz/archive/${VERSION_HARFBUZZ}.tar.gz | tar xzC ${DEPS}/harfbuzz --strip-components=1
 cd ${DEPS}/harfbuzz
-# https://github.com/harfbuzz/harfbuzz/pull/3707
-$CURL https://github.com/kleisauke/harfbuzz/commit/94bfd2ff7a4b4e7949f0ac0834b2bf38a1feea12.patch | patch -p1
-$CURL https://github.com/kleisauke/harfbuzz/commit/43f5ee43753cf4df5dc7811fc8a464f97a4551c2.patch | patch -p1
-$CURL https://github.com/kleisauke/harfbuzz/commit/23aa63c955202fc7e8caac59c0c656edddc84dba.patch | patch -p1
 # Disable utils
 sed -i'.bak' "/subdir('util')/d" meson.build
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
