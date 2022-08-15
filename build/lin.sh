@@ -338,7 +338,7 @@ mkdir ${DEPS}/gdkpixbuf
 $CURL https://download.gnome.org/sources/gdk-pixbuf/$(without_patch $VERSION_GDKPIXBUF)/gdk-pixbuf-${VERSION_GDKPIXBUF}.tar.xz | tar xJC ${DEPS}/gdkpixbuf --strip-components=1
 cd ${DEPS}/gdkpixbuf
 # Skip thumbnailer
-sed -i'.bak' "/subdir('thumbnailer')/{d;}/" meson.build
+sed -i'.bak' "/subdir('thumbnailer')/d" meson.build
 sed -i'.bak' "/post-install/{N;N;N;N;d;}" meson.build
 # Skip the built-in loaders for BMP, GIF, ICO, PNM, XPM, XBM, TGA, ICNS and QTIF
 sed -i'.bak' "/'bmp':/{N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;d;}" gdk-pixbuf/meson.build
