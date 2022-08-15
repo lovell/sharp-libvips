@@ -88,28 +88,28 @@ CURL="curl --silent --location --retry 3 --retry-max-time 30"
 # Dependency version numbers
 VERSION_ZLIB_NG=2.0.6
 VERSION_FFI=3.4.2
-VERSION_GLIB=2.73.2
+VERSION_GLIB=2.73.3
 VERSION_XML2=2.9.14
 VERSION_GSF=1.14.50
 VERSION_EXIF=0.6.24
 VERSION_LCMS2=2.13.1
-VERSION_MOZJPEG=4.0.3
+VERSION_MOZJPEG=4.1.1
 VERSION_PNG16=1.6.37
 VERSION_SPNG=0.7.2
 VERSION_IMAGEQUANT=2.4.1
-VERSION_WEBP=1.2.3
+VERSION_WEBP=1.2.4
 VERSION_TIFF=4.4.0
 VERSION_ORC=0.4.32
 VERSION_PROXY_LIBINTL=0.4
-VERSION_GDKPIXBUF=2.42.8
+VERSION_GDKPIXBUF=2.42.9
 VERSION_FREETYPE=2.12.1
 VERSION_EXPAT=2.4.8
 VERSION_FONTCONFIG=2.14.0
-VERSION_HARFBUZZ=5.0.1
+VERSION_HARFBUZZ=5.1.0
 VERSION_PIXMAN=0.40.0
 VERSION_CAIRO=1.17.6
 VERSION_FRIBIDI=1.0.12
-VERSION_PANGO=1.50.8
+VERSION_PANGO=1.50.9
 VERSION_SVG=2.54.4
 VERSION_AOM=3.4.0
 VERSION_HEIF=1.12.0
@@ -339,10 +339,9 @@ ninja -C _build install
 mkdir ${DEPS}/gdkpixbuf
 $CURL https://download.gnome.org/sources/gdk-pixbuf/$(without_patch $VERSION_GDKPIXBUF)/gdk-pixbuf-${VERSION_GDKPIXBUF}.tar.xz | tar xJC ${DEPS}/gdkpixbuf --strip-components=1
 cd ${DEPS}/gdkpixbuf
-# Disable tests and thumbnailer
-sed -i'.bak' "/subdir('tests')/{N;d;}" meson.build
+# Skip thumbnailer
 sed -i'.bak' "/post-install/{N;N;N;N;d;}" meson.build
-# Disable the built-in loaders for BMP, GIF, ICO, PNM, XPM, XBM, TGA, ICNS and QTIF
+# Skip the built-in loaders for BMP, GIF, ICO, PNM, XPM, XBM, TGA, ICNS and QTIF
 sed -i'.bak' "/'bmp':/{N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;d;}" gdk-pixbuf/meson.build
 sed -i'.bak' "/'pnm':/{N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;d;}" gdk-pixbuf/meson.build
 # Skip executables
@@ -352,7 +351,7 @@ sed -i'.bak' "/loaders_cache = custom/{N;N;N;N;N;N;N;N;N;c\\
   loaders_dep = declare_dependency()
 }" gdk-pixbuf/meson.build
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
-  -Dtiff=disabled -Dintrospection=disabled -Dinstalled_tests=false -Dgio_sniffing=false -Dman=false -Dbuiltin_loaders=png,jpeg
+  -Dtiff=disabled -Dintrospection=disabled -Dtests=false -Dinstalled_tests=false -Dgio_sniffing=false -Dman=false -Dbuiltin_loaders=png,jpeg
 ninja -C _build
 ninja -C _build install
 # Include libjpeg and libpng as a dependency of gdk-pixbuf, see: https://gitlab.gnome.org/GNOME/gdk-pixbuf/merge_requests/50
