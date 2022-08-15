@@ -36,7 +36,7 @@ RUN \
 ENV \
   PKG_CONFIG="pkg-config --static" \
   PLATFORM="linux-x64" \
-  FLAGS="-march=westmere" \
+  FLAGS="-march=x86-64-v2 -mtune=nehalem" \
   MESON="--cross-file=/root/meson.ini"
 
 COPY Toolchain.cmake /root/

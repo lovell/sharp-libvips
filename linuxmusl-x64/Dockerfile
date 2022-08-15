@@ -44,7 +44,7 @@ RUN \
 ENV \
   PKG_CONFIG="pkg-config --static" \
   PLATFORM="linuxmusl-x64" \
-  FLAGS="-march=westmere"
+  FLAGS="-march=nehalem"
 
 # Musl defaults to static libs but we need them to be dynamic for host toolchain.
 # The toolchain will produce static libs by default.
