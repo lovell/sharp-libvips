@@ -212,6 +212,8 @@ cd ${DEPS}/glib
 if [ "$DARWIN" = true ]; then
   $CURL https://gist.github.com/kleisauke/f6dcbf02a9aa43fd582272c3d815e7a8/raw/75b1e06250bdb0df067be4a5db54df960f35c46d/glib-proxy-libintl.patch | patch -p1
 fi
+# https://gitlab.gnome.org/GNOME/glib/-/issues/2713
+$CURL https://gitlab.gnome.org/GNOME/glib/-/commit/c850a06ea2a78a6822d54546989400039753329d.patch | patch -p1
 $CURL https://gist.github.com/kleisauke/284d685efa00908da99ea6afbaaf39ae/raw/af997aa5b6bdb27484c6d9f16d9255d79c86aa77/glib-without-gregex.patch | patch -p1
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   --force-fallback-for=gvdb -Dnls=disabled -Dtests=false -Dinstalled_tests=false -Dlibmount=disabled -Dlibelf=disabled ${DARWIN:+-Dbsymbolic_functions=false}
@@ -336,6 +338,7 @@ mkdir ${DEPS}/gdkpixbuf
 $CURL https://download.gnome.org/sources/gdk-pixbuf/$(without_patch $VERSION_GDKPIXBUF)/gdk-pixbuf-${VERSION_GDKPIXBUF}.tar.xz | tar xJC ${DEPS}/gdkpixbuf --strip-components=1
 cd ${DEPS}/gdkpixbuf
 # Skip thumbnailer
+sed -i'.bak' "/subdir('thumbnailer')/{d;}/" meson.build
 sed -i'.bak' "/post-install/{N;N;N;N;d;}" meson.build
 # Skip the built-in loaders for BMP, GIF, ICO, PNM, XPM, XBM, TGA, ICNS and QTIF
 sed -i'.bak' "/'bmp':/{N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;d;}" gdk-pixbuf/meson.build
