@@ -89,7 +89,7 @@ CURL="curl --silent --location --retry 3 --retry-max-time 30"
 VERSION_ZLIB_NG=2.0.6
 VERSION_FFI=3.4.2
 VERSION_GLIB=2.73.3
-VERSION_XML2=2.10.0
+VERSION_XML2=2.10.2
 VERSION_GSF=1.14.50
 VERSION_EXIF=0.6.24
 VERSION_LCMS2=2.13.1
@@ -110,9 +110,9 @@ VERSION_PIXMAN=0.40.0
 VERSION_CAIRO=1.17.6
 VERSION_FRIBIDI=1.0.12
 VERSION_PANGO=1.50.9
-VERSION_SVG=2.54.4
+VERSION_SVG=2.54.5
 VERSION_AOM=3.4.0
-VERSION_HEIF=1.12.0
+VERSION_HEIF=1.13.0
 VERSION_CGIF=0.3.0
 
 # Remove patch version component
@@ -167,7 +167,7 @@ version_latest "fribidi" "$VERSION_FRIBIDI" "857"
 version_latest "pango" "$VERSION_PANGO" "11783"
 version_latest "svg" "$VERSION_SVG" "5420"
 version_latest "aom" "$VERSION_AOM" "17628"
-version_latest "heif" "$VERSION_HEIF" "64439"
+version_latest "heif" "$VERSION_HEIF" "strukturag/libheif"
 version_latest "cgif" "$VERSION_CGIF" "dloebl/cgif"
 if [ "$ALL_AT_VERSION_LATEST" = "false" ]; then exit 1; fi
 
@@ -266,17 +266,6 @@ make install/strip
 mkdir ${DEPS}/heif
 $CURL https://github.com/strukturag/libheif/releases/download/v${VERSION_HEIF}/libheif-${VERSION_HEIF}.tar.gz | tar xzC ${DEPS}/heif --strip-components=1
 cd ${DEPS}/heif
-# [PATCH] aom encoder: improve performance by ~2x using new 'all intra'
-$CURL https://github.com/strukturag/libheif/commit/de0c159a60c2c50931321f06e36a3b6640c5c807.patch | patch -p1
-# [PATCH] aom: expose decoder error messages
-$CURL https://github.com/strukturag/libheif/commit/7e1c1888023f6dd68cf33e537e7eb8e4d5e17588.patch | patch -p1
-# [PATCH] Detect and prevent negative overflow of clap box dimensions
-$CURL https://github.com/strukturag/libheif/commit/e625a702ec7d46ce042922547d76045294af71d6.patch | git apply -
-# [PATCH] Avoid lroundf
-$CURL https://github.com/strukturag/libheif/commit/499a0a31d79936042c7abeef2513bb0b56b81489.patch | patch -p1
-# [PATCH] Add API to sanitize enums relating to color profiles
-$CURL https://github.com/kleisauke/libheif/commit/0d44224914946a00d293c08bbaf4553acc985802.patch | patch -p1
-autoreconf -fiv
 CFLAGS="${CFLAGS} -O3" CXXFLAGS="${CXXFLAGS} -O3" ./configure \
   --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
   --disable-gdk-pixbuf --disable-go --disable-examples --disable-libde265 --disable-x265
