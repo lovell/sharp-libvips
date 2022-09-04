@@ -4,7 +4,7 @@ on:
   - pull_request
 jobs:
   create-release:
-    runs-on: 'ubuntu-20.04'
+    runs-on: 'ubuntu-22.04'
     outputs:
       upload_url: ${{ steps.create-release.outputs.upload_url }}
     steps:
@@ -22,7 +22,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04]
+        os: [ubuntu-22.04]
         platform:
           - 'linux-x64'
           - 'linux-armv6'
