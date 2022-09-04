@@ -77,7 +77,7 @@ if ! [ -x "$(command -v docker)" ]; then
 fi
 
 # Update base images
-for baseimage in centos:7 debian:buster debian:bullseye alpine:3.12; do
+for baseimage in alpine:3.12 centos:7 debian:bullseye debian:buster; do
   docker pull $baseimage
 done
 
