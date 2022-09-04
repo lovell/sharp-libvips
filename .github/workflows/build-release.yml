@@ -1,7 +1,5 @@
 name: Build Release
-on:
-  - push
-  - pull_request
+on: [ push, pull_request ]
 jobs:
   create-release:
     runs-on: 'ubuntu-22.04'
