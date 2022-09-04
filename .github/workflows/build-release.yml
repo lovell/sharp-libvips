@@ -1,28 +1,26 @@
 name: Build Release
-on:
-  - push
-  - pull_request
+on: [ push, pull_request ]
 jobs:
   create-release:
-    runs-on: 'ubuntu-20.04'
+    runs-on: 'ubuntu-22.04'
     outputs:
       upload_url: ${{ steps.create-release.outputs.upload_url }}
     steps:
-    - name: Create Release
-      id: create-release
-      if: startsWith(github.ref, 'refs/tags/v')
-      uses: ncipollo/release-action@v1
-      with:
-        omitBody: true
-        prerelease: true
-        token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Release
+        id: create-release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: ncipollo/release-action@v1
+        with:
+          omitBody: true
+          prerelease: true
+          token: ${{ secrets.GITHUB_TOKEN }}
   build:
     runs-on: ${{ matrix.os }}
     needs: create-release
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04]
+        os: [ ubuntu-22.04 ]
         platform:
           - 'linux-x64'
           - 'linux-armv6'
@@ -38,56 +36,56 @@ jobs:
           - os: macos-11
             platform: 'darwin-arm64v8'
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Install dependencies (macOS)
-      run: |
-        pip3 install meson!=0.63.1 ninja
-        brew update
-        brew install advancecomp automake brotli nasm pkg-config
-      if: contains(matrix.platform, 'darwin')
-    - name: Build ${{ matrix.platform }}
-      id: build-release
-      run: ./build.sh $(cat LIBVIPS_VERSION) ${{ matrix.platform }}
-    - name: Generate integrity checksums
-      id: integrity
-      run: ./integrity.sh
-    - name: Upload Release Asset (.tar.gz)
-      id: upload-release-asset-gz
-      if: startsWith(github.ref, 'refs/tags/v')
-      uses: ncipollo/release-action@v1
-      with:
-        allowUpdates: true
-        artifacts: libvips-*-${{ matrix.platform }}.tar.gz
-        artifactContentType: application/gzip
-        artifactErrorsFailBuild: true
-        omitBodyDuringUpdate: true
-        omitNameDuringUpdate: true
-        prerelease: true
-        token: ${{ secrets.GITHUB_TOKEN }}
-    - name: Upload Release Asset (.tar.br)
-      id: upload-release-asset-br
-      if: startsWith(github.ref, 'refs/tags/v')
-      uses: ncipollo/release-action@v1
-      with:
-        allowUpdates: true
-        artifacts: libvips-*-${{ matrix.platform }}.tar.br
-        artifactContentType: application/x-brotli
-        artifactErrorsFailBuild: true
-        omitBodyDuringUpdate: true
-        omitNameDuringUpdate: true
-        prerelease: true
-        token: ${{ secrets.GITHUB_TOKEN }}
-    - name: Upload Release Asset (.integrity)
-      id: upload-release-asset-integrity
-      if: startsWith(github.ref, 'refs/tags/v')
-      uses: ncipollo/release-action@v1
-      with:
-        allowUpdates: true
-        artifacts: "*.integrity"
-        artifactContentType: text/plain
-        artifactErrorsFailBuild: true
-        omitBodyDuringUpdate: true
-        omitNameDuringUpdate: true
-        prerelease: true
-        token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          pip3 install meson!=0.63.1 ninja
+          brew update
+          brew install advancecomp automake brotli nasm pkg-config
+      - name: Build ${{ matrix.platform }}
+        id: build-release
+        run: ./build.sh $(cat LIBVIPS_VERSION) ${{ matrix.platform }}
+      - name: Generate integrity checksums
+        id: integrity
+        run: ./integrity.sh
+      - name: Upload Release Asset (.tar.gz)
+        id: upload-release-asset-gz
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          artifacts: libvips-*-${{ matrix.platform }}.tar.gz
+          artifactContentType: application/gzip
+          artifactErrorsFailBuild: true
+          omitBodyDuringUpdate: true
+          omitNameDuringUpdate: true
+          prerelease: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload Release Asset (.tar.br)
+        id: upload-release-asset-br
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          artifacts: libvips-*-${{ matrix.platform }}.tar.br
+          artifactContentType: application/x-brotli
+          artifactErrorsFailBuild: true
+          omitBodyDuringUpdate: true
+          omitNameDuringUpdate: true
+          prerelease: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload Release Asset (.integrity)
+        id: upload-release-asset-integrity
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          artifacts: "*.integrity"
+          artifactContentType: text/plain
+          artifactErrorsFailBuild: true
+          omitBodyDuringUpdate: true
+          omitNameDuringUpdate: true
+          prerelease: true
+          token: ${{ secrets.GITHUB_TOKEN }}
