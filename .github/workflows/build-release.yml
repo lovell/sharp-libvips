@@ -41,7 +41,7 @@ jobs:
       - name: Install dependencies (macOS)
         if: runner.os == 'macOS'
         run: |
-          pip3 install meson!=0.63.1 ninja
+          pip3 install meson ninja
           brew update
           brew install advancecomp automake brotli nasm pkg-config
       - name: Build ${{ matrix.platform }}
