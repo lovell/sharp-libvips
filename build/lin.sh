@@ -110,8 +110,8 @@ VERSION_PIXMAN=0.40.0
 VERSION_CAIRO=1.17.6
 VERSION_FRIBIDI=1.0.12
 VERSION_PANGO=1.50.10
-VERSION_SVG=2.54.5
-VERSION_AOM=3.4.0
+VERSION_SVG=2.55.1
+VERSION_AOM=3.5.0
 VERSION_HEIF=1.13.0
 VERSION_CGIF=0.3.0
 
@@ -165,7 +165,7 @@ version_latest "pixman" "$VERSION_PIXMAN" "3648"
 version_latest "cairo" "$VERSION_CAIRO" "247"
 version_latest "fribidi" "$VERSION_FRIBIDI" "857"
 version_latest "pango" "$VERSION_PANGO" "11783"
-version_latest "svg" "$VERSION_SVG" "5420"
+version_latest "svg" "$VERSION_SVG" "5420" "unstable"
 version_latest "aom" "$VERSION_AOM" "17628"
 version_latest "heif" "$VERSION_HEIF" "strukturag/libheif"
 version_latest "cgif" "$VERSION_CGIF" "dloebl/cgif"
