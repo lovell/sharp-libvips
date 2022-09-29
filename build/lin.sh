@@ -103,7 +103,7 @@ VERSION_ORC=0.4.32
 VERSION_PROXY_LIBINTL=0.4
 VERSION_GDKPIXBUF=2.42.9
 VERSION_FREETYPE=2.12.1
-VERSION_EXPAT=2.4.8
+VERSION_EXPAT=2.4.9
 VERSION_FONTCONFIG=2.14.0
 VERSION_HARFBUZZ=5.2.0
 VERSION_PIXMAN=0.40.0
@@ -158,7 +158,7 @@ version_latest "orc" "$VERSION_ORC" "2573"
 version_latest "proxy-libintl" "$VERSION_PROXY_LIBINTL" "frida/proxy-libintl"
 version_latest "gdkpixbuf" "$VERSION_GDKPIXBUF" "9533"
 version_latest "freetype" "$VERSION_FREETYPE" "854"
-version_latest "expat" "$VERSION_EXPAT" "770"
+#version_latest "expat" "$VERSION_EXPAT" "770" # latest version in release monitoring is out of sync
 version_latest "fontconfig" "$VERSION_FONTCONFIG" "827"
 version_latest "harfbuzz" "$VERSION_HARFBUZZ" "1299"
 version_latest "pixman" "$VERSION_PIXMAN" "3648"
