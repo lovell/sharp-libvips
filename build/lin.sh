@@ -109,7 +109,7 @@ VERSION_HARFBUZZ=5.2.0
 VERSION_PIXMAN=0.40.0
 VERSION_CAIRO=1.17.6
 VERSION_FRIBIDI=1.0.12
-VERSION_PANGO=1.50.10
+VERSION_PANGO=1.50.11
 VERSION_SVG=2.55.1
 VERSION_AOM=3.5.0
 VERSION_HEIF=1.13.0
@@ -158,7 +158,7 @@ version_latest "orc" "$VERSION_ORC" "2573"
 version_latest "proxy-libintl" "$VERSION_PROXY_LIBINTL" "frida/proxy-libintl"
 version_latest "gdkpixbuf" "$VERSION_GDKPIXBUF" "9533"
 version_latest "freetype" "$VERSION_FREETYPE" "854"
-#version_latest "expat" "$VERSION_EXPAT" "770" # latest version in release monitoring is out of sync
+version_latest "expat" "$VERSION_EXPAT" "770"
 version_latest "fontconfig" "$VERSION_FONTCONFIG" "827"
 version_latest "harfbuzz" "$VERSION_HARFBUZZ" "1299"
 version_latest "pixman" "$VERSION_PIXMAN" "3648"
