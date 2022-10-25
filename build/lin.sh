@@ -89,7 +89,7 @@ CURL="curl --silent --location --retry 3 --retry-max-time 30"
 VERSION_ZLIB_NG=2.0.6
 VERSION_FFI=3.4.3
 VERSION_GLIB=2.74.0
-VERSION_XML2=2.10.2
+VERSION_XML2=2.10.3
 VERSION_GSF=1.14.50
 VERSION_EXIF=0.6.24
 VERSION_LCMS2=2.13.1
@@ -104,9 +104,9 @@ VERSION_PROXY_LIBINTL=0.4
 VERSION_GDKPIXBUF=2.42.9
 VERSION_FREETYPE=2.12.1
 VERSION_EXPAT=2.4.9
-VERSION_FONTCONFIG=2.14.0
-VERSION_HARFBUZZ=5.3.0
-VERSION_PIXMAN=0.40.0
+VERSION_FONTCONFIG=2.14.1
+VERSION_HARFBUZZ=5.3.1
+VERSION_PIXMAN=0.42.0
 VERSION_CAIRO=1.17.6
 VERSION_FRIBIDI=1.0.12
 VERSION_PANGO=1.50.11
@@ -381,10 +381,8 @@ ninja -C _build install
 mkdir ${DEPS}/pixman
 $CURL https://cairographics.org/releases/pixman-${VERSION_PIXMAN}.tar.gz | tar xzC ${DEPS}/pixman --strip-components=1
 cd ${DEPS}/pixman
-# Disable tests and demos
-sed -i'.bak' "/subdir('test')/{N;d;}" meson.build
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
-  -Dlibpng=disabled -Diwmmxt=disabled -Dgtk=disabled -Dopenmp=disabled
+  -Dlibpng=disabled -Diwmmxt=disabled -Dgtk=disabled -Dopenmp=disabled -Dtests=disabled
 ninja -C _build
 ninja -C _build install
 
