@@ -381,6 +381,8 @@ ninja -C _build install
 mkdir ${DEPS}/pixman
 $CURL https://cairographics.org/releases/pixman-${VERSION_PIXMAN}.tar.gz | tar xzC ${DEPS}/pixman --strip-components=1
 cd ${DEPS}/pixman
+# https://gitlab.freedesktop.org/pixman/pixman/-/issues/66
+$CURL --remote-name https://gitlab.freedesktop.org/pixman/pixman/-/raw/pixman-${VERSION_PIXMAN}/a64-neon-test.S
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   -Dlibpng=disabled -Diwmmxt=disabled -Dgtk=disabled -Dopenmp=disabled -Dtests=disabled
 ninja -C _build
