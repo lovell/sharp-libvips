@@ -29,8 +29,8 @@ RUN \
   curl https://sh.rustup.rs -sSf | sh -s -- -y \
     --no-modify-path \
     --profile minimal \
+    --default-host aarch64-unknown-linux-gnu \
     && \
-  rustup target add aarch64-unknown-linux-gnu && \
   ln -s /usr/bin/cmake3 /usr/bin/cmake && \
   pip3 install meson ninja
 
@@ -38,7 +38,6 @@ RUN \
 ENV \
   PKG_CONFIG="pkg-config --static" \
   PLATFORM="linux-arm64v8" \
-  CARGO_BUILD_TARGET="aarch64-unknown-linux-gnu" \
   FLAGS="-march=armv8-a" \
   MESON="--cross-file=/root/meson.ini"
 

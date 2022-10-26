@@ -228,11 +228,10 @@ make install-strip
 mkdir ${DEPS}/gsf
 $CURL https://download.gnome.org/sources/libgsf/$(without_patch $VERSION_GSF)/libgsf-${VERSION_GSF}.tar.xz | tar xJC ${DEPS}/gsf --strip-components=1
 cd ${DEPS}/gsf
-# Skip unused subdirs
-sed -i'.bak' "s/ doc tools tests thumbnailer python//" Makefile.in
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
   --without-bz2 --without-gdk-pixbuf --disable-nls --without-libiconv-prefix --without-libintl-prefix
-make install-strip
+# Skip unused subdirs
+make install-strip SUBDIRS="gsf"
 
 mkdir ${DEPS}/exif
 $CURL https://github.com/libexif/libexif/releases/download/v${VERSION_EXIF}/libexif-${VERSION_EXIF}.tar.bz2 | tar xjC ${DEPS}/exif --strip-components=1
@@ -401,10 +400,8 @@ ninja -C _build install
 mkdir ${DEPS}/fribidi
 $CURL https://github.com/fribidi/fribidi/releases/download/v${VERSION_FRIBIDI}/fribidi-${VERSION_FRIBIDI}.tar.xz | tar xJC ${DEPS}/fribidi --strip-components=1
 cd ${DEPS}/fribidi
-# Disable tests
-sed -i'.bak' "/subdir('test')/d" meson.build
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
-  -Ddocs=false
+  -Ddocs=false -Dbin=false -Dtests=false
 ninja -C _build
 ninja -C _build install
 
@@ -421,21 +418,17 @@ ninja -C _build install
 mkdir ${DEPS}/svg
 $CURL https://download.gnome.org/sources/librsvg/$(without_patch $VERSION_SVG)/librsvg-${VERSION_SVG}.tar.xz | tar xJC ${DEPS}/svg --strip-components=1
 cd ${DEPS}/svg
+# Add missing pkg-config deps
 sed -i'.bak' "s/^\(Requires:.*\)/\1 cairo-gobject pangocairo/" librsvg.pc.in
 # LTO optimization does not work for staticlib+rlib compilation
 sed -i'.bak' "s/, \"rlib\"//" Cargo.toml
-# Skip executables
-sed -i'.bak' "/SCRIPTS = /d" Makefile.in
-# Use target/CARGO_BUILD_TARGET/release instead of target/release when set
-if [[ $CARGO_BUILD_TARGET ]]; then
-  sed -i'.bak' "s/@RUST_TARGET_SUBDIR@/$CARGO_BUILD_TARGET\/@RUST_TARGET_SUBDIR@/" Makefile.in
-fi
 # Remove the --static flag from the PKG_CONFIG env since Rust does not
 # support that. Build with PKG_CONFIG_ALL_STATIC=1 instead.
 PKG_CONFIG=${PKG_CONFIG/ --static/} ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
   --disable-introspection --disable-tools --disable-pixbuf-loader --disable-nls --without-libiconv-prefix --without-libintl-prefix \
   ${DARWIN:+--disable-Bsymbolic}
-PKG_CONFIG_ALL_STATIC=1 make install-strip
+# Skip build of rsvg-convert
+PKG_CONFIG_ALL_STATIC=1 make install-strip bin_SCRIPTS=
 
 mkdir ${DEPS}/cgif
 $CURL https://github.com/dloebl/cgif/archive/V${VERSION_CGIF}.tar.gz | tar xzC ${DEPS}/cgif --strip-components=1
