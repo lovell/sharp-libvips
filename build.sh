@@ -44,14 +44,16 @@ for flavour in darwin-x64 darwin-arm64v8; do
     # Use pkg-config provided by Homebrew
     export PKG_CONFIG="$(brew --prefix)/bin/pkg-config --static"
 
-    # 10.9 should be a good minimal release target
-    export MACOSX_DEPLOYMENT_TARGET="10.9"
+    # Earliest supported version of macOS
+    export MACOSX_DEPLOYMENT_TARGET="10.13"
 
     # Added -fno-stack-check to workaround a stack misalignment bug on macOS 10.15
     # See:
     # https://forums.developer.apple.com/thread/121887
     # https://trac.ffmpeg.org/ticket/8073#comment:12
     export FLAGS="-fno-stack-check"
+    # Prevent use of API newer than the deployment target
+    export FLAGS+=" -Werror=unguarded-availability-new"
 
     if [ $PLATFORM = "darwin-arm64v8" ]; then
       # ARM64 builds work via cross compilation from an x86_64 machine
