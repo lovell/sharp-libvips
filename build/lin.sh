@@ -88,7 +88,7 @@ CURL="curl --silent --location --retry 3 --retry-max-time 30"
 # Dependency version numbers
 VERSION_ZLIB_NG=2.0.6
 VERSION_FFI=3.4.4
-VERSION_GLIB=2.74.1
+VERSION_GLIB=2.75.0
 VERSION_XML2=2.10.3
 VERSION_GSF=1.14.50
 VERSION_EXIF=0.6.24
@@ -212,7 +212,7 @@ cd ${DEPS}/glib
 if [ "$DARWIN" = true ]; then
   $CURL https://gist.github.com/kleisauke/f6dcbf02a9aa43fd582272c3d815e7a8/raw/75b1e06250bdb0df067be4a5db54df960f35c46d/glib-proxy-libintl.patch | patch -p1
 fi
-$CURL https://gist.github.com/kleisauke/284d685efa00908da99ea6afbaaf39ae/raw/af997aa5b6bdb27484c6d9f16d9255d79c86aa77/glib-without-gregex.patch | patch -p1
+$CURL https://gist.github.com/kleisauke/284d685efa00908da99ea6afbaaf39ae/raw/ce7f85f337357555c3112b36d4b2753ae996f5ff/glib-without-gregex.patch | patch -p1
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   --force-fallback-for=gvdb -Dnls=disabled -Dtests=false -Dinstalled_tests=false -Dlibmount=disabled -Dlibelf=disabled ${DARWIN:+-Dbsymbolic_functions=false}
 ninja -C _build
