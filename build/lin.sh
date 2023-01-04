@@ -443,7 +443,7 @@ $CURL https://github.com/uclouvain/openjpeg/archive/refs/tags/v${VERSION_OPENJPE
 cd ${DEPS}/openjpeg
 CFLAGS="${CFLAGS} -O3" cmake -G"Unix Makefiles" \
   -DCMAKE_TOOLCHAIN_FILE=${ROOT}/Toolchain.cmake -DCMAKE_INSTALL_PREFIX=${TARGET} -DCMAKE_BUILD_TYPE=Release \
-  -DBUILD_SHARED_LIBS=FALSE -DZLIB_COMPAT=TRUE
+  -DBUILD_SHARED_LIBS=FALSE -DZLIB_COMPAT=TRUE -DBUILD_CODEC:BOOL=OFF
 make install/strip
 
 mkdir ${DEPS}/vips
