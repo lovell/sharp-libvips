@@ -432,7 +432,7 @@ PKG_CONFIG=${PKG_CONFIG/ --static/} ./configure --host=${CHOST} --prefix=${TARGE
 PKG_CONFIG_ALL_STATIC=1 make install-strip bin_SCRIPTS=
 
 mkdir ${DEPS}/cgif
-$CURL https://github.com/dloebl/cgif/archive/V${VERSION_CGIF}.tar.gz | tar xzC ${DEPS}/cgif --strip-components=1
+$CURL https://github.com/dloebl/cgif/archive/refs/tags/V${VERSION_CGIF}.tar.gz | tar xzC ${DEPS}/cgif --strip-components=1
 cd ${DEPS}/cgif
 CFLAGS="${CFLAGS} -O3" meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   -Dtests=false
