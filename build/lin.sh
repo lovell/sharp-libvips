@@ -88,7 +88,7 @@ CURL="curl --silent --location --retry 3 --retry-max-time 30"
 # Dependency version numbers
 VERSION_ZLIB_NG=2.0.6
 VERSION_FFI=3.4.4
-VERSION_GLIB=2.75.1
+VERSION_GLIB=2.75.2
 VERSION_XML2=2.10.3
 VERSION_GSF=1.14.50
 VERSION_EXIF=0.6.24
@@ -112,7 +112,7 @@ VERSION_FRIBIDI=1.0.12
 VERSION_PANGO=1.50.12
 VERSION_SVG=2.55.90
 VERSION_AOM=3.5.0
-VERSION_HEIF=1.14.1
+VERSION_HEIF=1.14.2
 VERSION_CGIF=0.3.0
 
 # Remove patch version component
@@ -214,9 +214,9 @@ mkdir ${DEPS}/glib
 $CURL https://download.gnome.org/sources/glib/$(without_patch $VERSION_GLIB)/glib-${VERSION_GLIB}.tar.xz | tar xJC ${DEPS}/glib --strip-components=1
 cd ${DEPS}/glib
 if [ "$DARWIN" = true ]; then
-  $CURL https://gist.github.com/kleisauke/f6dcbf02a9aa43fd582272c3d815e7a8/raw/75b1e06250bdb0df067be4a5db54df960f35c46d/glib-proxy-libintl.patch | patch -p1
+  $CURL https://gist.github.com/kleisauke/f6dcbf02a9aa43fd582272c3d815e7a8/raw/244533fc6935db39320d7d3773760f4d0e9d365b/glib-proxy-libintl.patch | patch -p1
 fi
-$CURL https://gist.github.com/kleisauke/284d685efa00908da99ea6afbaaf39ae/raw/ce7f85f337357555c3112b36d4b2753ae996f5ff/glib-without-gregex.patch | patch -p1
+$CURL https://gist.github.com/kleisauke/284d685efa00908da99ea6afbaaf39ae/raw/21e4100bce7145e9137c4b4a6c612e7a0864e476/glib-without-gregex.patch | patch -p1
 if [ "$LINUX" = true ]; then
   # use malloc rather than slice allocator https://gitlab.gnome.org/GNOME/glib/-/issues/1079
   $CURL https://raw.githubusercontent.com/alpinelinux/aports/ba57357f7a7094d1ebf4542912661383bafcf348/main/glib/always-malloc.patch | patch -p1
