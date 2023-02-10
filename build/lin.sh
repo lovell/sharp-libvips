@@ -355,7 +355,7 @@ meson install -C _build --tag devel
 sed -i'.bak' "s/^\(Requires:.*\)/\1 libjpeg, libpng16/" ${TARGET}/lib/pkgconfig/gdk-pixbuf-2.0.pc
 
 mkdir ${DEPS}/freetype
-$CURL https://download.savannah.gnu.org/releases/freetype/freetype-${VERSION_FREETYPE}.tar.xz | tar xJC ${DEPS}/freetype --strip-components=1
+$CURL https://gitlab.freedesktop.org/freetype/freetype/-/archive/VER-${VERSION_FREETYPE//./-}/freetype-VER-${VERSION_FREETYPE//./-}.tar.bz2 | tar xjC ${DEPS}/freetype --strip-components=1
 cd ${DEPS}/freetype
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   -Dzlib=enabled -Dpng=disabled -Dharfbuzz=disabled -Dbrotli=disabled -Dbzip2=disabled
