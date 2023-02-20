@@ -321,10 +321,8 @@ make install-strip
 mkdir ${DEPS}/orc
 $CURL https://gstreamer.freedesktop.org/data/src/orc/orc-${VERSION_ORC}.tar.xz | tar xJC ${DEPS}/orc --strip-components=1
 cd ${DEPS}/orc
-# Prevent detection of pthread_jit for macOS 10 deployment target
-if [ "$PLATFORM" == "darwin-x64" ]; then
-  sed -i'.bak' "s/cc.has_function('pthread_jit_write_protect_np')/false/" meson.build
-fi
+# Fix detection of macOS pthread_jit
+$CURL https://gitlab.freedesktop.org/gstreamer/orc/-/commit/4d0144a9cc4efa195ae3e7f6b99b2daa9ad47b54.patch | patch -p1
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   -Dorc-test=disabled -Dbenchmarks=disabled -Dexamples=disabled -Dgtk_doc=disabled -Dtests=disabled -Dtools=disabled
 meson install -C _build --tag devel
