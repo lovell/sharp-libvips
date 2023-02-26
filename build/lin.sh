@@ -313,6 +313,7 @@ $CURL https://gstreamer.freedesktop.org/data/src/orc/orc-${VERSION_ORC}.tar.xz |
 cd ${DEPS}/orc
 # Fix detection of macOS pthread_jit
 $CURL https://gitlab.freedesktop.org/gstreamer/orc/-/commit/4d0144a9cc4efa195ae3e7f6b99b2daa9ad47b54.patch | patch -p1
+$CURL https://gitlab.freedesktop.org/gstreamer/orc/-/commit/6b838f7e629cf721a570631e47ea482f25e75c70.patch | patch -p1
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   -Dorc-test=disabled -Dbenchmarks=disabled -Dexamples=disabled -Dgtk_doc=disabled -Dtests=disabled -Dtools=disabled
 meson install -C _build --tag devel
