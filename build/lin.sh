@@ -95,7 +95,7 @@ VERSION_FFI=3.4.4
 VERSION_GLIB=2.75.3
 VERSION_XML2=2.10.3
 VERSION_EXIF=0.6.24
-VERSION_LCMS2=2.14
+VERSION_LCMS2=2.15
 VERSION_MOZJPEG=4.1.1
 VERSION_PNG16=1.6.39
 VERSION_SPNG=0.7.3
@@ -112,7 +112,7 @@ VERSION_HARFBUZZ=7.0.1
 VERSION_PIXMAN=0.42.2
 VERSION_CAIRO=1.17.8
 VERSION_FRIBIDI=1.0.12
-VERSION_PANGO=1.50.13
+VERSION_PANGO=1.50.14
 VERSION_SVG=2.55.91
 VERSION_AOM=3.6.0
 VERSION_HEIF=1.15.1
@@ -242,8 +242,8 @@ make install-strip
 mkdir ${DEPS}/lcms2
 $CURL https://github.com/mm2/Little-CMS/releases/download/lcms${VERSION_LCMS2}/lcms2-${VERSION_LCMS2}.tar.gz | tar xzC ${DEPS}/lcms2 --strip-components=1
 cd ${DEPS}/lcms2
-CFLAGS="${CFLAGS} -O3" ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking
-make install-strip
+CFLAGS="${CFLAGS} -O3" meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON}
+meson install -C _build --tag devel
 
 mkdir ${DEPS}/aom
 $CURL https://storage.googleapis.com/aom-releases/libaom-${VERSION_AOM}.tar.gz | tar xzC ${DEPS}/aom --strip-components=1
