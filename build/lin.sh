@@ -113,7 +113,7 @@ VERSION_PIXMAN=0.42.2
 VERSION_CAIRO=1.17.8
 VERSION_FRIBIDI=1.0.12
 VERSION_PANGO=1.50.14
-VERSION_SVG=2.55.92
+VERSION_RSVG=2.55.92
 VERSION_AOM=3.6.0
 VERSION_HEIF=1.15.1
 VERSION_CGIF=0.3.0
@@ -171,7 +171,7 @@ version_latest "pixman" "$VERSION_PIXMAN" "3648"
 version_latest "cairo" "$VERSION_CAIRO" "247"
 version_latest "fribidi" "$VERSION_FRIBIDI" "857"
 version_latest "pango" "$VERSION_PANGO" "11783"
-version_latest "svg" "$VERSION_SVG" "5420" "unstable"
+version_latest "rsvg" "$VERSION_RSVG" "5420" "unstable"
 version_latest "aom" "$VERSION_AOM" "17628"
 version_latest "heif" "$VERSION_HEIF" "strukturag/libheif"
 version_latest "cgif" "$VERSION_CGIF" "dloebl/cgif"
@@ -403,9 +403,9 @@ meson setup _build --default-library=static --buildtype=release --strip --prefix
   -Dgtk_doc=false -Dintrospection=disabled -Dfontconfig=enabled
 meson install -C _build --tag devel
 
-mkdir ${DEPS}/svg
-$CURL https://download.gnome.org/sources/librsvg/$(without_patch $VERSION_SVG)/librsvg-${VERSION_SVG}.tar.xz | tar xJC ${DEPS}/svg --strip-components=1
-cd ${DEPS}/svg
+mkdir ${DEPS}/rsvg
+$CURL https://download.gnome.org/sources/librsvg/$(without_patch $VERSION_RSVG)/librsvg-${VERSION_RSVG}.tar.xz | tar xJC ${DEPS}/rsvg --strip-components=1
+cd ${DEPS}/rsvg
 # Add missing pkg-config deps
 sed -i'.bak' "s/^\(Requires:.*\)/\1 cairo-gobject pangocairo libxml-2.0/" librsvg.pc.in
 # LTO optimization does not work for staticlib+rlib compilation
@@ -526,7 +526,7 @@ printf "{\n\
   \"pixman\": \"${VERSION_PIXMAN}\",\n\
   \"png\": \"${VERSION_PNG16}\",\n\
   \"proxy-libintl\": \"${VERSION_PROXY_LIBINTL}\",\n\
-  \"svg\": \"${VERSION_SVG}\",\n\
+  \"rsvg\": \"${VERSION_RSVG}\",\n\
   \"spng\": \"${VERSION_SPNG}\",\n\
   \"tiff\": \"${VERSION_TIFF}\",\n\
   \"vips\": \"${VERSION_VIPS}\",\n\
