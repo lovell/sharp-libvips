@@ -33,7 +33,7 @@ RUN \
     py3-pip \
     python3 \
     && \
-  apk --update --no-cache --repository https://alpine.global.ssl.fastly.net/alpine/edge/community/ add advancecomp && \
+  apk --update --no-cache --repository https://alpine.global.ssl.fastly.net/alpine/v3.17/community/ add advancecomp && \
   curl -Ls https://github.com/lovell/aarch64-linux-musl-crosstools/archive/main.tar.gz | tar -hxzC / --strip-components=2 && \
   ln -s /usr/bin/pkg-config /bin/aarch64-linux-musl-pkg-config && \
   curl https://sh.rustup.rs -sSf | sh -s -- -y \

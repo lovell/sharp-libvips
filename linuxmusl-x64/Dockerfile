@@ -33,7 +33,7 @@ RUN \
     py3-pip \
     python3 \
     && \
-  apk --update --no-cache --repository https://alpine.global.ssl.fastly.net/alpine/edge/community/ add advancecomp && \
+  apk --update --no-cache --repository https://alpine.global.ssl.fastly.net/alpine/v3.17/community/ add advancecomp && \
   curl https://sh.rustup.rs -sSf | sh -s -- -y \
     --no-modify-path \
     --profile minimal \
