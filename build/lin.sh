@@ -90,22 +90,22 @@ unset PKG_CONFIG_PATH
 CURL="curl --silent --location --retry 3 --retry-max-time 30"
 
 # Dependency version numbers
-VERSION_ZLIB_NG=2.1.2
+VERSION_ZLIB_NG=2.1.3
 VERSION_FFI=3.4.4
-VERSION_GLIB=2.76.3
+VERSION_GLIB=2.77.0
 VERSION_XML2=2.11.4
 VERSION_EXIF=0.6.24
 VERSION_LCMS2=2.15
 VERSION_MOZJPEG=4.1.3
-VERSION_PNG16=1.6.39
+VERSION_PNG16=1.6.40
 VERSION_SPNG=0.7.4
 VERSION_IMAGEQUANT=2.4.1
-VERSION_WEBP=1.3.0
+VERSION_WEBP=1.3.1
 VERSION_TIFF=4.5.1
 VERSION_ORC=0.4.34
 VERSION_PROXY_LIBINTL=0.4
 VERSION_GDKPIXBUF=2.42.10
-VERSION_FREETYPE=2.13.0
+VERSION_FREETYPE=2.13.1
 VERSION_EXPAT=2.5.0
 VERSION_ARCHIVE=3.6.2
 VERSION_FONTCONFIG=2.14.2
@@ -114,7 +114,7 @@ VERSION_PIXMAN=0.42.2
 VERSION_CAIRO=1.17.8
 VERSION_FRIBIDI=1.0.13
 VERSION_PANGO=1.50.14
-VERSION_RSVG=2.56.1
+VERSION_RSVG=2.56.90
 VERSION_AOM=3.6.1
 VERSION_HEIF=1.16.2
 VERSION_CGIF=0.3.2
@@ -217,10 +217,7 @@ make install-strip
 mkdir ${DEPS}/glib
 $CURL https://download.gnome.org/sources/glib/$(without_patch $VERSION_GLIB)/glib-${VERSION_GLIB}.tar.xz | tar xJC ${DEPS}/glib --strip-components=1
 cd ${DEPS}/glib
-if [ "$DARWIN" = true ]; then
-  $CURL https://gist.github.com/kleisauke/f6dcbf02a9aa43fd582272c3d815e7a8/raw/244533fc6935db39320d7d3773760f4d0e9d365b/glib-proxy-libintl.patch | patch -p1
-fi
-$CURL https://gist.github.com/kleisauke/284d685efa00908da99ea6afbaaf39ae/raw/21e4100bce7145e9137c4b4a6c612e7a0864e476/glib-without-gregex.patch | patch -p1
+$CURL https://gist.github.com/kleisauke/284d685efa00908da99ea6afbaaf39ae/raw/e826724a837825226057347b75567059dabc85d4/glib-without-gregex.patch | patch -p1
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   --force-fallback-for=gvdb -Dnls=disabled -Dtests=false -Dinstalled_tests=false -Dlibmount=disabled -Dlibelf=disabled \
   -Dglib_assert=false -Dglib_checks=false ${DARWIN:+-Dbsymbolic_functions=false}
@@ -420,7 +417,9 @@ cd ${DEPS}/rsvg
 # Add missing pkg-config deps
 sed -i'.bak' "s/^\(Requires:.*\)/\1 cairo-gobject pangocairo libxml-2.0/" librsvg.pc.in
 # LTO optimization does not work for staticlib+rlib compilation
-sed -i'.bak' "s/, \"rlib\"//" Cargo.toml
+sed -i'.bak' "/crate-type = /s/, \"rlib\"//" librsvg-c/Cargo.toml
+# We build Cairo with `-Dzlib=disabled`, which implicitly disables the PDF/PostScript surface backends
+sed -i'.bak' "/cairo-rs = /s/ \"pdf\", \"ps\",//" {librsvg-c,rsvg}/Cargo.toml
 # Remove the --static flag from the PKG_CONFIG env since Rust does not
 # support that. Build with PKG_CONFIG_ALL_STATIC=1 instead.
 PKG_CONFIG=${PKG_CONFIG/ --static/} ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
