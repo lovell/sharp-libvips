@@ -1,7 +1,7 @@
-FROM centos:7
+FROM amazonlinux:2
 LABEL maintainer="Lovell Fuller <npm@lovell.info>"
 
-# Create CentOS 7 (glibc 2.17) container suitable for building Linux x64 binaries
+# Create Amazon Linux 2 (glibc 2.26) container suitable for building Linux x64 binaries
 
 # Path settings
 ENV \
@@ -12,19 +12,39 @@ ENV \
 # Build dependencies
 RUN \
   yum update -y && \
-  yum install -y epel-release centos-release-scl && \
-  yum group install -y "Development Tools" && \
+  amazon-linux-extras install epel -y && \
   yum install -y --setopt=tsflags=nodocs \
+    --exclude=gcc \
     advancecomp \
+    autoconf \
+    automake \
     brotli \
+    bzip2 \
     cmake3 \
-    devtoolset-11-gcc \
-    devtoolset-11-gcc-c++ \
+    curl \
+    gcc10 \
+    gcc10-binutils \
+    gcc10-c++ \
+    gettext \
+    git \
     gperf \
     jq \
+    make \
     nasm \
-    rh-python38 \
+    patch \
+    pkgconfig \
+    python3 \
+    tar \
+    xz \
     && \
+  ln -s /usr/bin/gcc10-gcc /usr/bin/cc && \
+  ln -s /usr/bin/gcc10-g++ /usr/bin/c++ && \
+  ln -s /usr/bin/gcc10-ar /usr/bin/ar && \
+  ln -s /usr/bin/gcc10-nm /usr/bin/nm && \
+  ln -s /usr/bin/gcc10-ld.bfd /usr/bin/ld && \
+  ln -s /usr/bin/gcc10-strip /usr/bin/strip && \
+  ln -s /usr/bin/gcc10-ranlib /usr/bin/ranlib && \
+  ln -s /usr/bin/gcc10-readelf /usr/bin/readelf && \
   curl https://sh.rustup.rs -sSf | sh -s -- -y \
     --no-modify-path \
     --profile minimal \
@@ -36,7 +56,7 @@ RUN \
 ENV \
   PKG_CONFIG="pkg-config --static" \
   PLATFORM="linux-x64" \
-  FLAGS="-march=x86-64-v2 -mtune=nehalem" \
+  FLAGS="-march=nehalem" \
   MESON="--cross-file=/root/meson.ini"
 
 COPY Toolchain.cmake /root/
