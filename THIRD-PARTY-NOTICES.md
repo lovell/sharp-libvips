@@ -16,6 +16,7 @@ used under the terms of the following licences:
 | glib          | LGPLv3                                                                                                    |
 | harfbuzz      | MIT Licence                                                                                               |
 | lcms          | MIT Licence                                                                                               |
+| libarchive    | BSD 2-Clause                                                                                              |
 | libexif       | LGPLv3                                                                                                    |
 | libffi        | MIT Licence                                                                                               |
 | libheif       | LGPLv3                                                                                                    |
