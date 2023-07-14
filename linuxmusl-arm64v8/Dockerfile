@@ -1,7 +1,7 @@
-FROM alpine:3.12
+FROM alpine:3.15
 LABEL maintainer="Lovell Fuller <npm@lovell.info>"
 
-# Create Alpine 3.12 (musl 1.1.24) container suitable for cross-compiling musl-based Linux ARM64v8-A binaries
+# Create Alpine 3.15 (musl 1.2.2) container suitable for cross-compiling musl-based Linux ARM64v8-A binaries
 
 # Path settings
 ENV \
