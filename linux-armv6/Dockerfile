@@ -26,7 +26,6 @@ RUN \
     gperf \
     jq \
     libtool \
-    nasm \
     ninja-build \
     pkg-config \
     python3-pip \

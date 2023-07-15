@@ -27,7 +27,6 @@ RUN \
     jq \
     libtool \
     linux-headers \
-    nasm \
     ninja \
     pkgconf \
     py3-pip \
