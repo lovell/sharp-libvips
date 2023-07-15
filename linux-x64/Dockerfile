@@ -41,7 +41,7 @@ RUN \
   ln -s /usr/bin/gcc10-g++ /usr/bin/c++ && \
   ln -s /usr/bin/gcc10-ar /usr/bin/ar && \
   ln -s /usr/bin/gcc10-nm /usr/bin/nm && \
-  ln -s /usr/bin/gcc10-ld.bfd /usr/bin/ld && \
+  ln -s /usr/bin/gcc10-ld /usr/bin/ld && \
   ln -s /usr/bin/gcc10-strip /usr/bin/strip && \
   ln -s /usr/bin/gcc10-ranlib /usr/bin/ranlib && \
   ln -s /usr/bin/gcc10-readelf /usr/bin/readelf && \
