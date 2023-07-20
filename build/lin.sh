@@ -422,11 +422,12 @@ sed -i'.bak' "s/^\(Requires:.*\)/\1 cairo-gobject pangocairo libxml-2.0/" librsv
 sed -i'.bak' "/crate-type = /s/, \"rlib\"//" librsvg-c/Cargo.toml
 # We build Cairo with `-Dzlib=disabled`, which implicitly disables the PDF/PostScript surface backends
 sed -i'.bak' "/cairo-rs = /s/ \"pdf\", \"ps\",//" {librsvg-c,rsvg}/Cargo.toml
+# https://gitlab.gnome.org/GNOME/librsvg/-/issues/996
+$CURL https://raw.githubusercontent.com/libvips/build-win64-mxe/master/build/patches/librsvg-2-issue-996.patch | patch -p1
 # Remove the --static flag from the PKG_CONFIG env since Rust does not
 # support that. Build with PKG_CONFIG_ALL_STATIC=1 instead.
 PKG_CONFIG=${PKG_CONFIG/ --static/} ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
-  --disable-introspection --disable-tools --disable-pixbuf-loader --disable-nls --without-libiconv-prefix --without-libintl-prefix \
-  ${DARWIN:+--disable-Bsymbolic}
+  --disable-introspection --disable-pixbuf-loader ${DARWIN:+--disable-Bsymbolic}
 # Skip build of rsvg-convert
 PKG_CONFIG_ALL_STATIC=1 make install-strip bin_SCRIPTS=
 
