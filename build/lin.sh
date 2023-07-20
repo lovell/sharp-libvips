@@ -359,7 +359,7 @@ cd ${DEPS}/archive
 # Replace svfs.f_namelen with svfs.f_namemax (remove when version > 3.7.0)
 $CURL https://github.com/libarchive/libarchive/commit/bd074c2531e867078788fe8539376c31119e4e55.patch | patch -p1
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
-  --disable-bsdtar --disable-bsdcat --disable-bsdcpio --disable-posix-regex-lib --disable-xattr --disable-acl \
+  --disable-bsdtar --disable-bsdcat --disable-bsdcpio --disable-bsdunzip --disable-posix-regex-lib --disable-xattr --disable-acl \
   --without-bz2lib --without-libb2 --without-iconv --without-lz4 --without-zstd --without-lzma \
   --without-lzo2 --without-cng --without-openssl --without-xml2 --without-expat
 make install-strip
