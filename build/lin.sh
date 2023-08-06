@@ -92,7 +92,7 @@ CURL="curl --silent --location --retry 3 --retry-max-time 30"
 # Dependency version numbers
 VERSION_ZLIB_NG=2.1.3
 VERSION_FFI=3.4.4
-VERSION_GLIB=2.77.0
+VERSION_GLIB=2.77.1
 VERSION_XML2=2.11.4
 VERSION_EXIF=0.6.24
 VERSION_LCMS2=2.15
@@ -107,9 +107,9 @@ VERSION_PROXY_LIBINTL=0.4
 VERSION_GDKPIXBUF=2.42.10
 VERSION_FREETYPE=2.13.1
 VERSION_EXPAT=2.5.0
-VERSION_ARCHIVE=3.7.0
+VERSION_ARCHIVE=3.7.1
 VERSION_FONTCONFIG=2.14.2
-VERSION_HARFBUZZ=8.0.1
+VERSION_HARFBUZZ=8.1.1
 VERSION_PIXMAN=0.42.2
 VERSION_CAIRO=1.17.8
 VERSION_FRIBIDI=1.0.13
@@ -356,8 +356,6 @@ make install-strip
 mkdir ${DEPS}/archive
 $CURL https://github.com/libarchive/libarchive/releases/download/v${VERSION_ARCHIVE}/libarchive-${VERSION_ARCHIVE}.tar.xz | tar xJC ${DEPS}/archive --strip-components=1
 cd ${DEPS}/archive
-# Replace svfs.f_namelen with svfs.f_namemax (remove when version > 3.7.0)
-$CURL https://github.com/libarchive/libarchive/commit/bd074c2531e867078788fe8539376c31119e4e55.patch | patch -p1
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
   --disable-bsdtar --disable-bsdcat --disable-bsdcpio --disable-bsdunzip --disable-posix-regex-lib --disable-xattr --disable-acl \
   --without-bz2lib --without-libb2 --without-iconv --without-lz4 --without-zstd --without-lzma \
