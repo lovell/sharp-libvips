@@ -92,8 +92,8 @@ CURL="curl --silent --location --retry 3 --retry-max-time 30"
 # Dependency version numbers
 VERSION_ZLIB_NG=2.1.3
 VERSION_FFI=3.4.4
-VERSION_GLIB=2.77.1
-VERSION_XML2=2.11.4
+VERSION_GLIB=2.77.2
+VERSION_XML2=2.11.5
 VERSION_EXIF=0.6.24
 VERSION_LCMS2=2.15
 VERSION_MOZJPEG=4.1.3
@@ -113,8 +113,8 @@ VERSION_HARFBUZZ=8.1.1
 VERSION_PIXMAN=0.42.2
 VERSION_CAIRO=1.17.8
 VERSION_FRIBIDI=1.0.13
-VERSION_PANGO=1.50.14
-VERSION_RSVG=2.56.90
+VERSION_PANGO=1.51.0
+VERSION_RSVG=2.56.92
 VERSION_AOM=3.6.1
 VERSION_HEIF=1.16.2
 VERSION_CGIF=0.3.2
@@ -172,8 +172,8 @@ version_latest "harfbuzz" "$VERSION_HARFBUZZ" "1299"
 version_latest "pixman" "$VERSION_PIXMAN" "3648"
 version_latest "cairo" "$VERSION_CAIRO" "247"
 version_latest "fribidi" "$VERSION_FRIBIDI" "857"
-version_latest "pango" "$VERSION_PANGO" "11783"
-version_latest "rsvg" "$VERSION_RSVG" "5420" "unstable"
+#version_latest "pango" "$VERSION_PANGO" "11783" https://gitlab.gnome.org/GNOME/pango/-/issues/760
+version_latest "rsvg" "$VERSION_RSVG" "5420"
 version_latest "aom" "$VERSION_AOM" "17628"
 version_latest "heif" "$VERSION_HEIF" "strukturag/libheif"
 version_latest "cgif" "$VERSION_CGIF" "dloebl/cgif"
@@ -420,8 +420,6 @@ sed -i'.bak' "s/^\(Requires:.*\)/\1 cairo-gobject pangocairo libxml-2.0/" librsv
 sed -i'.bak' "/crate-type = /s/, \"rlib\"//" librsvg-c/Cargo.toml
 # We build Cairo with `-Dzlib=disabled`, which implicitly disables the PDF/PostScript surface backends
 sed -i'.bak' "/cairo-rs = /s/ \"pdf\", \"ps\",//" {librsvg-c,rsvg}/Cargo.toml
-# https://gitlab.gnome.org/GNOME/librsvg/-/issues/996
-$CURL https://raw.githubusercontent.com/libvips/build-win64-mxe/master/build/patches/librsvg-2-issue-996.patch | patch -p1
 # Remove the --static flag from the PKG_CONFIG env since Rust does not
 # support that. Build with PKG_CONFIG_ALL_STATIC=1 instead.
 PKG_CONFIG=${PKG_CONFIG/ --static/} ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
