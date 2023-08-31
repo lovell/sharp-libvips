@@ -92,11 +92,11 @@ CURL="curl --silent --location --retry 3 --retry-max-time 30"
 # Dependency version numbers
 VERSION_ZLIB_NG=2.1.3
 VERSION_FFI=3.4.4
-VERSION_GLIB=2.77.2
+VERSION_GLIB=2.77.3
 VERSION_XML2=2.11.5
 VERSION_EXIF=0.6.24
 VERSION_LCMS2=2.15
-VERSION_MOZJPEG=4.1.3
+VERSION_MOZJPEG=4.1.4
 VERSION_PNG16=1.6.40
 VERSION_SPNG=0.7.4
 VERSION_IMAGEQUANT=2.4.1
@@ -105,7 +105,7 @@ VERSION_TIFF=4.5.1
 VERSION_ORC=0.4.34
 VERSION_PROXY_LIBINTL=0.4
 VERSION_GDKPIXBUF=2.42.10
-VERSION_FREETYPE=2.13.1
+VERSION_FREETYPE=2.13.2
 VERSION_EXPAT=2.5.0
 VERSION_ARCHIVE=3.7.1
 VERSION_FONTCONFIG=2.14.2
@@ -114,7 +114,7 @@ VERSION_PIXMAN=0.42.2
 VERSION_CAIRO=1.17.8
 VERSION_FRIBIDI=1.0.13
 VERSION_PANGO=1.51.0
-VERSION_RSVG=2.56.92
+VERSION_RSVG=2.56.93
 VERSION_AOM=3.6.1
 VERSION_HEIF=1.16.2
 VERSION_CGIF=0.3.2
@@ -269,8 +269,6 @@ make install/strip
 mkdir ${DEPS}/jpeg
 $CURL https://github.com/mozilla/mozjpeg/archive/v${VERSION_MOZJPEG}.tar.gz | tar xzC ${DEPS}/jpeg --strip-components=1
 cd ${DEPS}/jpeg
-# https://github.com/mozilla/mozjpeg/pull/432
-$CURL https://github.com/libjpeg-turbo/libjpeg-turbo/commit/d743a2c12e889f7605a56f5144ae2e3899c9dd4f.patch | patch -p1
 cmake -G"Unix Makefiles" \
   -DCMAKE_TOOLCHAIN_FILE=${ROOT}/Toolchain.cmake -DCMAKE_INSTALL_PREFIX=${TARGET} -DCMAKE_INSTALL_LIBDIR:PATH=lib -DCMAKE_BUILD_TYPE=MinSizeRel \
   -DENABLE_STATIC=TRUE -DENABLE_SHARED=FALSE -DWITH_JPEG8=1 -DWITH_TURBOJPEG=FALSE -DPNG_SUPPORTED=FALSE
@@ -419,7 +417,7 @@ sed -i'.bak' "s/^\(Requires:.*\)/\1 cairo-gobject pangocairo libxml-2.0/" librsv
 # LTO optimization does not work for staticlib+rlib compilation
 sed -i'.bak' "/crate-type = /s/, \"rlib\"//" librsvg-c/Cargo.toml
 # We build Cairo with `-Dzlib=disabled`, which implicitly disables the PDF/PostScript surface backends
-sed -i'.bak' "/cairo-rs = /s/ \"pdf\", \"ps\",//" {librsvg-c,rsvg}/Cargo.toml
+sed -i'.bak' "/cairo-rs = /s/, \"pdf\", \"ps\"//" {librsvg-c,rsvg}/Cargo.toml
 # Remove the --static flag from the PKG_CONFIG env since Rust does not
 # support that. Build with PKG_CONFIG_ALL_STATIC=1 instead.
 PKG_CONFIG=${PKG_CONFIG/ --static/} ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
