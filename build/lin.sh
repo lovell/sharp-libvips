@@ -92,7 +92,7 @@ CURL="curl --silent --location --retry 3 --retry-max-time 30"
 # Dependency version numbers
 VERSION_ZLIB_NG=2.1.3
 VERSION_FFI=3.4.4
-VERSION_GLIB=2.77.3
+VERSION_GLIB=2.78.0
 VERSION_XML2=2.11.5
 VERSION_EXIF=0.6.24
 VERSION_LCMS2=2.15
@@ -100,21 +100,21 @@ VERSION_MOZJPEG=4.1.4
 VERSION_PNG16=1.6.40
 VERSION_SPNG=0.7.4
 VERSION_IMAGEQUANT=2.4.1
-VERSION_WEBP=1.3.1
-VERSION_TIFF=4.5.1
+VERSION_WEBP=1.3.2
+VERSION_TIFF=4.6.0
 VERSION_ORC=0.4.34
 VERSION_PROXY_LIBINTL=0.4
 VERSION_GDKPIXBUF=2.42.10
 VERSION_FREETYPE=2.13.2
 VERSION_EXPAT=2.5.0
-VERSION_ARCHIVE=3.7.1
+VERSION_ARCHIVE=3.7.2
 VERSION_FONTCONFIG=2.14.2
-VERSION_HARFBUZZ=8.1.1
+VERSION_HARFBUZZ=8.2.0
 VERSION_PIXMAN=0.42.2
 VERSION_CAIRO=1.17.8
 VERSION_FRIBIDI=1.0.13
 VERSION_PANGO=1.51.0
-VERSION_RSVG=2.56.93
+VERSION_RSVG=2.57.0
 VERSION_AOM=3.6.1
 VERSION_HEIF=1.16.2
 VERSION_CGIF=0.3.2
@@ -159,7 +159,7 @@ version_latest "lcms2" "$VERSION_LCMS2" "9815"
 version_latest "mozjpeg" "$VERSION_MOZJPEG" "mozilla/mozjpeg"
 version_latest "png" "$VERSION_PNG16" "1705"
 version_latest "spng" "$VERSION_SPNG" "24289"
-version_latest "webp" "$VERSION_WEBP" "1761"
+version_latest "webp" "$VERSION_WEBP" "webmproject/libwebp"
 version_latest "tiff" "$VERSION_TIFF" "1738"
 version_latest "orc" "$VERSION_ORC" "2573"
 version_latest "proxy-libintl" "$VERSION_PROXY_LIBINTL" "frida/proxy-libintl"
@@ -174,7 +174,7 @@ version_latest "cairo" "$VERSION_CAIRO" "247"
 version_latest "fribidi" "$VERSION_FRIBIDI" "857"
 #version_latest "pango" "$VERSION_PANGO" "11783" https://gitlab.gnome.org/GNOME/pango/-/issues/760
 version_latest "rsvg" "$VERSION_RSVG" "5420"
-version_latest "aom" "$VERSION_AOM" "17628"
+#version_latest "aom" "$VERSION_AOM" "17628" # TODO: investigate compilation errors with latest 3.7.0
 version_latest "heif" "$VERSION_HEIF" "strukturag/libheif"
 version_latest "cgif" "$VERSION_CGIF" "dloebl/cgif"
 if [ "$ALL_AT_VERSION_LATEST" = "false" ]; then exit 1; fi
