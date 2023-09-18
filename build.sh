@@ -54,7 +54,7 @@ for flavour in darwin-x64 darwin-arm64v8; do
     export FLAGS="-fno-stack-check"
     # Prevent use of API newer than the deployment target
     export FLAGS+=" -Werror=unguarded-availability-new"
-    export MESON="--cross-file=$PWD/$PLATFORM/meson.ini"
+    export MESON="--cross-file=$PWD/platforms/$PLATFORM/meson.ini"
 
     if [ $PLATFORM = "darwin-arm64v8" ]; then
       # ARM64 builds work via cross compilation from an x86_64 machine
