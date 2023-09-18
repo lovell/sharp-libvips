@@ -115,7 +115,7 @@ VERSION_CAIRO=1.17.8
 VERSION_FRIBIDI=1.0.13
 VERSION_PANGO=1.51.0
 VERSION_RSVG=2.57.0
-VERSION_AOM=3.6.1
+VERSION_AOM=3.7.0
 VERSION_HEIF=1.16.2
 VERSION_CGIF=0.3.2
 
@@ -174,7 +174,7 @@ version_latest "cairo" "$VERSION_CAIRO" "247"
 version_latest "fribidi" "$VERSION_FRIBIDI" "857"
 #version_latest "pango" "$VERSION_PANGO" "11783" https://gitlab.gnome.org/GNOME/pango/-/issues/760
 version_latest "rsvg" "$VERSION_RSVG" "5420"
-#version_latest "aom" "$VERSION_AOM" "17628" # TODO: investigate compilation errors with latest 3.7.0
+version_latest "aom" "$VERSION_AOM" "17628"
 version_latest "heif" "$VERSION_HEIF" "strukturag/libheif"
 version_latest "cgif" "$VERSION_CGIF" "dloebl/cgif"
 if [ "$ALL_AT_VERSION_LATEST" = "false" ]; then exit 1; fi
@@ -246,6 +246,9 @@ CFLAGS="${CFLAGS} -O3" meson setup _build --default-library=static --buildtype=r
 meson install -C _build --tag devel
 
 mkdir ${DEPS}/aom
+if [[ "$(nasm -v)" == "NASM version 2.10"* ]]; then
+  VERSION_AOM="3.6.1"
+fi
 $CURL https://storage.googleapis.com/aom-releases/libaom-${VERSION_AOM}.tar.gz | tar xzC ${DEPS}/aom --strip-components=1
 cd ${DEPS}/aom
 mkdir aom_build
