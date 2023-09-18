@@ -248,11 +248,6 @@ CFLAGS="${CFLAGS} -O3" meson setup _build --default-library=static --buildtype=r
 meson install -C _build --tag devel
 
 mkdir ${DEPS}/aom
-# NASM >= 2.14 is required to build libaom 3.7.0, see:
-# https://gitlab.kitware.com/cmake/cmake/-/issues/12919
-if [[ "$(nasm -v)" == "NASM version 2.10"* ]]; then
-  VERSION_AOM="3.6.1"
-fi
 $CURL https://storage.googleapis.com/aom-releases/libaom-${VERSION_AOM}.tar.gz | tar xzC ${DEPS}/aom --strip-components=1
 cd ${DEPS}/aom
 mkdir aom_build
