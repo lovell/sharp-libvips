@@ -203,7 +203,7 @@ mkdir ${DEPS}/zlib-ng
 $CURL https://github.com/zlib-ng/zlib-ng/archive/${VERSION_ZLIB_NG}.tar.gz | tar xzC ${DEPS}/zlib-ng --strip-components=1
 cd ${DEPS}/zlib-ng
 CFLAGS="${CFLAGS} -O3" cmake -G"Unix Makefiles" \
-  -DCMAKE_TOOLCHAIN_FILE=${ROOT}/Toolchain.cmake -DCMAKE_INSTALL_PREFIX=${TARGET} -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_TOOLCHAIN_FILE=${ROOT}/Toolchain.cmake -DCMAKE_INSTALL_PREFIX=${TARGET} -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=Release \
   -DBUILD_SHARED_LIBS=FALSE -DZLIB_COMPAT=TRUE
 make install/strip
 
@@ -246,6 +246,8 @@ CFLAGS="${CFLAGS} -O3" meson setup _build --default-library=static --buildtype=r
 meson install -C _build --tag devel
 
 mkdir ${DEPS}/aom
+# NASM >= 2.14 is required to build libaom 3.7.0, see:
+# https://gitlab.kitware.com/cmake/cmake/-/issues/12919
 if [[ "$(nasm -v)" == "NASM version 2.10"* ]]; then
   VERSION_AOM="3.6.1"
 fi
@@ -452,9 +454,6 @@ if [ "$LINUX" = true ]; then
   # Localize the g_param_spec_types symbol to avoid collisions with shared libraries
   # See: https://github.com/lovell/sharp/issues/2535#issuecomment-766400693
   printf "{local:g_param_spec_types;};" > vips.map
-elif [ "$DARWIN" = true ]; then
-  # https://github.com/pybind/pybind11/issues/595
-  export STRIP="strip -x"
 fi
 # Disable building man pages, gettext po files, tools, and (fuzz-)tests
 sed -i'.bak' "/subdir('man')/{N;N;N;N;d;}" meson.build

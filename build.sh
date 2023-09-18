@@ -54,12 +54,12 @@ for flavour in darwin-x64 darwin-arm64v8; do
     export FLAGS="-fno-stack-check"
     # Prevent use of API newer than the deployment target
     export FLAGS+=" -Werror=unguarded-availability-new"
+    export MESON="--cross-file=$PWD/$PLATFORM/meson.ini"
 
     if [ $PLATFORM = "darwin-arm64v8" ]; then
       # ARM64 builds work via cross compilation from an x86_64 machine
       export CHOST="aarch64-apple-darwin"
       export FLAGS+=" -target arm64-apple-macos11"
-      export MESON="--cross-file=$PWD/$PLATFORM/meson.ini"
       # macOS 11 Big Sur is the first version to support ARM-based macs
       export MACOSX_DEPLOYMENT_TARGET="11.0"
       # Set SDKROOT to the latest SDK available
