@@ -454,9 +454,6 @@ if [ "$LINUX" = true ]; then
   # Localize the g_param_spec_types symbol to avoid collisions with shared libraries
   # See: https://github.com/lovell/sharp/issues/2535#issuecomment-766400693
   printf "{local:g_param_spec_types;};" > vips.map
-elif [ "$DARWIN" = true ]; then
-  # https://github.com/pybind/pybind11/issues/595
-  export STRIP="strip -x"
 fi
 # Disable building man pages, gettext po files, tools, and (fuzz-)tests
 sed -i'.bak' "/subdir('man')/{N;N;N;N;d;}" meson.build
