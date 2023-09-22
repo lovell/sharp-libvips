@@ -1,7 +1,7 @@
 FROM debian:buster
 LABEL maintainer="Lovell Fuller <npm@lovell.info>"
 
-# Create Debian-based container suitable for cross-compiling Linux ARMv7-A binaries
+# Create Debian 10 (glibc 2.28) container suitable for cross-compiling Linux ARMv7-A binaries
 
 # Path settings
 ENV \
