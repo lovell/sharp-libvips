@@ -53,6 +53,8 @@ if [ "$LINUX" = true ]; then
 fi
 
 if [ "$DARWIN" = true ]; then
+  # Let macOS linker remove unused code
+  export LDFLAGS+=" -Wl,-dead_strip"
   # Local rust installation
   export CARGO_HOME="${DEPS}/cargo"
   export RUSTUP_HOME="${DEPS}/rustup"
