@@ -250,6 +250,10 @@ meson install -C _build --tag devel
 mkdir ${DEPS}/aom
 $CURL https://storage.googleapis.com/aom-releases/libaom-${VERSION_AOM}.tar.gz | tar xzC ${DEPS}/aom --strip-components=1
 cd ${DEPS}/aom
+if [ "${PLATFORM%-*}" == "linuxmusl" ]; then
+  # https://bugs.chromium.org/p/aomedia/issues/detail?id=2754
+  $CURL https://git.alpinelinux.org/aports/plain/main/aom/fix-stack-size-e53da0b.patch | patch -p1
+fi
 mkdir aom_build
 cd aom_build
 AOM_AS_FLAGS="${FLAGS}" cmake -G"Unix Makefiles" \
