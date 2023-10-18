@@ -44,8 +44,6 @@ tar czf /packaging/libvips-${VERSION_VIPS}-${PLATFORM}.tar.gz \
   include \
   lib/glib-2.0 \
   lib/libvips.lib \
-  lib/libglib-2.0.lib \
-  lib/libgobject-2.0.lib \
   lib/*.dll \
   *.json \
   THIRD-PARTY-NOTICES.md

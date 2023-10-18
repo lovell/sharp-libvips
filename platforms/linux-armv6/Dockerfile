@@ -47,6 +47,8 @@ ENV \
   RUST_TARGET="arm-unknown-linux-gnueabihf" \
   FLAGS="-marm -mcpu=arm1176jzf-s -mfpu=vfp -mfloat-abi=hard" \
   WITHOUT_NEON="true" \
+  # Highway requires NEON (Armv7+)
+  WITHOUT_HIGHWAY="true" \
   MESON="--cross-file=/root/meson.ini"
 
 COPY Toolchain.cmake /root/
