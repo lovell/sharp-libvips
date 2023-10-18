@@ -98,7 +98,7 @@ VERSION_GLIB=2.78.0
 VERSION_XML2=2.11.5
 VERSION_EXIF=0.6.24
 VERSION_LCMS2=2.15
-VERSION_MOZJPEG=4.1.4
+VERSION_MOZJPEG=4.1.5
 VERSION_PNG16=1.6.40
 VERSION_SPNG=0.7.4
 VERSION_IMAGEQUANT=2.4.1
@@ -118,7 +118,7 @@ VERSION_FRIBIDI=1.0.13
 VERSION_PANGO=1.51.0
 VERSION_RSVG=2.57.0
 VERSION_AOM=3.7.0
-VERSION_HEIF=1.16.2
+VERSION_HEIF=1.17.0
 VERSION_CGIF=0.3.2
 
 # Remove patch version component
@@ -267,6 +267,8 @@ make install/strip
 mkdir ${DEPS}/heif
 $CURL https://github.com/strukturag/libheif/releases/download/v${VERSION_HEIF}/libheif-${VERSION_HEIF}.tar.gz | tar xzC ${DEPS}/heif --strip-components=1
 cd ${DEPS}/heif
+# Downgrade minimum required CMake version to 3.12 - https://github.com/strukturag/libheif/issues/975
+sed -i'.bak' "/^cmake_minimum_required/s/3.16.3/3.12/" CMakeLists.txt
 CFLAGS="${CFLAGS} -O3" CXXFLAGS="${CXXFLAGS} -O3" cmake -G"Unix Makefiles" \
   -DCMAKE_TOOLCHAIN_FILE=${ROOT}/Toolchain.cmake -DCMAKE_INSTALL_PREFIX=${TARGET} -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=Release \
   -DBUILD_SHARED_LIBS=FALSE -DENABLE_PLUGIN_LOADING=0 -DWITH_EXAMPLES=0 -DWITH_LIBDE265=0 -DWITH_X265=0
