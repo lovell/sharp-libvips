@@ -43,7 +43,7 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           pip3 install meson ninja
-          brew install advancecomp automake brotli nasm pkg-config
+          brew install automake nasm pkg-config
       - name: Build ${{ matrix.platform }}
         id: build-release
         run: ./build.sh $(cat LIBVIPS_VERSION) ${{ matrix.platform }}
@@ -58,19 +58,6 @@ jobs:
           allowUpdates: true
           artifacts: libvips-*-${{ matrix.platform }}.tar.gz
           artifactContentType: application/gzip
-          artifactErrorsFailBuild: true
-          omitBodyDuringUpdate: true
-          omitNameDuringUpdate: true
-          prerelease: true
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Upload Release Asset (.tar.br)
-        id: upload-release-asset-br
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: ncipollo/release-action@v1
-        with:
-          allowUpdates: true
-          artifacts: libvips-*-${{ matrix.platform }}.tar.br
-          artifactContentType: application/x-brotli
           artifactErrorsFailBuild: true
           omitBodyDuringUpdate: true
           omitNameDuringUpdate: true
