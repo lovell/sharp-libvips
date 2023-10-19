@@ -45,6 +45,8 @@ ENV \
   CHOST="s390x-linux-gnu" \
   RUST_TARGET="s390x-unknown-linux-gnu" \
   FLAGS="" \
+  # https://github.com/google/highway/issues/1153
+  WITHOUT_HIGHWAY="true" \
   MESON="--cross-file=/root/meson.ini"
 
 COPY Toolchain.cmake /root/
