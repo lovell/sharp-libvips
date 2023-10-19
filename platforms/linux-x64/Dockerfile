@@ -15,10 +15,8 @@ RUN \
   amazon-linux-extras install epel -y && \
   yum install -y --setopt=tsflags=nodocs \
     --exclude=gcc \
-    advancecomp \
     autoconf \
     automake \
-    brotli \
     bzip2 \
     cmake3 \
     curl \

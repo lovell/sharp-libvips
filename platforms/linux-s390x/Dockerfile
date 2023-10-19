@@ -16,10 +16,8 @@ RUN \
   dpkg --add-architecture s390x && \
   apt-get update && \
   apt-get install -y \
-    advancecomp \
     autoconf \
     autopoint \
-    brotli \
     cmake \
     crossbuild-essential-s390x \
     gettext \

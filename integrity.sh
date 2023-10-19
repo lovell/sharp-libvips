@@ -8,6 +8,6 @@ integrity() {
   printf "$CHECKSUM" > $1.integrity
 }
 
-for tarball in *.tar.{br,gz}; do
+for tarball in *.tar.gz; do
   integrity $tarball
 done

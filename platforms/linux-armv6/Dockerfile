@@ -16,10 +16,8 @@ RUN \
   dpkg --add-architecture armhf && \
   apt-get update && \
   apt-get install -y \
-    advancecomp \
     autoconf \
     autopoint \
-    brotli \
     cmake \
     gettext \
     git \
