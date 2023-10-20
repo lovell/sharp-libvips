@@ -92,7 +92,7 @@ unset PKG_CONFIG_PATH
 CURL="curl --silent --location --retry 3 --retry-max-time 30"
 
 # Dependency version numbers
-VERSION_ZLIB_NG=2.1.3
+VERSION_ZLIB_NG=2.1.4
 VERSION_FFI=3.4.4
 VERSION_GLIB=2.78.0
 VERSION_XML2=2.11.5
