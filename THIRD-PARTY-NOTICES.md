@@ -26,7 +26,7 @@ used under the terms of the following licences:
 | libpng        | [libpng License](https://github.com/glennrp/libpng/blob/master/LICENSE)                                   |
 | librsvg       | LGPLv3                                                                                                    |
 | libspng       | [BSD 2-Clause, libpng License](https://github.com/randy408/libspng/blob/master/LICENSE)                   |
-| libtiff       | [libtiff License](https://libtiff.gitlab.io/libtiff/misc.html) (BSD-like)                                 |
+| libtiff       | [libtiff License](https://gitlab.com/libtiff/libtiff/blob/master/LICENSE.md) (BSD-like)                   |
 | libvips       | LGPLv3                                                                                                    |
 | libwebp       | New BSD License                                                                                           |
 | libxml2       | MIT Licence                                                                                               |
