@@ -2,3 +2,6 @@ libvips*
 *.log
 deps/
 target/
+npm/*/*
+!npm/*/package.json
+npm/img-sharp-libvips-*.tgz

@@ -1,0 +1,18 @@
+{
+  "name": "@img/sharp-libvips",
+  "version": "0.0.3",
+  "private": "true",
+  "workspaces": [
+    "dev",
+    "darwin-x64",
+    "darwin-arm64",
+    "linux-arm",
+    "linux-arm64",
+    "linuxmusl-arm64",
+    "linuxmusl-x64",
+    "linux-s390x",
+    "linux-x64",
+    "win32-ia32",
+    "win32-x64"
+  ]
+}
