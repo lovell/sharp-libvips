@@ -3,13 +3,8 @@
 libvips and its dependencies are provided as pre-compiled shared libraries
 for the most common operating systems and CPU architectures.
 
-During `npm install`, these binaries are fetched as tarballs from
-this repository via HTTPS and stored locally within `node_modules/sharp/vendor`.
-
-The base URL can be overridden using the
-`npm_config_sharp_libvips_binary_host` environment variable.
-
-https://sharp.pixelplumbing.com/install#custom-prebuilt-binaries
+These are [packaged](npm) and published to the npm registry under the
+[@img](https://www.npmjs.com/org/img) organisation.
 
 ## Creating a tarball
 

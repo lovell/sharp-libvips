@@ -1,0 +1,30 @@
+{
+  "name": "@img/sharp-libvips-dev",
+  "version": "0.0.3",
+  "description": "Header files and C++ sources for libvips and dependencies required when compiling sharp from source",
+  "author": "Lovell Fuller <npm@lovell.info>",
+  "homepage": "https://sharp.pixelplumbing.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lovell/sharp-libvips.git",
+    "directory": "npm/dev"
+  },
+  "license": "LGPL-3.0-or-later",
+  "funding": {
+    "url": "https://opencollective.com/libvips"
+  },
+  "preferUnplugged": true,
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "include",
+    "cplusplus",
+    "versions.json"
+  ],
+  "type": "commonjs",
+  "exports": {
+    "./include": "./include/index.js",
+    "./cplusplus": "./cplusplus/index.js"
+  }
+}
