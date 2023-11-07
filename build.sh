@@ -79,6 +79,12 @@ if ! [ -x "$(command -v docker)" ]; then
   exit 1
 fi
 
+# WebAssembly
+if [ "$PLATFORM" == "wasm32" ]; then
+  ./build/wasm.sh "${VERSION_VIPS}"
+  exit 0
+fi
+
 # Update base images
 for baseimage in alpine:3.15 amazonlinux:2 debian:bullseye debian:buster; do
   docker pull $baseimage

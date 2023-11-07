@@ -4,6 +4,7 @@
   "private": "true",
   "workspaces": [
     "dev",
+    "dev-wasm32",
     "darwin-x64",
     "darwin-arm64",
     "linux-arm",
