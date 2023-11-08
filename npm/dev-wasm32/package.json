@@ -1,0 +1,31 @@
+{
+  "name": "@img/sharp-libvips-dev-wasm32",
+  "version": "0.0.3",
+  "description": "Header files and static wasm32 libraries for libvips and dependencies to build sharp as wasm32",
+  "author": "Lovell Fuller <npm@lovell.info>",
+  "homepage": "https://sharp.pixelplumbing.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lovell/sharp-libvips.git",
+    "directory": "npm/dev-wasm32"
+  },
+  "license": "LGPL-3.0-or-later",
+  "funding": {
+    "url": "https://opencollective.com/libvips"
+  },
+  "preferUnplugged": true,
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "include",
+    "lib",
+    "versions.json"
+  ],
+  "type": "commonjs",
+  "exports": {
+    "./include": "./include/index.js",
+    "./lib": "./lib/index.js",
+    "./versions": "./versions.json"
+  }
+}

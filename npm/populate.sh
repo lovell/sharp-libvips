@@ -38,10 +38,10 @@ generate_index() {
 
 remove_unused() {
   PACKAGE="$1"
-  if [ "$PACKAGE" != "dev" ]; then
+  if [[ "$PACKAGE" != "dev"* ]]; then
     rm -r "npm/$PACKAGE/include"
+    rm "npm/$PACKAGE/THIRD-PARTY-NOTICES.md"
   fi
-  rm "npm/$PACKAGE/THIRD-PARTY-NOTICES.md"
 }
 
 # Download and extract per-platform binaries

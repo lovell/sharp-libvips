@@ -40,6 +40,13 @@ The dylib files are compiled within the same build script as Linux.
 
 Dependency paths are modified to use the relative `@rpath` with `install_name_tool`.
 
+### WebAssembly
+
+The scripts from [wasm-vips](https://github.com/kleisauke/wasm-vips)
+are [used to compile](build/wasm.sh) libvips and its dependencies
+as static Wasm libraries ready for further compilation into a single,
+statically-linked sharp shared library.
+
 ## Licences
 
 These scripts are licensed under the terms of the [Apache 2.0 Licence](LICENSE).
