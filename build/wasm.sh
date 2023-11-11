@@ -12,7 +12,7 @@ if [ $# -lt 1 ]; then
   exit 1
 fi
 VERSION_VIPS="$1"
-VERSION_WASM_VIPS="${2:-56f151b}" # TODO: fetch latest wasm-vips commit as default
+VERSION_WASM_VIPS="${2:-c5a5f0f}" # TODO: fetch latest wasm-vips commit as default
 
 DIR="wasm-vips-${VERSION_WASM_VIPS}"
 TAG="wasm-vips:${VERSION_WASM_VIPS}"
