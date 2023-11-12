@@ -59,7 +59,6 @@ jobs:
           allowUpdates: true
           artifacts: libvips-*-${{ matrix.platform }}.tar.gz
           artifactContentType: application/gzip
-          artifactErrorsFailBuild: true
           omitBodyDuringUpdate: true
           omitNameDuringUpdate: true
           prerelease: true
@@ -72,7 +71,6 @@ jobs:
           allowUpdates: true
           artifacts: "*.integrity"
           artifactContentType: text/plain
-          artifactErrorsFailBuild: true
           omitBodyDuringUpdate: true
           omitNameDuringUpdate: true
           prerelease: true
