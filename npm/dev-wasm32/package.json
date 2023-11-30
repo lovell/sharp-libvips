@@ -1,6 +1,6 @@
 {
   "name": "@img/sharp-libvips-dev-wasm32",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "Header files and static wasm32 libraries for libvips and dependencies to build sharp as wasm32",
   "author": "Lovell Fuller <npm@lovell.info>",
   "homepage": "https://sharp.pixelplumbing.com",
