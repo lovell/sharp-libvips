@@ -27,6 +27,7 @@ RUN \
     libtool \
     ninja-build \
     pkg-config \
+    python3-packaging \
     python3-pip \
     && \
   curl https://sh.rustup.rs -sSf | sh -s -- -y \

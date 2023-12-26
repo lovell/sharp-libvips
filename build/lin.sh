@@ -94,7 +94,7 @@ CURL="curl --silent --location --retry 3 --retry-max-time 30"
 # Dependency version numbers
 VERSION_ZLIB_NG=2.1.5
 VERSION_FFI=3.4.4
-VERSION_GLIB=2.78.3
+VERSION_GLIB=2.79.0
 VERSION_XML2=2.12.3
 VERSION_EXIF=0.6.24
 VERSION_LCMS2=2.16
@@ -110,7 +110,7 @@ VERSION_GDKPIXBUF=2.42.10
 VERSION_FREETYPE=2.13.2
 VERSION_EXPAT=2.5.0
 VERSION_ARCHIVE=3.7.2
-VERSION_FONTCONFIG=2.14.2
+VERSION_FONTCONFIG=2.15.0
 VERSION_HARFBUZZ=8.3.0
 VERSION_PIXMAN=0.42.2
 VERSION_CAIRO=1.18.0
@@ -219,10 +219,10 @@ make install-strip
 mkdir ${DEPS}/glib
 $CURL https://download.gnome.org/sources/glib/$(without_patch $VERSION_GLIB)/glib-${VERSION_GLIB}.tar.xz | tar xJC ${DEPS}/glib --strip-components=1
 cd ${DEPS}/glib
-$CURL https://gist.githubusercontent.com/lovell/8d0de84a57dd10220cdeb8f64d7dd9ce/raw/1c0a5b5e1d5731bc1557df789e6d85b97f6a69dc/glib-without-gregex.patch | patch -p1
+$CURL https://gist.github.com/kleisauke/284d685efa00908da99ea6afbaaf39ae/raw/36e32c79e7962c5ea96cbb3f9c629e9145253e30/glib-without-gregex.patch | patch -p1
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
-  --force-fallback-for=gvdb -Dnls=disabled -Dtests=false -Dinstalled_tests=false -Dlibmount=disabled -Dlibelf=disabled \
-  -Dglib_assert=false -Dglib_checks=false ${DARWIN:+-Dbsymbolic_functions=false}
+  --force-fallback-for=gvdb -Dintrospection=disabled -Dnls=disabled -Dlibmount=disabled -Dlibelf=disabled \
+  -Dtests=false -Dglib_assert=false -Dglib_checks=false ${DARWIN:+-Dbsymbolic_functions=false}
 # bin-devel is needed for glib-compile-resources, as required by gdk-pixbuf
 meson install -C _build --tag bin-devel,devel
 

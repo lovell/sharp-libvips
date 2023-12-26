@@ -49,7 +49,7 @@ RUN \
     --default-host aarch64-unknown-linux-gnu \
     && \
   ln -s /usr/bin/cmake3 /usr/bin/cmake && \
-  pip3 install meson ninja
+  pip3 install meson ninja packaging
 
 # Compiler settings
 ENV \

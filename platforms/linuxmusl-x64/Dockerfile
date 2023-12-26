@@ -29,6 +29,7 @@ RUN \
     nasm \
     ninja \
     pkgconf \
+    py3-packaging \
     py3-pip \
     python3 \
     && \
