@@ -48,7 +48,7 @@ RUN \
     --profile minimal \
     && \
   ln -s /usr/bin/cmake3 /usr/bin/cmake && \
-  pip3 install meson ninja
+  pip3 install meson ninja packaging
 
 # Compiler settings
 ENV \

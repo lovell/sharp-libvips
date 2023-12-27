@@ -26,6 +26,7 @@ RUN \
     libtool \
     ninja-build \
     pkg-config \
+    python3-packaging \
     python3-pip \
     && \
   mkdir /root/tools && \
