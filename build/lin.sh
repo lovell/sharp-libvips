@@ -252,7 +252,7 @@ $CURL https://storage.googleapis.com/aom-releases/libaom-${VERSION_AOM}.tar.gz |
 cd ${DEPS}/aom
 if [ "${PLATFORM%-*}" == "linuxmusl" ]; then
   # https://bugs.chromium.org/p/aomedia/issues/detail?id=2754
-  : # $CURL https://git.alpinelinux.org/aports/plain/main/aom/fix-stack-size-e53da0b.patch | patch -p1 # TODO: requires updated patch
+  $CURL https://gist.github.com/lovell/3e70b51079af2c9b78e5a0e6f6ad0e59/raw/92864bf57345f57cf32307dd3b399a6bd430b78e/aom-ensure-thread-stack-size-is-at-least-256-KB.patch | patch -p1
 fi
 mkdir aom_build
 cd aom_build
