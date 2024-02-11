@@ -345,14 +345,18 @@ meson setup _build --default-library=static --buildtype=release --strip --prefix
   -Dtiff=disabled -Dintrospection=disabled -Dtests=false -Dinstalled_tests=false -Dgio_sniffing=false -Dman=false -Dbuiltin_loaders=png,jpeg
 meson install -C _build --tag devel
 # Include libjpeg and libpng as a dependency of gdk-pixbuf, see: https://gitlab.gnome.org/GNOME/gdk-pixbuf/merge_requests/50
-sed -i'.bak' "s/^\(Requires:.*\)/\1 libjpeg, libpng16/" ${TARGET}/lib/pkgconfig/gdk-pixbuf-2.0.pc
+sed -i'.bak' "/^Requires:/s/$/ libjpeg, libpng16/" ${TARGET}/lib/pkgconfig/gdk-pixbuf-2.0.pc
 
-mkdir ${DEPS}/freetype
-$CURL https://github.com/freetype/freetype/archive/VER-${VERSION_FREETYPE//./-}.tar.gz | tar xzC ${DEPS}/freetype --strip-components=1
-cd ${DEPS}/freetype
-meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
-  -Dzlib=enabled -Dpng=disabled -Dharfbuzz=disabled -Dbrotli=disabled -Dbzip2=disabled
-meson install -C _build --tag devel
+build_freetype() {
+  rm -rf ${DEPS}/freetype
+  mkdir ${DEPS}/freetype
+  $CURL https://github.com/freetype/freetype/archive/VER-${VERSION_FREETYPE//./-}.tar.gz | tar xzC ${DEPS}/freetype --strip-components=1
+  cd ${DEPS}/freetype
+  meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
+    -Dzlib=enabled -Dpng=disabled -Dbrotli=disabled -Dbzip2=disabled "$@"
+  meson install -C _build --tag devel
+}
+build_freetype -Dharfbuzz=disabled
 
 mkdir ${DEPS}/expat
 $CURL https://github.com/libexpat/libexpat/releases/download/R_${VERSION_EXPAT//./_}/expat-${VERSION_EXPAT}.tar.xz | tar xJC ${DEPS}/expat --strip-components=1
@@ -387,6 +391,15 @@ sed -i'.bak' "/subdir('util')/d" meson.build
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   -Dgobject=disabled -Dicu=disabled -Dtests=disabled -Dintrospection=disabled -Ddocs=disabled -Dbenchmark=disabled ${DARWIN:+-Dcoretext=enabled}
 meson install -C _build --tag devel
+
+# pkg-config provided by Amazon Linux 2 doesn't support circular `Requires` dependencies.
+# https://bugs.freedesktop.org/show_bug.cgi?id=7331
+# https://gitlab.freedesktop.org/pkg-config/pkg-config/-/commit/6d6dd43e75e2bc82cfe6544f8631b1bef6e1cf45
+# TODO(kleisauke): Remove when Amazon Linux 2 reaches EOL.
+sed -i'.bak' "/^Requires:/s/ freetype2,//" ${TARGET}/lib/pkgconfig/harfbuzz.pc
+sed -i'.bak' "/^Libs:/s/$/ -lfreetype/" ${TARGET}/lib/pkgconfig/harfbuzz.pc
+
+build_freetype -Dharfbuzz=enabled
 
 mkdir ${DEPS}/pixman
 $CURL https://cairographics.org/releases/pixman-${VERSION_PIXMAN}.tar.gz | tar xzC ${DEPS}/pixman --strip-components=1
