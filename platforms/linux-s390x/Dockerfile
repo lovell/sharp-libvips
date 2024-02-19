@@ -37,6 +37,10 @@ RUN \
   rustup target add s390x-unknown-linux-gnu && \
   pip3 install meson
 
+# Handy for debugging the compiled targets in Highway (hwy_list_targets)
+#RUN apt-get install -y qemu-user-static
+#ENV QEMU_LD_PREFIX="/usr/s390x-linux-gnu"
+
 # Compiler settings
 ENV \
   PKG_CONFIG="s390x-linux-gnu-pkg-config --static" \
@@ -44,7 +48,10 @@ ENV \
   CHOST="s390x-linux-gnu" \
   RUST_TARGET="s390x-unknown-linux-gnu" \
   FLAGS="" \
-  # https://github.com/google/highway/issues/1153
+  # Highway supports IBMZ starting from IBM/Z14, which needs GCC 11 or
+  # higher (i.e. Debian 12, glibc 2.36). Therefore, it should be disabled
+  # for the time being.
+  #FLAGS="-march=z14 -mzvector" \
   WITHOUT_HIGHWAY="true" \
   MESON="--cross-file=/root/meson.ini"
 

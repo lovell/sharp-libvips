@@ -93,8 +93,8 @@ CURL="curl --silent --location --retry 3 --retry-max-time 30"
 
 # Dependency version numbers
 VERSION_ZLIB_NG=2.1.6
-VERSION_FFI=3.4.4
-VERSION_GLIB=2.79.1
+VERSION_FFI=3.4.5
+VERSION_GLIB=2.79.2
 VERSION_XML2=2.12.5
 VERSION_EXIF=0.6.24
 VERSION_LCMS2=2.16
@@ -104,7 +104,7 @@ VERSION_SPNG=0.7.4
 VERSION_IMAGEQUANT=2.4.1
 VERSION_WEBP=1.3.2
 VERSION_TIFF=4.6.0
-VERSION_HWY=1.0.7
+VERSION_HWY=1.1.0
 VERSION_PROXY_LIBINTL=0.4
 VERSION_GDKPIXBUF=2.42.10
 VERSION_FREETYPE=2.13.2
@@ -437,7 +437,7 @@ mkdir ${DEPS}/rsvg
 $CURL https://download.gnome.org/sources/librsvg/$(without_patch $VERSION_RSVG)/librsvg-${VERSION_RSVG}.tar.xz | tar xJC ${DEPS}/rsvg --strip-components=1
 cd ${DEPS}/rsvg
 # Add missing pkg-config deps
-sed -i'.bak' "s/^\(Requires:.*\)/\1 cairo-gobject pangocairo libxml-2.0/" librsvg.pc.in
+sed -i'.bak' "/^Requires:/s/$/ cairo-gobject pangocairo libxml-2.0/" librsvg.pc.in
 # LTO optimization does not work for staticlib+rlib compilation
 sed -i'.bak' "/crate-type = /s/, \"rlib\"//" librsvg-c/Cargo.toml
 # We build Cairo with `-Dzlib=disabled`, which implicitly disables the PDF/PostScript surface backends
