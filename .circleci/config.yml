@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  github-cli: circleci/github-cli@1.0
+  github-cli: circleci/github-cli@2.0
 
 workflows:
   build:
@@ -23,4 +23,4 @@ jobs:
       - when:
           condition: <<pipeline.git.tag>>
           steps:
-            - run: gh release upload --repo lovell/sharp-libvips $CIRCLE_TAG *.tar.gz *.integrity
+            - run: gh release upload --repo "$(git config --get remote.origin.url)" $CIRCLE_TAG *.tar.gz *.integrity
