@@ -39,7 +39,7 @@ jobs:
             platform: 'darwin-arm64v8'
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Install dependencies (macOS)
         if: runner.os == 'macOS'
         run: |
