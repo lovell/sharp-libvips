@@ -116,7 +116,7 @@ VERSION_PIXMAN=0.43.4
 VERSION_CAIRO=1.18.0
 VERSION_FRIBIDI=1.0.13
 VERSION_PANGO=1.52.1
-VERSION_RSVG=2.57.92
+VERSION_RSVG=2.57.2
 VERSION_AOM=3.8.2
 VERSION_HEIF=1.17.6
 VERSION_CGIF=0.3.2
@@ -175,7 +175,7 @@ version_latest "pixman" "$VERSION_PIXMAN" "3648"
 version_latest "cairo" "$VERSION_CAIRO" "247"
 version_latest "fribidi" "$VERSION_FRIBIDI" "857"
 version_latest "pango" "$VERSION_PANGO" "11783"
-version_latest "rsvg" "$VERSION_RSVG" "5420"
+#version_latest "rsvg" "$VERSION_RSVG" "5420" # https://github.com/lovell/sharp-libvips/issues/226
 version_latest "aom" "$VERSION_AOM" "17628"
 version_latest "heif" "$VERSION_HEIF" "strukturag/libheif"
 version_latest "cgif" "$VERSION_CGIF" "dloebl/cgif"
