@@ -457,7 +457,7 @@ CFLAGS="${CFLAGS} -O3" meson setup _build --default-library=static --buildtype=r
 meson install -C _build --tag devel
 
 mkdir ${DEPS}/vips
-$CURL https://github.com/libvips/libvips/releases/download/v${VERSION_VIPS}a/vips-$(without_prerelease $VERSION_VIPS).tar.xz | tar xJC ${DEPS}/vips --strip-components=1
+$CURL https://github.com/libvips/libvips/releases/download/v${VERSION_VIPS}/vips-$(without_prerelease $VERSION_VIPS).tar.xz | tar xJC ${DEPS}/vips --strip-components=1
 cd ${DEPS}/vips
 # Link libvips.so.42 statically into libvips-cpp.so.42
 sed -i'.bak' "s/library('vips'/static_&/" libvips/meson.build
