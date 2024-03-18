@@ -34,15 +34,15 @@ if [ "$VERSION_VIPS" != "$VERSION_VIPS_UPSTREAM" ]; then
 fi
 
 # Create container with emscripten
-if [ -z "$(docker images -q ${TAG})" ]; then
-  pushd "${DIR}"
-  docker build -t "${TAG}" .
-  popd
-fi
+pushd "${DIR}"
+docker build -t "${TAG}" .
+popd
 
 # Build libvips and dependencies as static Wasm libraries via emscripten
 if [ ! -d "$DIR/build/target/lib" ]; then
   docker run --rm -v "$PWD/${DIR}":/src "${TAG}" -c "./build.sh --disable-bindings --disable-modules --disable-jxl --enable-libvips-cpp"
+else
+  echo "Skipping build: found existing files in $DIR/build/target"
 fi
 
 # Copy only the files we need
