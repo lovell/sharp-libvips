@@ -353,7 +353,7 @@ build_freetype() {
   $CURL https://github.com/freetype/freetype/archive/VER-${VERSION_FREETYPE//./-}.tar.gz | tar xzC ${DEPS}/freetype --strip-components=1
   cd ${DEPS}/freetype
   meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
-    -Dzlib=enabled -Dpng=disabled -Dbrotli=disabled -Dbzip2=disabled "$@"
+    -Dzlib=enabled -Dpng=enabled -Dbrotli=disabled -Dbzip2=disabled "$@"
   meson install -C _build --tag devel
 }
 build_freetype -Dharfbuzz=disabled
