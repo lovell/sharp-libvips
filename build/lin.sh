@@ -1,6 +1,16 @@
 #!/usr/bin/env bash
 set -e
 
+# Optional depedency to add libde265 to the build which enables HEIC support in libvips
+ADD_LIBDE265_OPTIONAL_DEPEDENCY="${1:-false}"
+
+# Used to specify correct cmake DWITH_LIBDE265 flag for libheif
+if [ "$ADD_LIBDE265_OPTIONAL_DEPEDENCY" == "true" ]; then
+  DWITH_LIBDE265=1
+else
+  DWITH_LIBDE265=0
+fi
+
 # Environment / working directories
 case ${PLATFORM} in
   linux*)
@@ -118,6 +128,7 @@ VERSION_FRIBIDI=1.0.13
 VERSION_PANGO=1.52.2
 VERSION_RSVG=2.57.3
 VERSION_AOM=3.8.2
+VERSION_DE265=1.0.15
 VERSION_HEIF=1.17.6
 VERSION_CGIF=0.3.2
 
@@ -177,6 +188,7 @@ version_latest "fribidi" "$VERSION_FRIBIDI" "857"
 version_latest "pango" "$VERSION_PANGO" "11783"
 #version_latest "rsvg" "$VERSION_RSVG" "5420" # https://github.com/lovell/sharp-libvips/issues/226
 version_latest "aom" "$VERSION_AOM" "17628"
+version_latest "de265" "$VERSION_DE265" "11239"
 version_latest "heif" "$VERSION_HEIF" "strukturag/libheif"
 version_latest "cgif" "$VERSION_CGIF" "dloebl/cgif"
 if [ "$ALL_AT_VERSION_LATEST" = "false" ]; then exit 1; fi
@@ -264,6 +276,18 @@ AOM_AS_FLAGS="${FLAGS}" cmake -G"Unix Makefiles" \
   ..
 make install/strip
 
+if [ $ADD_LIBDE265_OPTIONAL_DEPEDENCY = true ]; then
+  mkdir ${DEPS}/de265
+  $CURL https://github.com/strukturag/libde265/releases/download/v${VERSION_DE265}/libde265-${VERSION_DE265}.tar.gz | tar xzC ${DEPS}/de265 --strip-components=1
+  cd ${DEPS}/de265
+  # Do not build the dec265 and sherlock265 example programs.
+  ./configure --disable-dec265 --disable-sherlock265
+  CFLAGS="${CFLAGS} -O3" CXXFLAGS="${CXXFLAGS} -O3" cmake -G"Unix Makefiles" \
+    -DCMAKE_TOOLCHAIN_FILE=${ROOT}/Toolchain.cmake -DCMAKE_INSTALL_PREFIX=${TARGET} -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_SHARED_LIBS=FALSE
+  make install/strip
+fi
+
 mkdir ${DEPS}/heif
 $CURL https://github.com/strukturag/libheif/releases/download/v${VERSION_HEIF}/libheif-${VERSION_HEIF}.tar.gz | tar xzC ${DEPS}/heif --strip-components=1
 cd ${DEPS}/heif
@@ -271,7 +295,7 @@ cd ${DEPS}/heif
 sed -i'.bak' "/^cmake_minimum_required/s/3.16.3/3.12/" CMakeLists.txt
 CFLAGS="${CFLAGS} -O3" CXXFLAGS="${CXXFLAGS} -O3" cmake -G"Unix Makefiles" \
   -DCMAKE_TOOLCHAIN_FILE=${ROOT}/Toolchain.cmake -DCMAKE_INSTALL_PREFIX=${TARGET} -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=Release \
-  -DBUILD_SHARED_LIBS=FALSE -DENABLE_PLUGIN_LOADING=0 -DWITH_EXAMPLES=0 -DWITH_LIBDE265=0 -DWITH_X265=0
+  -DBUILD_SHARED_LIBS=FALSE -DENABLE_PLUGIN_LOADING=0 -DWITH_EXAMPLES=0 -DWITH_LIBDE265=${DWITH_LIBDE265} -DWITH_X265=0
 make install/strip
 
 mkdir ${DEPS}/jpeg
@@ -538,6 +562,7 @@ printf "{\n\
   \"archive\": \"${VERSION_ARCHIVE}\",\n\
   \"cairo\": \"${VERSION_CAIRO}\",\n\
   \"cgif\": \"${VERSION_CGIF}\",\n\
+  \"de265\": \"${VERSION_DE265}\",\n\
   \"exif\": \"${VERSION_EXIF}\",\n\
   \"expat\": \"${VERSION_EXPAT}\",\n\
   \"ffi\": \"${VERSION_FFI}\",\n\

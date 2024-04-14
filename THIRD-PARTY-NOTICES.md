@@ -18,6 +18,7 @@ used under the terms of the following licences:
 | highway       | Apache-2.0 License, BSD 3-Clause                                                                          |
 | lcms          | MIT Licence                                                                                               |
 | libarchive    | BSD 2-Clause                                                                                              |
+| libde265      | LGPLv3                                                                                                    |
 | libexif       | LGPLv3                                                                                                    |
 | libffi        | MIT Licence                                                                                               |
 | libheif       | LGPLv3                                                                                                    |

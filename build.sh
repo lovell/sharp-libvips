@@ -3,7 +3,7 @@ set -e
 
 if [ $# -lt 1 ]; then
   echo
-  echo "Usage: $0 VERSION [PLATFORM]"
+  echo "Usage: $0 VERSION [PLATFORM] ADD_LIBDE265_OPTIONAL_DEPEDENCY"
   echo "Build shared libraries for libvips and its dependencies via containers"
   echo
   echo "Please specify the libvips VERSION, e.g. 8.9.2"
@@ -24,10 +24,12 @@ if [ $# -lt 1 ]; then
   echo "- darwin-x64"
   echo "- darwin-arm64v8"
   echo
+  echo "Optionally add libde265 to the build, defaults to false"
   exit 1
 fi
 VERSION_VIPS="$1"
 PLATFORM="${2:-all}"
+ADD_LIBDE265_OPTIONAL_DEPEDENCY="${3:-false}"
 
 # macOS
 # Note: we intentionally don't build these binaries inside a Docker container
@@ -67,7 +69,7 @@ for flavour in darwin-x64 darwin-arm64v8; do
       export SDKROOT=$(xcrun -sdk macosx --show-sdk-path)
     fi
 
-    . $PWD/build/mac.sh
+    . $PWD/build/mac.sh $ADD_LIBDE265_OPTIONAL_DEPEDENCY
 
     exit 0
   fi
@@ -104,6 +106,6 @@ for flavour in linux-x64 linuxmusl-x64 linux-armv6 linux-armv7 linux-arm64v8 lin
   if [ $PLATFORM = "all" ] || [ $PLATFORM = $flavour ]; then
     echo "Building $flavour..."
     docker build -t vips-dev-$flavour platforms/$flavour
-    docker run --rm -e "VERSION_VIPS=${VERSION_VIPS}" -e VERSION_LATEST_REQUIRED -v $PWD:/packaging vips-dev-$flavour sh -c "/packaging/build/lin.sh"
+    docker run --rm -e "VERSION_VIPS=${VERSION_VIPS}" -e VERSION_LATEST_REQUIRED -v $PWD:/packaging vips-dev-$flavour sh -c "/packaging/build/lin.sh $ADD_LIBDE265_OPTIONAL_DEPEDENCY"
   fi
 done
