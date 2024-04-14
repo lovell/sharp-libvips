@@ -102,14 +102,14 @@ VERSION_MOZJPEG=4.1.5
 VERSION_PNG16=1.6.43
 VERSION_SPNG=0.7.4
 VERSION_IMAGEQUANT=2.4.1
-VERSION_WEBP=1.3.2
+VERSION_WEBP=1.4.0
 VERSION_TIFF=4.6.0
 VERSION_HWY=1.1.0
 VERSION_PROXY_LIBINTL=0.4
 VERSION_GDKPIXBUF=2.42.10
 VERSION_FREETYPE=2.13.2
 VERSION_EXPAT=2.6.2
-VERSION_ARCHIVE=3.7.2
+VERSION_ARCHIVE=3.7.3
 VERSION_FONTCONFIG=2.15.0
 VERSION_HARFBUZZ=8.4.0
 VERSION_PIXMAN=0.43.4
@@ -119,7 +119,7 @@ VERSION_PANGO=1.52.2
 VERSION_RSVG=2.57.3
 VERSION_AOM=3.8.2
 VERSION_HEIF=1.17.6
-VERSION_CGIF=0.3.2
+VERSION_CGIF=0.4.0
 
 # Remove patch version component
 without_patch() {
@@ -143,7 +143,7 @@ version_latest() {
     VERSION_SELECTOR="versions"
   fi
   if [[ "$3" == *"/"* ]]; then
-    VERSION_LATEST=$(git ls-remote --tags --refs https://github.com/$3.git | sort -t'/' -k3 -V | awk -F'/' 'END{print $3}' | tr -d 'vV')
+    VERSION_LATEST=$(git -c 'versionsort.suffix=-' ls-remote --tags --refs --sort='v:refname' https://github.com/$3.git | awk -F'/' 'END{print $3}' | tr -d 'v')
   else
     VERSION_LATEST=$($CURL "https://release-monitoring.org/api/v2/versions/?project_id=$3" | jq -j ".$VERSION_SELECTOR[0]" | tr '_' '.')
   fi
@@ -449,7 +449,7 @@ PKG_CONFIG=${PKG_CONFIG/ --static/} ./configure --host=${CHOST} --prefix=${TARGE
 PKG_CONFIG_ALL_STATIC=1 make install-strip bin_SCRIPTS=
 
 mkdir ${DEPS}/cgif
-$CURL https://github.com/dloebl/cgif/archive/V${VERSION_CGIF}.tar.gz | tar xzC ${DEPS}/cgif --strip-components=1
+$CURL https://github.com/dloebl/cgif/archive/v${VERSION_CGIF}.tar.gz | tar xzC ${DEPS}/cgif --strip-components=1
 cd ${DEPS}/cgif
 CFLAGS="${CFLAGS} -O3" meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   -Dtests=false
