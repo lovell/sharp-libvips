@@ -1,7 +1,7 @@
-FROM debian:buster
+FROM debian:bullseye
 LABEL maintainer="Lovell Fuller <npm@lovell.info>"
 
-# Create Debian 10 (glibc 2.28) container suitable for cross-compiling Linux s390x binaries
+# Create Debian 11 (glibc 2.31) container suitable for cross-compiling Linux s390x binaries
 
 # Path settings
 ENV \
