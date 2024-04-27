@@ -28,6 +28,7 @@ RUN \
     gperf \
     jq \
     make \
+    openssl-devel \
     patch \
     pkgconfig \
     python3 \
@@ -48,6 +49,7 @@ RUN \
     --profile minimal \
     --default-host aarch64-unknown-linux-gnu \
     && \
+  cargo install cargo-c && \
   ln -s /usr/bin/cmake3 /usr/bin/cmake && \
   pip3 install meson ninja packaging
 

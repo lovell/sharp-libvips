@@ -106,18 +106,17 @@ VERSION_WEBP=1.4.0
 VERSION_TIFF=4.6.0
 VERSION_HWY=1.1.0
 VERSION_PROXY_LIBINTL=0.4
-VERSION_GDKPIXBUF=2.42.10
 VERSION_FREETYPE=2.13.2
 VERSION_EXPAT=2.6.2
-VERSION_ARCHIVE=3.7.3
+VERSION_ARCHIVE=3.7.4
 VERSION_FONTCONFIG=2.15.0
 VERSION_HARFBUZZ=8.4.0
 VERSION_PIXMAN=0.43.4
 VERSION_CAIRO=1.18.0
-VERSION_FRIBIDI=1.0.13
+VERSION_FRIBIDI=1.0.14
 VERSION_PANGO=1.52.2
-VERSION_RSVG=2.57.3
-VERSION_AOM=3.8.2
+VERSION_RSVG=2.58.91
+VERSION_AOM=3.9.0
 VERSION_HEIF=1.17.6
 VERSION_CGIF=0.4.0
 
@@ -165,7 +164,6 @@ version_latest "webp" "$VERSION_WEBP" "webmproject/libwebp"
 version_latest "tiff" "$VERSION_TIFF" "1738"
 version_latest "highway" "$VERSION_HWY" "205809"
 version_latest "proxy-libintl" "$VERSION_PROXY_LIBINTL" "frida/proxy-libintl"
-version_latest "gdkpixbuf" "$VERSION_GDKPIXBUF" "9533"
 version_latest "freetype" "$VERSION_FREETYPE" "854"
 version_latest "expat" "$VERSION_EXPAT" "770"
 version_latest "archive" "$VERSION_ARCHIVE" "1558"
@@ -175,7 +173,7 @@ version_latest "pixman" "$VERSION_PIXMAN" "3648"
 version_latest "cairo" "$VERSION_CAIRO" "247"
 version_latest "fribidi" "$VERSION_FRIBIDI" "857"
 version_latest "pango" "$VERSION_PANGO" "11783"
-#version_latest "rsvg" "$VERSION_RSVG" "5420" # https://github.com/lovell/sharp-libvips/issues/226
+version_latest "rsvg" "$VERSION_RSVG" "5420"
 version_latest "aom" "$VERSION_AOM" "17628"
 version_latest "heif" "$VERSION_HEIF" "strukturag/libheif"
 version_latest "cgif" "$VERSION_CGIF" "dloebl/cgif"
@@ -189,6 +187,7 @@ if [ "$DARWIN" = true ]; then
   if [ "$DARWIN_ARM" = true ]; then
     ${CARGO_HOME}/bin/rustup target add aarch64-apple-darwin
   fi
+  CFLAGS= cargo install cargo-c
 fi
 
 if [ "${PLATFORM%-*}" == "linuxmusl" ] || [ "$DARWIN" = true ]; then
@@ -223,7 +222,7 @@ $CURL https://gist.github.com/kleisauke/284d685efa00908da99ea6afbaaf39ae/raw/36e
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   --force-fallback-for=gvdb -Dintrospection=disabled -Dnls=disabled -Dlibmount=disabled -Dlibelf=disabled \
   -Dtests=false -Dglib_assert=false -Dglib_checks=false ${DARWIN:+-Dbsymbolic_functions=false}
-# bin-devel is needed for glib-compile-resources, as required by gdk-pixbuf
+# bin-devel is needed for glib-compile-resources
 meson install -C _build --tag bin-devel,devel
 
 mkdir ${DEPS}/xml2
@@ -326,27 +325,6 @@ if [ -z "$WITHOUT_HIGHWAY" ]; then
   make install/strip
 fi
 
-mkdir ${DEPS}/gdkpixbuf
-$CURL https://download.gnome.org/sources/gdk-pixbuf/$(without_patch $VERSION_GDKPIXBUF)/gdk-pixbuf-${VERSION_GDKPIXBUF}.tar.xz | tar xJC ${DEPS}/gdkpixbuf --strip-components=1
-cd ${DEPS}/gdkpixbuf
-# Skip thumbnailer
-sed -i'.bak' "/subdir('thumbnailer')/d" meson.build
-sed -i'.bak' "/post-install/{N;N;N;N;d;}" meson.build
-# Skip the built-in loaders for BMP, GIF, ICO, PNM, XPM, XBM, TGA, ICNS and QTIF
-sed -i'.bak' "/'bmp':/{N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;d;}" gdk-pixbuf/meson.build
-sed -i'.bak' "/'pnm':/{N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;d;}" gdk-pixbuf/meson.build
-# Skip executables
-sed -i'.bak' "/gdk-pixbuf-csource/{N;N;d;}" gdk-pixbuf/meson.build
-sed -i'.bak' "/loaders_cache = custom/{N;N;N;N;N;N;N;N;N;c\\
-  loaders_cache = []\\
-  loaders_dep = declare_dependency()
-}" gdk-pixbuf/meson.build
-meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
-  -Dtiff=disabled -Dintrospection=disabled -Dtests=false -Dinstalled_tests=false -Dgio_sniffing=false -Dman=false -Dbuiltin_loaders=png,jpeg
-meson install -C _build --tag devel
-# Include libjpeg and libpng as a dependency of gdk-pixbuf, see: https://gitlab.gnome.org/GNOME/gdk-pixbuf/merge_requests/50
-sed -i'.bak' "/^Requires:/s/$/ libjpeg, libpng16/" ${TARGET}/lib/pkgconfig/gdk-pixbuf-2.0.pc
-
 build_freetype() {
   rm -rf ${DEPS}/freetype
   mkdir ${DEPS}/freetype
@@ -435,18 +413,20 @@ meson install -C _build --tag devel
 mkdir ${DEPS}/rsvg
 $CURL https://download.gnome.org/sources/librsvg/$(without_patch $VERSION_RSVG)/librsvg-${VERSION_RSVG}.tar.xz | tar xJC ${DEPS}/rsvg --strip-components=1
 cd ${DEPS}/rsvg
-# Add missing pkg-config deps
-sed -i'.bak' "/^Requires:/s/$/ cairo-gobject pangocairo libxml-2.0/" librsvg.pc.in
-# LTO optimization does not work for staticlib+rlib compilation
-sed -i'.bak' "/crate-type = /s/, \"rlib\"//" librsvg-c/Cargo.toml
+# Disallow GIF and WebP embedded in SVG images
+sed -i'.bak' "/image = /s/, \"gif\", \"webp\"//" rsvg/Cargo.toml
 # We build Cairo with `-Dzlib=disabled`, which implicitly disables the PDF/PostScript surface backends
 sed -i'.bak' "/cairo-rs = /s/, \"pdf\", \"ps\"//" {librsvg-c,rsvg}/Cargo.toml
-# Remove the --static flag from the PKG_CONFIG env since Rust does not
-# support that. Build with PKG_CONFIG_ALL_STATIC=1 instead.
-PKG_CONFIG=${PKG_CONFIG/ --static/} ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
-  --disable-introspection --disable-pixbuf-loader ${DARWIN:+--disable-Bsymbolic}
 # Skip build of rsvg-convert
-PKG_CONFIG_ALL_STATIC=1 make install-strip bin_SCRIPTS=
+sed -i'.bak' "/subdir('rsvg_convert')/d" meson.build
+# Regenerate the lockfile after making the above changes
+cargo generate-lockfile
+# Remove the --static flag from the PKG_CONFIG env since Rust does not
+# parse that correctly.
+PKG_CONFIG=${PKG_CONFIG/ --static/} meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
+  -Dintrospection=disabled -Dpixbuf{,-loader}=disabled -Ddocs=disabled -Dvala=disabled -Dtests=false \
+  ${RUST_TARGET:+-Dtriplet=$RUST_TARGET}
+meson install -C _build --tag devel
 
 mkdir ${DEPS}/cgif
 $CURL https://github.com/dloebl/cgif/archive/v${VERSION_CGIF}.tar.gz | tar xzC ${DEPS}/cgif --strip-components=1
@@ -544,7 +524,6 @@ printf "{\n\
   \"fontconfig\": \"${VERSION_FONTCONFIG}\",\n\
   \"freetype\": \"${VERSION_FREETYPE}\",\n\
   \"fribidi\": \"${VERSION_FRIBIDI}\",\n\
-  \"gdkpixbuf\": \"${VERSION_GDKPIXBUF}\",\n\
   \"glib\": \"${VERSION_GLIB}\",\n\
   \"harfbuzz\": \"${VERSION_HARFBUZZ}\",\n\
   \"heif\": \"${VERSION_HEIF}\",\n\
