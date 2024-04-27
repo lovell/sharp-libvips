@@ -24,6 +24,7 @@ RUN \
     git \
     gperf \
     jq \
+    libssl-dev \
     libtool \
     ninja-build \
     pkg-config \
@@ -35,6 +36,7 @@ RUN \
     --profile minimal \
     && \
   rustup target add arm-unknown-linux-gnueabihf && \
+  cargo install cargo-c && \
   pip3 install meson
 
 # Compiler settings

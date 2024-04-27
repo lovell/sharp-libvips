@@ -12,7 +12,6 @@ used under the terms of the following licences:
 | fontconfig    | [fontconfig Licence](https://gitlab.freedesktop.org/fontconfig/fontconfig/blob/main/COPYING) (BSD-like)   |
 | freetype      | [freetype Licence](https://git.savannah.gnu.org/cgit/freetype/freetype2.git/tree/docs/FTL.TXT) (BSD-like) |
 | fribidi       | LGPLv3                                                                                                    |
-| gdk-pixbuf    | LGPLv3                                                                                                    |
 | glib          | LGPLv3                                                                                                    |
 | harfbuzz      | MIT Licence                                                                                               |
 | highway       | Apache-2.0 License, BSD 3-Clause                                                                          |
