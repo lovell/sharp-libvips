@@ -94,8 +94,8 @@ CURL="curl --silent --location --retry 3 --retry-max-time 30"
 # Dependency version numbers
 VERSION_ZLIB_NG=2.1.6
 VERSION_FFI=3.4.6
-VERSION_GLIB=2.80.0
-VERSION_XML2=2.12.6
+VERSION_GLIB=2.80.2
+VERSION_XML2=2.12.7
 VERSION_EXIF=0.6.24
 VERSION_LCMS2=2.16
 VERSION_MOZJPEG=4.1.5
@@ -235,6 +235,8 @@ make install-strip
 mkdir ${DEPS}/exif
 $CURL https://github.com/libexif/libexif/releases/download/v${VERSION_EXIF}/libexif-${VERSION_EXIF}.tar.bz2 | tar xjC ${DEPS}/exif --strip-components=1
 cd ${DEPS}/exif
+# https://github.com/libexif/libexif/pull/147
+$CURL https://github.com/lovell/libexif/commit/db84aefa1deb103604c5860dd6486b1dd3af676b.patch | patch -p1
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
   --disable-nls --without-libiconv-prefix --without-libintl-prefix \
   CPPFLAGS="${CPPFLAGS} -DNO_VERBOSE_TAG_DATA"
