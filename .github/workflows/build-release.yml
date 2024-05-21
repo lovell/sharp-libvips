@@ -33,9 +33,9 @@ jobs:
           - 'win32-x64'
           - 'win32-arm64v8'
         include:
-          - os: macos-11
+          - os: macos-12
             platform: 'darwin-x64'
-          - os: macos-11
+          - os: macos-12
             platform: 'darwin-arm64v8'
     steps:
       - name: Checkout
