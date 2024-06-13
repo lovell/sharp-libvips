@@ -94,8 +94,8 @@ CURL="curl --silent --location --retry 3 --retry-max-time 30"
 # Dependency version numbers
 VERSION_ZLIB_NG=2.1.6
 VERSION_FFI=3.4.6
-VERSION_GLIB=2.80.2
-VERSION_XML2=2.12.7
+VERSION_GLIB=2.80.3
+VERSION_XML2=2.13.0
 VERSION_EXIF=0.6.24
 VERSION_LCMS2=2.16
 VERSION_MOZJPEG=4.1.5
@@ -104,7 +104,7 @@ VERSION_SPNG=0.7.4
 VERSION_IMAGEQUANT=2.4.1
 VERSION_WEBP=1.4.0
 VERSION_TIFF=4.6.0
-VERSION_HWY=1.1.0
+VERSION_HWY=1.2.0
 VERSION_PROXY_LIBINTL=0.4
 VERSION_FREETYPE=2.13.2
 VERSION_EXPAT=2.6.2
@@ -113,10 +113,10 @@ VERSION_FONTCONFIG=2.15.0
 VERSION_HARFBUZZ=8.5.0
 VERSION_PIXMAN=0.43.4
 VERSION_CAIRO=1.18.0
-VERSION_FRIBIDI=1.0.14
-VERSION_PANGO=1.52.2
+VERSION_FRIBIDI=1.0.15
+VERSION_PANGO=1.54.0
 VERSION_RSVG=2.58.91
-VERSION_AOM=3.9.0
+VERSION_AOM=3.9.1
 VERSION_HEIF=1.17.6
 VERSION_CGIF=0.4.0
 
@@ -406,10 +406,10 @@ meson install -C _build --tag devel
 mkdir ${DEPS}/pango
 $CURL https://download.gnome.org/sources/pango/$(without_patch $VERSION_PANGO)/pango-${VERSION_PANGO}.tar.xz | tar xJC ${DEPS}/pango --strip-components=1
 cd ${DEPS}/pango
-# Disable utils, examples, tests and tools
-sed -i'.bak' "/subdir('utils')/{N;N;N;d;}" meson.build
+# Disable utils and tools
+sed -i'.bak' "/subdir('utils')/{N;d;}" meson.build
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
-  -Dgtk_doc=false -Dintrospection=disabled -Dfontconfig=enabled
+  -Ddocumentation=false -Dbuild-testsuite=false -Dbuild-examples=false -Dintrospection=disabled -Dfontconfig=enabled
 meson install -C _build --tag devel
 
 mkdir ${DEPS}/rsvg
