@@ -27,10 +27,7 @@
     "./package": "./package.json",
     "./versions": "./versions.json"
   },
-  "engines": {
-    "npm": ">=9.6.5",
-    "yarn": ">=3.2.0",
-    "pnpm": ">=7.1.0",
+  "config": {
     "glibc": ">=2.26"
   },
   "os": [
