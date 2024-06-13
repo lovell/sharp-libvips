@@ -44,7 +44,7 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           pip3 install meson ninja packaging
-          brew install automake nasm pkg-config
+          brew install automake nasm
       - name: Build ${{ matrix.platform }}
         id: build-release
         run: ./build.sh $(cat LIBVIPS_VERSION) ${{ matrix.platform }}
