@@ -92,10 +92,10 @@ unset PKG_CONFIG_PATH
 CURL="curl --silent --location --retry 3 --retry-max-time 30"
 
 # Dependency version numbers
-VERSION_ZLIB_NG=2.1.6
+VERSION_ZLIB_NG=2.1.7
 VERSION_FFI=3.4.6
 VERSION_GLIB=2.80.3
-VERSION_XML2=2.13.0
+VERSION_XML2=2.13.1
 VERSION_EXIF=0.6.24
 VERSION_LCMS2=2.16
 VERSION_MOZJPEG=4.1.5
@@ -151,7 +151,7 @@ version_latest() {
     echo "$1 version $2 has been superseded by $VERSION_LATEST"
   fi
 }
-version_latest "zlib-ng" "$VERSION_ZLIB_NG" "115592"
+#version_latest "zlib-ng" "$VERSION_ZLIB_NG" "115592" # latest version in release monitoring is a release candidate
 version_latest "ffi" "$VERSION_FFI" "1611"
 version_latest "glib" "$VERSION_GLIB" "10024" "unstable"
 version_latest "xml2" "$VERSION_XML2" "1783"
