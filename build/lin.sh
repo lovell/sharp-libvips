@@ -231,9 +231,9 @@ meson install -C _build --tag bin-devel,devel
 mkdir ${DEPS}/xml2
 $CURL https://download.gnome.org/sources/libxml2/$(without_patch $VERSION_XML2)/libxml2-${VERSION_XML2}.tar.xz | tar xJC ${DEPS}/xml2 --strip-components=1
 cd ${DEPS}/xml2
-./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
-  --with-minimum --with-reader --with-writer --with-valid --with-http --with-tree --with-zlib --without-python --without-lzma
-make install-strip
+meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
+  -Dminimum=true
+meson install -C _build --tag devel
 
 mkdir ${DEPS}/exif
 $CURL https://github.com/libexif/libexif/releases/download/v${VERSION_EXIF}/libexif-${VERSION_EXIF}.tar.bz2 | tar xjC ${DEPS}/exif --strip-components=1
