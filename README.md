@@ -23,6 +23,7 @@ the same shared libraries within multiple containers.
 * [ARMv7-A glibc](platforms/linux-armv7/Dockerfile)
 * [ARM64v8-A glibc](platforms/linux-arm64v8/Dockerfile)
 * [ARM64v8-A musl](platforms/linuxmusl-arm64v8/Dockerfile)
+* [ppc64le glibc](platforms/linux-ppc64le/Dockerfile)
 * [s390x glibc](platforms/linux-s390x/Dockerfile)
 
 ### Windows
