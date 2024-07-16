@@ -47,7 +47,6 @@ ENV \
   CHOST="powerpc64le-linux-gnu" \
   RUST_TARGET="powerpc64le-unknown-linux-gnu" \
   FLAGS="" \
-  WITHOUT_HIGHWAY="false" \
   MESON="--cross-file=/root/meson.ini"
 
 COPY Toolchain.cmake /root/
