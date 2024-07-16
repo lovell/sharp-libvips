@@ -1,7 +1,7 @@
 FROM debian:bullseye
 LABEL maintainer="Lovell Fuller <npm@lovell.info>"
 
-# Create Debian 10 (glibc 2.28) container suitable for cross-compiling Linux s390x binaries
+# Create Debian 11 (glibc 2.31) container suitable for cross-compiling Linux ppc64le binaries
 
 # Path settings
 ENV \
@@ -38,7 +38,7 @@ RUN \
 
 # Handy for debugging the compiled targets in Highway (hwy_list_targets)
 #RUN apt-get install -y qemu-user-static
-#ENV QEMU_LD_PREFIX="/usr/s390x-linux-gnu"
+#ENV QEMU_LD_PREFIX="/usr/powerpc64le-linux-gnu"
 
 # Compiler settings
 ENV \
