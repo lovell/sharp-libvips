@@ -38,7 +38,7 @@ RUN \
     && \
   rustup target add arm-unknown-linux-gnueabihf && \
   cargo install cargo-c && \
-  pip3 install meson
+  pip3 install meson tomli
 
 # Compiler settings
 ENV \
