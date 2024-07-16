@@ -50,7 +50,7 @@ RUN \
     && \
   cargo install cargo-c && \
   ln -s /usr/bin/cmake3 /usr/bin/cmake && \
-  pip3 install meson ninja packaging
+  pip3 install meson ninja packaging tomli
 
 # Compiler settings
 ENV \
