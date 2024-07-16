@@ -37,7 +37,7 @@ RUN \
     && \
   rustup target add s390x-unknown-linux-gnu && \
   cargo install cargo-c && \
-  pip3 install meson
+  pip3 install meson tomli
 
 # Handy for debugging the compiled targets in Highway (hwy_list_targets)
 #RUN apt-get install -y qemu-user-static
