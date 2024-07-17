@@ -6,7 +6,14 @@ CURL="curl --silent --location"
 
 download_extract() {
   PLATFORM="$1"
-  PACKAGE="${1%v[68]}" # remove ARM version
+  case $1 in
+    *ppc64le)
+      PACKAGE="${1%??}" # package directory is named as npm/linux-ppc64
+      ;;
+    *)
+      PACKAGE="${1%v[68]}" # remove ARM version
+      ;;
+  esac
   echo "$PLATFORM -> $PACKAGE"
   rm -rf "npm/$PACKAGE/include" "npm/$PACKAGE/lib"
   $CURL \
