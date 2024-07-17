@@ -1,5 +1,5 @@
 {
-  "name": "@img/sharp-libvips-linux-ppc64le",
+  "name": "@img/sharp-libvips-linux-ppc64",
   "version": "1.0.2",
   "description": "Prebuilt libvips and dependencies for use with sharp on Linux (glibc) ppc64le",
   "author": "Lovell Fuller <npm@lovell.info>",
@@ -7,7 +7,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lovell/sharp-libvips.git",
-    "directory": "npm/linux-ppc64le"
+    "directory": "npm/linux-ppc64"
   },
   "license": "LGPL-3.0-or-later",
   "funding": {
@@ -37,6 +37,6 @@
     "glibc"
   ],
   "cpu": [
-    "ppc64le"
+    "ppc64"
   ]
 }
