@@ -20,7 +20,6 @@ the same shared libraries within multiple containers.
 * [x64 glibc](platforms/linux-x64/Dockerfile)
 * [x64 musl](platforms/linuxmusl-x64/Dockerfile)
 * [ARMv6 glibc](platforms/linux-armv6/Dockerfile)
-* [ARMv7-A glibc](platforms/linux-armv7/Dockerfile)
 * [ARM64v8-A glibc](platforms/linux-arm64v8/Dockerfile)
 * [ARM64v8-A musl](platforms/linuxmusl-arm64v8/Dockerfile)
 * [ppc64le glibc](platforms/linux-ppc64le/Dockerfile)
