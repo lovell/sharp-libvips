@@ -85,6 +85,12 @@ export CARGO_PROFILE_RELEASE_PANIC=abort
 # https://reproducible-builds.org/docs/build-path/
 export RUSTFLAGS+=" --remap-path-prefix=$CARGO_HOME/registry/="
 
+# Ensure Cargo uses correct linker when cross-compiling
+if [ "$LINUX" = true ] && [ -n "$CHOST" ]; then
+  echo "[target.${RUST_TARGET}]" >> "$CARGO_HOME/config"
+  echo "linker = \"${CHOST}-gcc\"" >> "$CARGO_HOME/config"
+fi
+
 # We don't want to use any native libraries, so unset PKG_CONFIG_PATH
 unset PKG_CONFIG_PATH
 
