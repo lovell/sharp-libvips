@@ -85,12 +85,6 @@ export CARGO_PROFILE_RELEASE_PANIC=abort
 # https://reproducible-builds.org/docs/build-path/
 export RUSTFLAGS+=" --remap-path-prefix=$CARGO_HOME/registry/="
 
-# Ensure Cargo uses correct linker when cross-compiling
-if [ "$LINUX" = true ] && [ -n "$CHOST" ]; then
-  echo "[target.${RUST_TARGET}]" >> "$CARGO_HOME/config"
-  echo "linker = \"${CHOST}-gcc\"" >> "$CARGO_HOME/config"
-fi
-
 # We don't want to use any native libraries, so unset PKG_CONFIG_PATH
 unset PKG_CONFIG_PATH
 
@@ -427,6 +421,13 @@ sed -i'.bak' "/image = /s/, \"gif\", \"webp\"//" rsvg/Cargo.toml
 sed -i'.bak' "/cairo-rs = /s/, \"pdf\", \"ps\"//" {librsvg-c,rsvg}/Cargo.toml
 # Skip build of rsvg-convert
 sed -i'.bak' "/subdir('rsvg_convert')/d" meson.build
+# https://github.com/etemesi254/zune-image/pull/187
+# https://github.com/bevyengine/bevy/issues/14117#issuecomment-2236518551
+# https://doc.rust-lang.org/cargo/reference/overriding-dependencies.html#the-patch-section
+cat >> Cargo.toml <<EOL
+[patch.crates-io]
+zune-jpeg = { git = "https://github.com/ironpeak/zune-image.git", rev = "eebb01b" }
+EOL
 # Regenerate the lockfile after making the above changes
 cargo generate-lockfile
 # Remove the --static flag from the PKG_CONFIG env since Rust does not
