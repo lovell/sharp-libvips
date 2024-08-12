@@ -28,7 +28,7 @@
   },
   "type": "commonjs",
   "config": {
-    "glibc": ">=2.31"
+    "glibc": ">=2.28"
   },
   "os": [
     "linux"

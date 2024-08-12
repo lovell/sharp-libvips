@@ -1,13 +1,13 @@
-FROM debian:bullseye
+FROM debian:buster
 LABEL maintainer="Lovell Fuller <npm@lovell.info>"
 
-# Create Debian 11 (glibc 2.31) container suitable for cross-compiling Linux ARMv6 binaries
+# Create Debian 10 (glibc 2.28) container suitable for cross-compiling Linux ARMv6 binaries
 
 # Path settings
 ENV \
   RUSTUP_HOME="/usr/local/rustup" \
   CARGO_HOME="/usr/local/cargo" \
-  PATH="/usr/local/cargo/bin:$PATH"
+  PATH="/usr/local/cargo/bin:/root/tools/x64-gcc-6.5.0/arm-rpi-linux-gnueabihf/bin:$PATH"
 
 # Build dependencies
 RUN \
@@ -19,7 +19,6 @@ RUN \
     autoconf \
     autopoint \
     cmake \
-    crossbuild-essential-armhf \
     gettext \
     git \
     gperf \
@@ -31,6 +30,8 @@ RUN \
     python3-packaging \
     python3-pip \
     && \
+  mkdir /root/tools && \
+  curl -Ls https://github.com/rvagg/rpi-newer-crosstools/archive/master.tar.gz | tar xzC /root/tools --strip-components=1 && \
   curl https://sh.rustup.rs -sSf | sh -s -- -y \
     --no-modify-path \
     --profile minimal \
@@ -43,7 +44,7 @@ RUN \
 ENV \
   PKG_CONFIG="arm-linux-gnueabihf-pkg-config --static" \
   PLATFORM="linux-armv6" \
-  CHOST="arm-linux-gnueabihf" \
+  CHOST="arm-rpi-linux-gnueabihf" \
   RUST_TARGET="arm-unknown-linux-gnueabihf" \
   FLAGS="-marm -mcpu=arm1176jzf-s -mfpu=vfp -mfloat-abi=hard" \
   WITHOUT_NEON="true" \
