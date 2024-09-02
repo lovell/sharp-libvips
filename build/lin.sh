@@ -392,7 +392,7 @@ mkdir ${DEPS}/cairo
 $CURL https://cairographics.org/releases/cairo-${VERSION_CAIRO}.tar.xz | tar xJC ${DEPS}/cairo --strip-components=1
 cd ${DEPS}/cairo
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
-  ${LINUX:+-Dquartz=disabled} ${DARWIN:+-Dquartz=enabled} -Dfreetype=enabled -Dtee=disabled -Dxcb=disabled -Dxlib=disabled -Dzlib=disabled \
+  ${LINUX:+-Dquartz=disabled} ${DARWIN:+-Dquartz=enabled} -Dfreetype=enabled -Dfontconfig=enabled -Dtee=disabled -Dxcb=disabled -Dxlib=disabled -Dzlib=disabled \
   -Dtests=disabled -Dspectre=disabled -Dsymbol-lookup=disabled
 meson install -C _build --tag devel
 
