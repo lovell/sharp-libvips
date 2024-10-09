@@ -1,6 +1,6 @@
 {
   "name": "@img/sharp-libvips-dev",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "Header files and C++ sources for libvips and dependencies required when compiling sharp from source",
   "author": "Lovell Fuller <npm@lovell.info>",
   "homepage": "https://sharp.pixelplumbing.com",
