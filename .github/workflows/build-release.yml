@@ -1,8 +1,13 @@
 name: Build Release
-on: [ push, pull_request ]
+on:
+  - push
+  - pull_request
+permissions: {}
 jobs:
   create-release:
-    runs-on: 'ubuntu-22.04'
+    permissions:
+      contents: write
+    runs-on: 'ubuntu-24.04'
     outputs:
       upload_url: ${{ steps.create-release.outputs.upload_url }}
     steps:
@@ -15,12 +20,15 @@ jobs:
           prerelease: true
           token: ${{ secrets.GITHUB_TOKEN }}
   build:
+    permissions:
+      contents: write
     runs-on: ${{ matrix.os }}
     needs: create-release
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-22.04 ]
+        os:
+          - 'ubuntu-24.04'
         platform:
           - 'linux-x64'
           - 'linux-armv6'
@@ -33,9 +41,9 @@ jobs:
           - 'win32-x64'
           - 'win32-arm64v8'
         include:
-          - os: macos-12
+          - os: macos-13
             platform: 'darwin-x64'
-          - os: macos-12
+          - os: macos-13
             platform: 'darwin-arm64v8'
     steps:
       - name: Checkout
