@@ -103,7 +103,7 @@ CURL="curl --silent --location --retry 3 --retry-max-time 30"
 # Dependency version numbers
 VERSION_ZLIB_NG=2.2.2
 VERSION_FFI=3.4.6
-VERSION_GLIB=2.82.1
+VERSION_GLIB=2.82.2
 VERSION_XML2=2.13.4
 VERSION_EXIF=0.6.24
 VERSION_LCMS2=2.16
@@ -160,7 +160,7 @@ version_latest "lcms2" "$VERSION_LCMS2" "9815"
 version_latest "mozjpeg" "$VERSION_MOZJPEG" "mozilla/mozjpeg"
 version_latest "png" "$VERSION_PNG16" "1705"
 version_latest "spng" "$VERSION_SPNG" "24289"
-version_latest "webp" "$VERSION_WEBP" "webmproject/libwebp"
+version_latest "webp" "$VERSION_WEBP" "1761"
 version_latest "tiff" "$VERSION_TIFF" "1738"
 version_latest "highway" "$VERSION_HWY" "205809"
 version_latest "proxy-libintl" "$VERSION_PROXY_LIBINTL" "frida/proxy-libintl"
