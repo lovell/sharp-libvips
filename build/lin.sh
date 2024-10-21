@@ -428,8 +428,8 @@ cat >> Cargo.toml <<EOL
 [patch.crates-io]
 zune-jpeg = { git = "https://github.com/ironpeak/zune-image.git", rev = "eebb01b" }
 EOL
-# Regenerate the lockfile after making the above changes
-cargo generate-lockfile
+# Regenerate the lockfile for zune-jpeg
+cargo update zune-jpeg
 # Remove the --static flag from the PKG_CONFIG env since Rust does not
 # parse that correctly.
 PKG_CONFIG=${PKG_CONFIG/ --static/} meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
