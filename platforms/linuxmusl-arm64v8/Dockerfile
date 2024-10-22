@@ -46,7 +46,7 @@ RUN \
     --profile minimal \
     && \
   rustup target add aarch64-unknown-linux-musl && \
-  cargo install cargo-c && \
+  cargo install cargo-c --locked && \
   pip3 install meson
 
 # Compiler settings
