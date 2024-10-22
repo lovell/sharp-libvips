@@ -187,7 +187,7 @@ if [ "$DARWIN" = true ]; then
   if [ "$DARWIN_ARM" = true ]; then
     ${CARGO_HOME}/bin/rustup target add aarch64-apple-darwin
   fi
-  CFLAGS= cargo install cargo-c
+  CFLAGS= cargo install cargo-c --locked
 fi
 
 if [ "${PLATFORM%-*}" == "linuxmusl" ] || [ "$DARWIN" = true ]; then

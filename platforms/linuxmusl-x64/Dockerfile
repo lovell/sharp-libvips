@@ -43,7 +43,7 @@ RUN \
     --no-modify-path \
     --profile minimal \
     && \
-  cargo install cargo-c && \
+  cargo install cargo-c --locked && \
   pip3 install meson
 
 # Compiler settings

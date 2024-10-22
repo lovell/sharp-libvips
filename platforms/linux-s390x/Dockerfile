@@ -36,7 +36,7 @@ RUN \
     --profile minimal \
     && \
   rustup target add s390x-unknown-linux-gnu && \
-  cargo install cargo-c && \
+  cargo install cargo-c --locked && \
   pip3 install meson tomli
 
 # Handy for debugging the compiled targets in Highway (hwy_list_targets)
