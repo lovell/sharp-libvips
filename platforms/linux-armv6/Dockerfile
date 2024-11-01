@@ -7,7 +7,7 @@ LABEL maintainer="Lovell Fuller <npm@lovell.info>"
 ENV \
   RUSTUP_HOME="/usr/local/rustup" \
   CARGO_HOME="/usr/local/cargo" \
-  PATH="/usr/local/cargo/bin:/root/tools/x64-gcc-6.5.0/arm-rpi-linux-gnueabihf/bin:$PATH"
+  PATH="/usr/local/cargo/bin:/root/tools/x64-gcc-12.3.0-glibc-2.28/arm-rpi-linux-gnueabihf/bin:$PATH"
 
 # Build dependencies
 RUN \
