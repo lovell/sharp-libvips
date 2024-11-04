@@ -1,13 +1,13 @@
 FROM debian:buster
 LABEL maintainer="Lovell Fuller <npm@lovell.info>"
 
-# Create Debian 10 (glibc 2.28) container suitable for cross-compiling Linux ARMv6 binaries
+# Create Debian 11 (glibc 2.31) container suitable for cross-compiling Linux ARMv6 binaries
 
 # Path settings
 ENV \
   RUSTUP_HOME="/usr/local/rustup" \
   CARGO_HOME="/usr/local/cargo" \
-  PATH="/usr/local/cargo/bin:/root/tools/x64-gcc-12.3.0-glibc-2.28/arm-rpi-linux-gnueabihf/bin:$PATH"
+  PATH="/usr/local/cargo/bin:/root/tools/x64-gcc-10.3.0-glibc-2.28/arm-rpi-linux-gnueabihf/bin:$PATH"
 
 # Build dependencies
 RUN \
