@@ -103,7 +103,7 @@ CURL="curl --silent --location --retry 3 --retry-max-time 30"
 # Dependency version numbers
 VERSION_ZLIB_NG=2.2.2
 VERSION_FFI=3.4.6
-VERSION_GLIB=2.82.2
+VERSION_GLIB=2.83.0
 VERSION_XML2=2.13.4
 VERSION_EXIF=0.6.24
 VERSION_LCMS2=2.16
@@ -116,17 +116,17 @@ VERSION_TIFF=4.7.0
 VERSION_HWY=1.2.0
 VERSION_PROXY_LIBINTL=0.4
 VERSION_FREETYPE=2.13.3
-VERSION_EXPAT=2.6.3
+VERSION_EXPAT=2.6.4
 VERSION_ARCHIVE=3.7.7
 VERSION_FONTCONFIG=2.15.0
-VERSION_HARFBUZZ=10.0.1
-VERSION_PIXMAN=0.43.4
+VERSION_HARFBUZZ=10.1.0
+VERSION_PIXMAN=0.44.0
 VERSION_CAIRO=1.18.2
 VERSION_FRIBIDI=1.0.16
 VERSION_PANGO=1.54.0
 VERSION_RSVG=2.59.2
 VERSION_AOM=3.10.0
-VERSION_HEIF=1.19.1
+VERSION_HEIF=1.19.2
 VERSION_CGIF=0.4.1
 
 # Check for newer versions
@@ -381,7 +381,7 @@ mkdir ${DEPS}/pixman
 $CURL https://cairographics.org/releases/pixman-${VERSION_PIXMAN}.tar.gz | tar xzC ${DEPS}/pixman --strip-components=1
 cd ${DEPS}/pixman
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
-  -Dlibpng=disabled -Diwmmxt=disabled -Dgtk=disabled -Dopenmp=disabled -Dtests=disabled \
+  -Dlibpng=disabled -Dgtk=disabled -Dopenmp=disabled -Dtests=disabled -Ddemos=disabled \
   ${DARWIN_ARM:+-Da64-neon=disabled}
 meson install -C _build --tag devel
 
