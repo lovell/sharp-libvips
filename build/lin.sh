@@ -237,6 +237,8 @@ $CURL https://github.com/libexif/libexif/releases/download/v${VERSION_EXIF}/libe
 cd ${DEPS}/exif
 # https://github.com/libexif/libexif/pull/147
 $CURL https://github.com/lovell/libexif/commit/db84aefa1deb103604c5860dd6486b1dd3af676b.patch | patch -p1
+# https://github.com/libexif/libexif/pull/183
+$CURL https://github.com/lovell/libexif/commit/ef0887f2635180d1e7197c92756d1dc0243f9a35.patch | patch -p1
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
   --disable-nls --without-libiconv-prefix --without-libintl-prefix \
   CPPFLAGS="${CPPFLAGS} -DNO_VERBOSE_TAG_DATA"
