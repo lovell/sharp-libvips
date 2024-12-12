@@ -22,7 +22,7 @@ used under the terms of the following licences:
 | libtiff       | [libtiff License](https://gitlab.com/libtiff/libtiff/blob/master/LICENSE.md) (BSD-like)                   |
 | libvips       | LGPLv3                                                                                                    |
 | libwebp       | New BSD License                                                                                           |
-| resvg         | MPL-2.0 License                                                                                           |
+| resvg         | MIT Licence                                                                                               |
 | zlib-ng       | [zlib Licence](https://github.com/zlib-ng/zlib-ng/blob/develop/LICENSE.md)                                |
 
 Use of libraries under the terms of the LGPLv3 is via the
