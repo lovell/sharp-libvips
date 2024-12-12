@@ -420,12 +420,11 @@ sed -i'.bak' "/image = /s/, \"gif\", \"webp\"//" rsvg/Cargo.toml
 sed -i'.bak' "/cairo-rs = /s/, \"pdf\", \"ps\"//" {librsvg-c,rsvg}/Cargo.toml
 # Skip build of rsvg-convert
 sed -i'.bak' "/subdir('rsvg_convert')/d" meson.build
-# https://github.com/etemesi254/zune-image/pull/187
-# https://github.com/bevyengine/bevy/issues/14117#issuecomment-2236518551
+# https://github.com/etemesi254/zune-image/pull/242
 # https://doc.rust-lang.org/cargo/reference/overriding-dependencies.html#the-patch-section
 cat >> Cargo.toml <<EOL
 [patch.crates-io]
-zune-jpeg = { git = "https://github.com/ironpeak/zune-image.git", rev = "eebb01b" }
+zune-jpeg = { git = "https://github.com/etemesi254/zune-image.git", rev = "80e1957" }
 EOL
 # Regenerate the lockfile for zune-jpeg
 cargo update zune-jpeg
