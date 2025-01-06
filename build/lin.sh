@@ -101,7 +101,7 @@ unset PKG_CONFIG_PATH
 CURL="curl --silent --location --retry 3 --retry-max-time 30"
 
 # Dependency version numbers
-VERSION_ZLIB_NG=2.2.2
+VERSION_ZLIB_NG=2.2.3
 VERSION_FFI=3.4.6
 VERSION_GLIB=2.83.2
 VERSION_XML2=2.13.5
@@ -111,7 +111,7 @@ VERSION_MOZJPEG=4.1.5
 VERSION_PNG16=1.6.44
 VERSION_SPNG=0.7.4
 VERSION_IMAGEQUANT=2.4.1
-VERSION_WEBP=1.4.0
+VERSION_WEBP=1.5.0
 VERSION_TIFF=4.7.0
 VERSION_HWY=1.2.0
 VERSION_PROXY_LIBINTL=0.4
@@ -172,7 +172,7 @@ version_latest "harfbuzz" "$VERSION_HARFBUZZ" "1299"
 version_latest "pixman" "$VERSION_PIXMAN" "3648"
 version_latest "cairo" "$VERSION_CAIRO" "247"
 version_latest "fribidi" "$VERSION_FRIBIDI" "857"
-version_latest "pango" "$VERSION_PANGO" "11783"
+version_latest "pango" "$VERSION_PANGO" "11783" "unstable"
 version_latest "rsvg" "$VERSION_RSVG" "5420"
 version_latest "aom" "$VERSION_AOM" "17628"
 version_latest "heif" "$VERSION_HEIF" "64439"
