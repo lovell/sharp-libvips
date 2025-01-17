@@ -105,7 +105,7 @@ VERSION_ZLIB_NG=2.2.3
 VERSION_FFI=3.4.6
 VERSION_GLIB=2.83.2
 VERSION_XML2=2.13.5
-VERSION_EXIF=0.6.24
+VERSION_EXIF=0.6.25
 VERSION_LCMS2=2.16
 VERSION_MOZJPEG=4.1.5
 VERSION_PNG16=1.6.45
@@ -118,7 +118,7 @@ VERSION_PROXY_LIBINTL=0.4
 VERSION_FREETYPE=2.13.3
 VERSION_EXPAT=2.6.4
 VERSION_ARCHIVE=3.7.7
-VERSION_FONTCONFIG=2.15.0
+VERSION_FONTCONFIG=2.16.0
 VERSION_HARFBUZZ=10.2.0
 VERSION_PIXMAN=0.44.2
 VERSION_CAIRO=1.18.2
@@ -235,10 +235,6 @@ meson install -C _build --tag devel
 mkdir ${DEPS}/exif
 $CURL https://github.com/libexif/libexif/releases/download/v${VERSION_EXIF}/libexif-${VERSION_EXIF}.tar.bz2 | tar xjC ${DEPS}/exif --strip-components=1
 cd ${DEPS}/exif
-# https://github.com/libexif/libexif/pull/147
-$CURL https://github.com/lovell/libexif/commit/db84aefa1deb103604c5860dd6486b1dd3af676b.patch | patch -p1
-# https://github.com/libexif/libexif/pull/183
-$CURL https://github.com/lovell/libexif/commit/ef0887f2635180d1e7197c92756d1dc0243f9a35.patch | patch -p1
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
   --disable-nls --without-libiconv-prefix --without-libintl-prefix \
   CPPFLAGS="${CPPFLAGS} -DNO_VERBOSE_TAG_DATA"
