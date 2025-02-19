@@ -417,14 +417,8 @@ sed -i'.bak' "/image = /s/, \"gif\", \"webp\"//" rsvg/Cargo.toml
 sed -i'.bak' "/cairo-rs = /s/, \"pdf\", \"ps\"//" {librsvg-c,rsvg}/Cargo.toml
 # Skip build of rsvg-convert
 sed -i'.bak' "/subdir('rsvg_convert')/d" meson.build
-# https://github.com/etemesi254/zune-image/pull/187
-# https://github.com/bevyengine/bevy/issues/14117#issuecomment-2236518551
-# https://doc.rust-lang.org/cargo/reference/overriding-dependencies.html#the-patch-section
-cat >> Cargo.toml <<EOL
-[patch.crates-io]
-zune-jpeg = { git = "https://github.com/ironpeak/zune-image.git", rev = "eebb01b" }
-EOL
-# Regenerate the lockfile for zune-jpeg
+# Update and regenerate the lockfile for zune-jpeg
+# https://github.com/etemesi254/zune-image/pull/242
 cargo update zune-jpeg
 # Remove the --static flag from the PKG_CONFIG env since Rust does not
 # parse that correctly.
