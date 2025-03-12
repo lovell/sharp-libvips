@@ -1,6 +1,6 @@
 {
   "name": "@img/sharp-libvips-linux-arm",
-  "version": "1.1.0-rc3.1",
+  "version": "1.1.0-rc4.1",
   "description": "Prebuilt libvips and dependencies for use with sharp on Linux (glibc) 32-bit ARM",
   "author": "Lovell Fuller <npm@lovell.info>",
   "homepage": "https://sharp.pixelplumbing.com",
