@@ -103,8 +103,8 @@ CURL="curl --silent --location --retry 3 --retry-max-time 30"
 # Dependency version numbers
 VERSION_ZLIB_NG=2.2.4
 VERSION_FFI=3.4.7
-VERSION_GLIB=2.84.0
-VERSION_XML2=2.13.7
+VERSION_GLIB=2.84.1
+VERSION_XML2=2.14.1
 VERSION_EXIF=0.6.25
 VERSION_LCMS2=2.17
 VERSION_MOZJPEG=4.1.5
@@ -154,7 +154,7 @@ version_latest() {
 version_latest "zlib-ng" "$VERSION_ZLIB_NG" "115592"
 version_latest "ffi" "$VERSION_FFI" "1611"
 version_latest "glib" "$VERSION_GLIB" "10024" "unstable"
-#version_latest "xml2" "$VERSION_XML2" "1783" # https://gitlab.gnome.org/GNOME/libxml2/-/issues/883
+version_latest "xml2" "$VERSION_XML2" "1783"
 version_latest "exif" "$VERSION_EXIF" "1607"
 version_latest "lcms2" "$VERSION_LCMS2" "9815"
 version_latest "mozjpeg" "$VERSION_MOZJPEG" "mozilla/mozjpeg"
@@ -228,6 +228,8 @@ meson install -C _build --tag bin-devel,devel
 mkdir ${DEPS}/xml2
 $CURL https://download.gnome.org/sources/libxml2/$(without_patch $VERSION_XML2)/libxml2-${VERSION_XML2}.tar.xz | tar xJC ${DEPS}/xml2 --strip-components=1
 cd ${DEPS}/xml2
+# https://gitlab.gnome.org/GNOME/libxml2/-/merge_requests/306
+$CURL https://gitlab.gnome.org/GNOME/libxml2/-/commit/88732cae7d6031b2fa216faa3dd542681b385117.patch | patch -p1
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   -Dminimum=true
 meson install -C _build --tag devel
