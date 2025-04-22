@@ -56,8 +56,9 @@ PLATFORMS=$(ls platforms --ignore=win32*)
 for platform in $PLATFORMS; do
   download_extract "$platform"
 done
-download_extract "win32-ia32"
-download_extract "win32-x64"
+for platform in arm64v8 ia32 x64; do
+  download_extract "win32-$platform"
+done
 
 # Common header and source files
 cp -r npm/linux-x64/{include,versions.json,THIRD-PARTY-NOTICES.md} npm/dev/
