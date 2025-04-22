@@ -58,6 +58,7 @@ for platform in $PLATFORMS; do
 done
 download_extract "win32-ia32"
 download_extract "win32-x64"
+download_extract "win32-arm64"
 
 # Common header and source files
 cp -r npm/linux-x64/{include,versions.json,THIRD-PARTY-NOTICES.md} npm/dev/
