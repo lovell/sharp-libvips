@@ -102,9 +102,9 @@ CURL="curl --silent --location --retry 3 --retry-max-time 30"
 
 # Dependency version numbers
 VERSION_ZLIB_NG=2.2.4
-VERSION_FFI=3.4.7
+VERSION_FFI=3.4.8
 VERSION_GLIB=2.84.1
-VERSION_XML2=2.14.1
+VERSION_XML2=2.14.2
 VERSION_EXIF=0.6.25
 VERSION_LCMS2=2.17
 VERSION_MOZJPEG=4.1.5
@@ -118,14 +118,14 @@ VERSION_PROXY_LIBINTL=0.4
 VERSION_FREETYPE=2.13.3
 VERSION_EXPAT=2.7.1
 VERSION_ARCHIVE=3.7.9
-VERSION_FONTCONFIG=2.16.1
-VERSION_HARFBUZZ=11.0.0
+VERSION_FONTCONFIG=2.16.2
+VERSION_HARFBUZZ=11.1.0
 VERSION_PIXMAN=0.44.2
 VERSION_CAIRO=1.18.4
 VERSION_FRIBIDI=1.0.16
 VERSION_PANGO=1.56.3
 VERSION_RSVG=2.60.0
-VERSION_AOM=3.12.0
+VERSION_AOM=3.12.1
 VERSION_HEIF=1.19.7
 VERSION_CGIF=0.5.0
 
@@ -228,8 +228,6 @@ meson install -C _build --tag bin-devel,devel
 mkdir ${DEPS}/xml2
 $CURL https://download.gnome.org/sources/libxml2/$(without_patch $VERSION_XML2)/libxml2-${VERSION_XML2}.tar.xz | tar xJC ${DEPS}/xml2 --strip-components=1
 cd ${DEPS}/xml2
-# https://gitlab.gnome.org/GNOME/libxml2/-/merge_requests/306
-$CURL https://gitlab.gnome.org/GNOME/libxml2/-/commit/88732cae7d6031b2fa216faa3dd542681b385117.patch | patch -p1
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   -Dminimum=true
 meson install -C _build --tag devel
