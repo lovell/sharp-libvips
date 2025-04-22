@@ -125,7 +125,7 @@ VERSION_CAIRO=1.18.4
 VERSION_FRIBIDI=1.0.16
 VERSION_PANGO=1.56.3
 VERSION_RSVG=2.60.0
-VERSION_AOM=3.12.1
+VERSION_AOM=3.12.0
 VERSION_HEIF=1.19.7
 VERSION_CGIF=0.5.0
 
@@ -174,7 +174,7 @@ version_latest "cairo" "$VERSION_CAIRO" "247"
 version_latest "fribidi" "$VERSION_FRIBIDI" "857"
 version_latest "pango" "$VERSION_PANGO" "11783" "unstable"
 version_latest "rsvg" "$VERSION_RSVG" "5420" "unstable"
-version_latest "aom" "$VERSION_AOM" "17628"
+#version_latest "aom" "$VERSION_AOM" "17628" # aom 3.12.1 requires cmake 3.16 https://aomedia.googlesource.com/aom/+/597a35fbc9837e33366a1108631d9c72ee7a49e7
 version_latest "heif" "$VERSION_HEIF" "64439"
 version_latest "cgif" "$VERSION_CGIF" "dloebl/cgif"
 if [ "$ALL_AT_VERSION_LATEST" = "false" ]; then exit 1; fi
