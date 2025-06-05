@@ -117,7 +117,7 @@ VERSION_HWY=1.2.0
 VERSION_PROXY_LIBINTL=0.4
 VERSION_FREETYPE=2.13.3
 VERSION_EXPAT=2.7.1
-VERSION_ARCHIVE=3.8.0
+VERSION_ARCHIVE=3.8.1
 VERSION_FONTCONFIG=2.16.2
 VERSION_HARFBUZZ=11.2.1
 VERSION_PIXMAN=0.46.0
@@ -236,7 +236,7 @@ mkdir ${DEPS}/exif
 $CURL https://github.com/libexif/libexif/releases/download/v${VERSION_EXIF}/libexif-${VERSION_EXIF}.tar.xz | tar xJC ${DEPS}/exif --strip-components=1
 cd ${DEPS}/exif
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
-  --disable-nls --without-libiconv-prefix --without-libintl-prefix \
+  --disable-nls --disable-docs --without-libiconv-prefix --without-libintl-prefix \
   CPPFLAGS="${CPPFLAGS} -DNO_VERBOSE_TAG_DATA"
 make install-strip doc_DATA=
 
