@@ -14,7 +14,7 @@ Run the top-level [build script](build.sh) without parameters for help.
 
 ### Linux
 
-One [build script](build/lin.sh) is used to (cross-)compile
+One [build script](build/posix.sh) is used to (cross-)compile
 the same shared libraries within multiple containers.
 
 * [x64 glibc](platforms/linux-x64/Dockerfile)

@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
+# Dependency version numbers
+source /packaging/versions.properties
+
 VERSION_VIPS_SHORT=${VERSION_VIPS%.[[:digit:]]*}
 
 # Common options for curl

@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 set -e
 
-LIBVIPS_VERSION=$(cat LIBVIPS_VERSION)
-CURL="curl --silent --location"
+# Dependency version numbers
+source ../versions.properties
+
+# Common options for curl
+CURL="curl --silent --location --retry 3 --retry-max-time 30"
 
 download_extract() {
   PLATFORM="$1"
@@ -17,14 +20,14 @@ download_extract() {
   echo "$PLATFORM -> $PACKAGE"
   rm -rf "npm/$PACKAGE/include" "npm/$PACKAGE/lib"
   $CURL \
-    "https://github.com/lovell/sharp-libvips/releases/download/v$LIBVIPS_VERSION/libvips-$LIBVIPS_VERSION-$PLATFORM.tar.gz" | \
+    "https://github.com/lovell/sharp-libvips/releases/download/v$VERSION_VIPS/libvips-$VERSION_VIPS-$PLATFORM.tar.gz" | \
     tar xzC "npm/$PACKAGE" --exclude="platform.json"
 }
 
 download_cpp() {
   $CURL \
     --remote-name --output-dir "npm/dev/cplusplus" --create-dirs \
-    "https://raw.githubusercontent.com/libvips/libvips/v$LIBVIPS_VERSION/cplusplus/$1.cpp"
+    "https://raw.githubusercontent.com/libvips/libvips/v$VERSION_VIPS/cplusplus/$1.cpp"
 }
 
 generate_readme() {

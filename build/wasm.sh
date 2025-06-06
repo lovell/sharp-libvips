@@ -1,18 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-if [ $# -lt 1 ]; then
-  echo
-  echo "Usage: $0 VERSION_VIPS [VERSION_WASM_VIPS]"
-  echo "Use wasm-vips to build wasm32 static libraries for libvips and its dependencies"
-  echo
-  echo "Please specify the libvips VERSION_VIPS, e.g. 8.15.0"
-  echo "Optionally provide a specific VERSION_WASM_VIPS commit, e.g. abc1234"
-  echo
-  exit 1
-fi
-VERSION_VIPS="$1"
-VERSION_WASM_VIPS="${2:-HEAD}"
+source ./versions.properties
+VERSION_WASM_VIPS="${1:-HEAD}"
 
 DIR="wasm-vips-${VERSION_WASM_VIPS}"
 TAG="wasm-vips:${VERSION_WASM_VIPS}"

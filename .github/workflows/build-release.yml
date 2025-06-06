@@ -4,10 +4,20 @@ on:
   - pull_request
 permissions: {}
 jobs:
-  create-release:
+  check-latest-versions:
+    permissions:
+      contents: read
+    runs-on: 'ubuntu-24.04'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Check latest versions
+        run: ./check-latest-versions.sh
+  create-release-for-tag:
     permissions:
       contents: write
     runs-on: 'ubuntu-24.04'
+    needs: check-latest-versions
     outputs:
       upload_url: ${{ steps.create-release.outputs.upload_url }}
     steps:
@@ -23,7 +33,7 @@ jobs:
     permissions:
       contents: write
     runs-on: ${{ matrix.os }}
-    needs: create-release
+    needs: create-release-for-tag
     strategy:
       fail-fast: false
       matrix:
@@ -33,7 +43,6 @@ jobs:
           - 'linux-x64'
           - 'linux-armv6'
           - 'linuxmusl-x64'
-          - 'linuxmusl-arm64v8'
           - 'linux-ppc64le'
           - 'linux-s390x'
           - 'wasm32'
@@ -45,6 +54,10 @@ jobs:
             platform: 'darwin-x64'
           - os: macos-13
             platform: 'darwin-arm64v8'
+          - os: 'ubuntu-24.04-arm'
+            platform: 'linux-arm64v8'
+          - os: 'ubuntu-24.04-arm'
+            platform: 'linuxmusl-arm64v8'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -55,10 +68,7 @@ jobs:
           brew install automake nasm
       - name: Build ${{ matrix.platform }}
         id: build-release
-        run: ./build.sh $(cat LIBVIPS_VERSION) ${{ matrix.platform }}
-      - name: Generate integrity checksums
-        id: integrity
-        run: ./integrity.sh
+        run: ./build.sh ${{ matrix.platform }}
       - name: Upload Release Asset (.tar.gz)
         id: upload-release-asset-gz
         if: startsWith(github.ref, 'refs/tags/v')
@@ -67,18 +77,6 @@ jobs:
           allowUpdates: true
           artifacts: libvips-*-${{ matrix.platform }}.tar.gz
           artifactContentType: application/gzip
-          omitBodyDuringUpdate: true
-          omitNameDuringUpdate: true
-          prerelease: true
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Upload Release Asset (.integrity)
-        id: upload-release-asset-integrity
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: ncipollo/release-action@v1
-        with:
-          allowUpdates: true
-          artifacts: "*.integrity"
-          artifactContentType: text/plain
           omitBodyDuringUpdate: true
           omitNameDuringUpdate: true
           prerelease: true

@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -e
 
+# Dependency version numbers
+if [ -f /packaging/versions.properties ]; then
+  source /packaging/versions.properties
+fi
+
 # Remove patch version component
 without_patch() {
   echo "${1%.[[:digit:]]*}"
@@ -100,85 +105,6 @@ unset PKG_CONFIG_PATH
 # Common options for curl
 CURL="curl --silent --location --retry 3 --retry-max-time 30"
 
-# Dependency version numbers
-VERSION_ZLIB_NG=2.2.4
-VERSION_FFI=3.4.8
-VERSION_GLIB=2.85.0
-VERSION_XML2=2.14.3
-VERSION_EXIF=0.6.25
-VERSION_LCMS2=2.17
-VERSION_MOZJPEG=4.1.5
-VERSION_PNG16=1.6.48
-VERSION_SPNG=0.7.4
-VERSION_IMAGEQUANT=2.4.1
-VERSION_WEBP=1.5.0
-VERSION_TIFF=4.7.0
-VERSION_HWY=1.2.0
-VERSION_PROXY_LIBINTL=0.4
-VERSION_FREETYPE=2.13.3
-VERSION_EXPAT=2.7.1
-VERSION_ARCHIVE=3.8.1
-VERSION_FONTCONFIG=2.16.2
-VERSION_HARFBUZZ=11.2.1
-VERSION_PIXMAN=0.46.0
-VERSION_CAIRO=1.18.4
-VERSION_FRIBIDI=1.0.16
-VERSION_PANGO=1.56.3
-VERSION_RSVG=2.60.0
-VERSION_AOM=3.12.0
-VERSION_HEIF=1.19.8
-VERSION_CGIF=0.5.0
-
-# Check for newer versions
-# Skip by setting the VERSION_LATEST_REQUIRED environment variable to "false"
-ALL_AT_VERSION_LATEST=true
-version_latest() {
-  if [ "$VERSION_LATEST_REQUIRED" == "false" ]; then
-    echo "Skipping latest version check for $1"
-    return
-  fi
-  VERSION_SELECTOR="stable_versions"
-  if [[ "$4" == *"unstable"* ]]; then
-    VERSION_SELECTOR="versions"
-  fi
-  if [[ "$3" == *"/"* ]]; then
-    VERSION_LATEST=$(git -c 'versionsort.suffix=-' ls-remote --tags --refs --sort='v:refname' https://github.com/$3.git | awk -F'/' 'END{print $3}' | tr -d 'v')
-  else
-    VERSION_LATEST=$($CURL "https://release-monitoring.org/api/v2/versions/?project_id=$3" | jq -j ".$VERSION_SELECTOR[0]" | tr '_' '.')
-  fi
-  if [ "$VERSION_LATEST" != "$2" ]; then
-    ALL_AT_VERSION_LATEST=false
-    echo "$1 version $2 has been superseded by $VERSION_LATEST"
-  fi
-}
-version_latest "zlib-ng" "$VERSION_ZLIB_NG" "115592"
-version_latest "ffi" "$VERSION_FFI" "1611"
-version_latest "glib" "$VERSION_GLIB" "10024" "unstable"
-version_latest "xml2" "$VERSION_XML2" "1783"
-version_latest "exif" "$VERSION_EXIF" "1607"
-version_latest "lcms2" "$VERSION_LCMS2" "9815"
-version_latest "mozjpeg" "$VERSION_MOZJPEG" "mozilla/mozjpeg"
-version_latest "png" "$VERSION_PNG16" "1705"
-version_latest "spng" "$VERSION_SPNG" "24289"
-version_latest "webp" "$VERSION_WEBP" "1761"
-version_latest "tiff" "$VERSION_TIFF" "1738"
-version_latest "highway" "$VERSION_HWY" "205809"
-version_latest "proxy-libintl" "$VERSION_PROXY_LIBINTL" "frida/proxy-libintl"
-version_latest "freetype" "$VERSION_FREETYPE" "854"
-version_latest "expat" "$VERSION_EXPAT" "770"
-version_latest "archive" "$VERSION_ARCHIVE" "1558"
-version_latest "fontconfig" "$VERSION_FONTCONFIG" "827"
-version_latest "harfbuzz" "$VERSION_HARFBUZZ" "1299"
-version_latest "pixman" "$VERSION_PIXMAN" "3648"
-version_latest "cairo" "$VERSION_CAIRO" "247"
-version_latest "fribidi" "$VERSION_FRIBIDI" "857"
-version_latest "pango" "$VERSION_PANGO" "11783" "unstable"
-version_latest "rsvg" "$VERSION_RSVG" "5420" "unstable"
-#version_latest "aom" "$VERSION_AOM" "17628" # aom 3.12.1 requires cmake 3.16 https://aomedia.googlesource.com/aom/+/597a35fbc9837e33366a1108631d9c72ee7a49e7
-version_latest "heif" "$VERSION_HEIF" "64439"
-version_latest "cgif" "$VERSION_CGIF" "dloebl/cgif"
-if [ "$ALL_AT_VERSION_LATEST" = "false" ]; then exit 1; fi
-
 # Download and build dependencies from source
 
 if [ "$DARWIN" = true ]; then
@@ -240,9 +166,9 @@ cd ${DEPS}/exif
   CPPFLAGS="${CPPFLAGS} -DNO_VERBOSE_TAG_DATA"
 make install-strip doc_DATA=
 
-mkdir ${DEPS}/lcms2
-$CURL https://github.com/mm2/Little-CMS/releases/download/lcms${VERSION_LCMS2}/lcms2-${VERSION_LCMS2}.tar.gz | tar xzC ${DEPS}/lcms2 --strip-components=1
-cd ${DEPS}/lcms2
+mkdir ${DEPS}/lcms
+$CURL https://github.com/mm2/Little-CMS/releases/download/lcms${VERSION_LCMS}/lcms2-${VERSION_LCMS}.tar.gz | tar xzC ${DEPS}/lcms --strip-components=1
+cd ${DEPS}/lcms
 CFLAGS="${CFLAGS} -O3" meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   -Dtests=disabled 
 meson install -C _build --tag devel
@@ -278,9 +204,9 @@ cmake -G"Unix Makefiles" \
   -DENABLE_STATIC=TRUE -DENABLE_SHARED=FALSE -DWITH_JPEG8=1 -DWITH_TURBOJPEG=FALSE -DPNG_SUPPORTED=FALSE
 make install/strip
 
-mkdir ${DEPS}/png16
-$CURL https://downloads.sourceforge.net/project/libpng/libpng16/${VERSION_PNG16}/libpng-${VERSION_PNG16}.tar.xz | tar xJC ${DEPS}/png16 --strip-components=1
-cd ${DEPS}/png16
+mkdir ${DEPS}/png
+$CURL https://downloads.sourceforge.net/project/libpng/libpng16/${VERSION_PNG}/libpng-${VERSION_PNG}.tar.xz | tar xJC ${DEPS}/png --strip-components=1
+cd ${DEPS}/png
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
   --disable-tools --without-binconfigs --disable-unversioned-libpng-config
 make install-strip dist_man_MANS=
@@ -533,18 +459,18 @@ printf "{\n\
   \"heif\": \"${VERSION_HEIF}\",\n\
   \"highway\": \"${VERSION_HWY}\",\n\
   \"imagequant\": \"${VERSION_IMAGEQUANT}\",\n\
-  \"lcms\": \"${VERSION_LCMS2}\",\n\
+  \"lcms\": \"${VERSION_LCMS}\",\n\
   \"mozjpeg\": \"${VERSION_MOZJPEG}\",\n\
   \"pango\": \"${VERSION_PANGO}\",\n\
   \"pixman\": \"${VERSION_PIXMAN}\",\n\
-  \"png\": \"${VERSION_PNG16}\",\n\
+  \"png\": \"${VERSION_PNG}\",\n\
   \"proxy-libintl\": \"${VERSION_PROXY_LIBINTL}\",\n\
   \"rsvg\": \"${VERSION_RSVG}\",\n\
   \"spng\": \"${VERSION_SPNG}\",\n\
   \"tiff\": \"${VERSION_TIFF}\",\n\
   \"vips\": \"${VERSION_VIPS}\",\n\
   \"webp\": \"${VERSION_WEBP}\",\n\
-  \"xml\": \"${VERSION_XML2}\",\n\
+  \"xml2\": \"${VERSION_XML2}\",\n\
   \"zlib-ng\": \"${VERSION_ZLIB_NG}\"\n\
 }" >versions.json
 

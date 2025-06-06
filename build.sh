@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
 set -e
 
+# Dependency version numbers
+source ./versions.properties
+
 if [ $# -lt 1 ]; then
   echo
-  echo "Usage: $0 VERSION [PLATFORM]"
-  echo "Build shared libraries for libvips and its dependencies via containers"
-  echo
-  echo "Please specify the libvips VERSION, e.g. 8.9.2"
-  echo
-  echo "Optionally build for only one PLATFORM, defaults to building for all"
+  echo "Usage: $0 PLATFORM"
+  echo "Build shared libraries for libvips and its dependencies"
   echo
   echo "Possible values for PLATFORM are:"
   echo "- win32-ia32"
@@ -26,8 +25,7 @@ if [ $# -lt 1 ]; then
   echo
   exit 1
 fi
-VERSION_VIPS="$1"
-PLATFORM="${2:-all}"
+PLATFORM="$1"
 
 # macOS
 # Note: we intentionally don't build these binaries inside a Docker container
@@ -39,7 +37,6 @@ for flavour in darwin-x64 darwin-arm64v8; do
     export CC="clang"
     export CXX="clang++"
 
-    export VERSION_VIPS
     export PLATFORM
 
     # Use pkg-config provided by Homebrew
@@ -68,7 +65,8 @@ for flavour in darwin-x64 darwin-arm64v8; do
       export SDKROOT=$(xcrun -sdk macosx --show-sdk-path)
     fi
 
-    . $PWD/build/mac.sh
+    source $PWD/versions.properties
+    source $PWD/build/posix.sh
 
     exit 0
   fi
@@ -82,7 +80,7 @@ fi
 
 # WebAssembly
 if [ "$PLATFORM" == "wasm32" ]; then
-  ./build/wasm.sh "${VERSION_VIPS}"
+  ./build/wasm.sh
   exit 0
 fi
 
@@ -96,7 +94,7 @@ for flavour in win32-ia32 win32-x64 win32-arm64v8; do
   if [ $PLATFORM = "all" ] || [ $PLATFORM = $flavour ]; then
     echo "Building $flavour..."
     docker build -t vips-dev-win32 platforms/win32
-    docker run --rm -e "VERSION_VIPS=${VERSION_VIPS}" -e "PLATFORM=${flavour}" -v $PWD:/packaging vips-dev-win32 sh -c "/packaging/build/win.sh"
+    docker run --rm -e "PLATFORM=${flavour}" -v $PWD:/packaging vips-dev-win32 sh -c "/packaging/build/win.sh"
   fi
 done
 
@@ -105,6 +103,6 @@ for flavour in linux-x64 linuxmusl-x64 linux-armv6 linux-arm64v8 linuxmusl-arm64
   if [ $PLATFORM = "all" ] || [ $PLATFORM = $flavour ]; then
     echo "Building $flavour..."
     docker build -t vips-dev-$flavour platforms/$flavour
-    docker run --rm -e "VERSION_VIPS=${VERSION_VIPS}" -e VERSION_LATEST_REQUIRED -v $PWD:/packaging vips-dev-$flavour sh -c "/packaging/build/lin.sh"
+    docker run --rm -v $PWD:/packaging vips-dev-$flavour sh -c "/packaging/build/posix.sh"
   fi
 done
