@@ -44,7 +44,7 @@ RUN \
     --profile minimal \
     && \
   cargo install cargo-c --locked && \
-  pip3 install meson
+  pip3 install meson==1.7.2
 
 # Compiler settings
 ENV \
