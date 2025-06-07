@@ -25,7 +25,7 @@ version_latest() {
   fi
 }
 
-#version_latest "aom" "$VERSION_AOM" "17628" # aom 3.12.1 requires cmake 3.16 https://aomedia.googlesource.com/aom/+/597a35fbc9837e33366a1108631d9c72ee7a49e7
+version_latest "aom" "$VERSION_AOM" "17628"
 version_latest "archive" "$VERSION_ARCHIVE" "1558"
 version_latest "cairo" "$VERSION_CAIRO" "247"
 version_latest "cgif" "$VERSION_CGIF" "dloebl/cgif"
