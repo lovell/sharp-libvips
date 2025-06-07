@@ -370,6 +370,8 @@ cd ${DEPS}/vips
 $CURL https://gist.githubusercontent.com/lovell/313a6901e9db1bf285f2a1f1180499e4/raw/3988223c7dfa4d22745d9392034b0117abef1446/libvips-cpp-soversion.patch | patch -p1
 # Disable HBR support in heifsave
 $CURL https://github.com/libvips/build-win64-mxe/raw/v${VERSION_VIPS}/build/patches/vips-8-heifsave-disable-hbr-support.patch | patch -p1
+# [PATCH] Meson: improve reliability of function checks
+$CURL https://gist.github.com/kleisauke/85912d7fd8b779f2b60690de9b7c565a/raw/88ae86382f24b1aa8c7b8908edafa44d1e503b2b/libvips-improve-reliability-of-function-checks.patch | patch -p1
 # Link libvips.so statically into libvips-cpp.so
 sed -i'.bak' "s/library('vips'/static_&/" libvips/meson.build
 sed -i'.bak' "/version: library_version/{N;d;}" libvips/meson.build
