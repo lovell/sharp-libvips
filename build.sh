@@ -19,6 +19,7 @@ if [ $# -lt 1 ]; then
   echo "- linux-arm64v8"
   echo "- linuxmusl-arm64v8"
   echo "- linux-ppc64le"
+  echo "- linux-riscv64"
   echo "- linux-s390x"
   echo "- darwin-x64"
   echo "- darwin-arm64v8"
@@ -85,25 +86,20 @@ if [ "$PLATFORM" == "dev-wasm32" ]; then
   exit 0
 fi
 
-# Update base images
-for baseimage in alpine:3.15 amazonlinux:2 debian:bullseye debian:buster; do
-  docker pull $baseimage
-done
-
 # Windows
 for flavour in win32-ia32 win32-x64 win32-arm64v8; do
   if [ $PLATFORM = "all" ] || [ $PLATFORM = $flavour ]; then
     echo "Building $flavour..."
-    docker build -t vips-dev-win32 platforms/win32
+    docker build --pull -t vips-dev-win32 platforms/win32
     docker run --rm -e "PLATFORM=${flavour}" -v $PWD:/packaging vips-dev-win32 sh -c "/packaging/build/win.sh"
   fi
 done
 
 # Linux (x64, ARMv6, ARM64v8)
-for flavour in linux-x64 linuxmusl-x64 linux-armv6 linux-arm64v8 linuxmusl-arm64v8 linux-ppc64le linux-s390x; do
+for flavour in linux-x64 linuxmusl-x64 linux-armv6 linux-arm64v8 linuxmusl-arm64v8 linux-ppc64le linux-riscv64 linux-s390x; do
   if [ $PLATFORM = "all" ] || [ $PLATFORM = $flavour ]; then
     echo "Building $flavour..."
-    docker build -t vips-dev-$flavour platforms/$flavour
+    docker build --pull -t vips-dev-$flavour platforms/$flavour
     docker run --rm -v $PWD:/packaging vips-dev-$flavour sh -c "/packaging/build/posix.sh"
   fi
 done

@@ -32,6 +32,8 @@ jobs:
           - os: 'ubuntu-24.04'
             platform: 'linux-ppc64le'
           - os: 'ubuntu-24.04'
+            platform: 'linux-riscv64'
+          - os: 'ubuntu-24.04'
             platform: 'linux-s390x'
           - os: 'ubuntu-24.04'
             platform: 'dev-wasm32'
@@ -69,7 +71,7 @@ jobs:
           if-no-files-found: error
   populate-and-publish-npm-workspace:
     permissions:
-      contents: read
+      contents: write
     needs: build
     runs-on: ubuntu-24.04
     steps:
