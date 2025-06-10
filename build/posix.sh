@@ -478,8 +478,6 @@ printf "{\n\
   \"zlib-ng\": \"${VERSION_ZLIB_NG}\"\n\
 }" >versions.json
 
-printf "\"${PLATFORM}\"" >platform.json
-
 # Add third-party notices
 $CURL -O https://raw.githubusercontent.com/lovell/sharp-libvips/main/THIRD-PARTY-NOTICES.md
 
@@ -487,11 +485,11 @@ $CURL -O https://raw.githubusercontent.com/lovell/sharp-libvips/main/THIRD-PARTY
 ls -al lib
 rm -rf lib
 mv lib-filtered lib
-tar chzf ${PACKAGE}/libvips-${VERSION_VIPS}-${PLATFORM}.tar.gz \
+tar chzf ${PACKAGE}/sharp-libvips-${PLATFORM}.tar.gz \
   include \
   lib \
   *.json \
   THIRD-PARTY-NOTICES.md
 
 # Allow tarballs to be read outside container
-chmod 644 ${PACKAGE}/libvips-${VERSION_VIPS}-${PLATFORM}.tar.*
+chmod 644 ${PACKAGE}/sharp-libvips-${PLATFORM}.tar.*

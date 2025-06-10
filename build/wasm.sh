@@ -35,6 +35,9 @@ else
   echo "Skipping build: found existing files in $DIR/build/target"
 fi
 
-# Copy only the files we need
-cp -r --no-preserve=mode,ownership ${DIR}/build/target/{include,lib,versions.json} ../npm/dev-wasm32
-rm -r ../npm/dev-wasm32/lib/cmake
+echo "Creating tarball"
+tar chzf \
+  ../sharp-libvips-dev-wasm32.tar.gz \
+  --directory="${DIR}/build/target" \
+  --exclude="cmake/*" \
+  {include,lib,versions.json}

@@ -22,6 +22,7 @@ if [ $# -lt 1 ]; then
   echo "- linux-s390x"
   echo "- darwin-x64"
   echo "- darwin-arm64v8"
+  echo "- dev-wasm32"
   echo
   exit 1
 fi
@@ -79,7 +80,7 @@ if ! [ -x "$(command -v docker)" ]; then
 fi
 
 # WebAssembly
-if [ "$PLATFORM" == "wasm32" ]; then
+if [ "$PLATFORM" == "dev-wasm32" ]; then
   ./build/wasm.sh
   exit 0
 fi

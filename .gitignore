@@ -1,4 +1,5 @@
 libvips*
+sharp-libvips*
 *.log
 build/wasm-vips-*
 deps/

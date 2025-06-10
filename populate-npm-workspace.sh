@@ -2,12 +2,12 @@
 set -e
 
 # Dependency version numbers
-source ../versions.properties
+source ./versions.properties
 
 # Common options for curl
 CURL="curl --silent --location --retry 3 --retry-max-time 30"
 
-download_extract() {
+extract() {
   PLATFORM="$1"
   case $1 in
     *ppc64le)
@@ -19,9 +19,7 @@ download_extract() {
   esac
   echo "$PLATFORM -> $PACKAGE"
   rm -rf "npm/$PACKAGE/include" "npm/$PACKAGE/lib"
-  $CURL \
-    "https://github.com/lovell/sharp-libvips/releases/download/v$VERSION_VIPS/libvips-$VERSION_VIPS-$PLATFORM.tar.gz" | \
-    tar xzC "npm/$PACKAGE" --exclude="platform.json"
+  tar xzf sharp-libvips-$PLATFORM.tar.gz -C "npm/$PACKAGE"
 }
 
 download_cpp() {
@@ -57,11 +55,12 @@ remove_unused() {
 # Download and extract per-platform binaries
 PLATFORMS=$(ls platforms --ignore=win32*)
 for platform in $PLATFORMS; do
-  download_extract "$platform"
+  extract "$platform"
 done
 for platform in arm64v8 ia32 x64; do
-  download_extract "win32-$platform"
+  extract "win32-$platform"
 done
+extract "dev-wasm32"
 
 # Common header and source files
 cp -r npm/linux-x64/{include,versions.json,THIRD-PARTY-NOTICES.md} npm/dev/

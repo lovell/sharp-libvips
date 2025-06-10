@@ -1,0 +1,93 @@
+name: CI
+on:
+  - push
+  - pull_request
+permissions: {}
+jobs:
+  check-latest-versions:
+    permissions:
+      contents: read
+    runs-on: 'ubuntu-24.04'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Check latest versions
+        run: ./check-latest-versions.sh
+  build:
+    permissions:
+      contents: read
+    name: build-${{ matrix.platform }}
+    runs-on: ${{ matrix.os }}
+    needs: check-latest-versions
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: 'ubuntu-24.04'
+            platform: 'linux-x64'
+          - os: 'ubuntu-24.04'
+            platform: 'linux-armv6'
+          - os: 'ubuntu-24.04'
+            platform: 'linuxmusl-x64'
+          - os: 'ubuntu-24.04'
+            platform: 'linux-ppc64le'
+          - os: 'ubuntu-24.04'
+            platform: 'linux-s390x'
+          - os: 'ubuntu-24.04'
+            platform: 'dev-wasm32'
+          - os: 'ubuntu-24.04'
+            platform: 'win32-ia32'
+          - os: 'ubuntu-24.04'
+            platform: 'win32-x64'
+          - os: 'ubuntu-24.04'
+            platform: 'win32-arm64v8'
+          - os: 'macos-13'
+            platform: 'darwin-x64'
+          - os: 'macos-13'
+            platform: 'darwin-arm64v8'
+          - os: 'ubuntu-24.04-arm'
+            platform: 'linux-arm64v8'
+          - os: 'ubuntu-24.04-arm'
+            platform: 'linuxmusl-arm64v8'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          pip3 install meson==1.7.2 ninja packaging
+          brew install automake nasm
+      - name: Build ${{ matrix.platform }}
+        run: ./build.sh ${{ matrix.platform }}
+      - name: Upload ${{ matrix.platform }} artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.platform }}
+          path: '*.tar.gz'
+          compression-level: 0
+          retention-days: 1
+          if-no-files-found: error
+  populate-and-publish-npm-workspace:
+    permissions:
+      contents: read
+    needs: build
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
+      - name: Populate npm workspace
+        run: ./populate-npm-workspace.sh
+      - name: Create npm workspace tarball
+        run: tar -caf npm-workspace.tar.xz npm
+      - name: Create GitHub release for tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: npm-workspace.tar.xz
+          artifactContentType: application/x-xz
+          prerelease: ${{ contains(github.ref, '-rc') }}
+          makeLatest: ${{ !contains(github.ref, '-rc') }}
