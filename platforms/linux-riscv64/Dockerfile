@@ -38,7 +38,7 @@ RUN \
     && \
   rustup target add riscv64gc-unknown-linux-gnu && \
   cargo install cargo-c --locked && \
-  pipx install meson==1.7.2
+  pipx install meson
 
 # Compiler settings
 ENV \

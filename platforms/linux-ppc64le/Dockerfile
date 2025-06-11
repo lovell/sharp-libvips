@@ -36,7 +36,7 @@ RUN \
     && \
   rustup target add powerpc64le-unknown-linux-gnu && \
   cargo install cargo-c --locked && \
-  pip3 install meson==1.7.2 tomli
+  pip3 install meson tomli
 
 # Handy for debugging the compiled targets in Highway (hwy_list_targets)
 #RUN apt-get install -y qemu-user-static
