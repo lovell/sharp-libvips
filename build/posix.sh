@@ -75,9 +75,6 @@ if [ "$DARWIN" = true ]; then
   mkdir -p $CARGO_HOME
   mkdir -p $RUSTUP_HOME
   export PATH="${CARGO_HOME}/bin:${PATH}"
-  if [ "$PLATFORM" == "darwin-arm64v8" ]; then
-    export DARWIN_ARM=true
-  fi
 fi
 
 # Run as many parallel jobs as there are available CPU cores
@@ -110,9 +107,6 @@ CURL="curl --silent --location --retry 3 --retry-max-time 30"
 if [ "$DARWIN" = true ]; then
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \
     | sh -s -- -y --no-modify-path --profile minimal
-  if [ "$DARWIN_ARM" = true ]; then
-    ${CARGO_HOME}/bin/rustup target add aarch64-apple-darwin
-  fi
   CFLAGS= cargo install cargo-c --locked
 fi
 
@@ -183,7 +177,7 @@ cd aom_build
 AOM_AS_FLAGS="${FLAGS}" cmake -G"Unix Makefiles" \
   -DCMAKE_TOOLCHAIN_FILE=${ROOT}/Toolchain.cmake -DCMAKE_INSTALL_PREFIX=${TARGET} -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=MinSizeRel \
   -DBUILD_SHARED_LIBS=FALSE -DENABLE_DOCS=0 -DENABLE_TESTS=0 -DENABLE_TESTDATA=0 -DENABLE_TOOLS=0 -DENABLE_EXAMPLES=0 \
-  -DCONFIG_PIC=1 -DENABLE_NASM=1 ${WITHOUT_NEON:+-DENABLE_NEON=0} ${DARWIN_ARM:+-DCONFIG_RUNTIME_CPU_DETECT=0} \
+  -DCONFIG_PIC=1 -DENABLE_NASM=1 ${WITHOUT_NEON:+-DENABLE_NEON=0} \
   -DCONFIG_AV1_HIGHBITDEPTH=0 -DCONFIG_WEBM_IO=0 \
   ..
 make install/strip

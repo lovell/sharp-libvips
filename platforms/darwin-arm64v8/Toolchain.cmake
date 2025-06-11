@@ -1,11 +1,5 @@
-set(CMAKE_SYSTEM_NAME "Darwin")
-set(CMAKE_SYSTEM_PROCESSOR "arm64")
-set(CMAKE_OSX_ARCHITECTURES "arm64")
-
 SET(CMAKE_C_COMPILER clang)
-set(CMAKE_C_COMPILER_ARG1 "-target arm64-apple-macos11")
 SET(CMAKE_CXX_COMPILER clang++)
-set(CMAKE_CXX_COMPILER_ARG1 "-target arm64-apple-macos11")
 
 # macOS 11 Big Sur is the first version to support ARM-based macs
 SET(CMAKE_OSX_DEPLOYMENT_TARGET 11.0)
