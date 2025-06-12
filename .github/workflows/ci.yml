@@ -57,7 +57,7 @@ jobs:
       - name: Install dependencies (macOS)
         if: runner.os == 'macOS'
         run: |
-          pipx install meson
+          pipx install meson==1.7.2
           brew install automake nasm python-packaging
       - name: Build ${{ matrix.platform }}
         run: ./build.sh ${{ matrix.platform }}
