@@ -1,6 +1,6 @@
 {
   "name": "@img/sharp-libvips-darwin-arm64",
-  "version": "1.2.0-rc.0",
+  "version": "1.2.0-rc.1",
   "description": "Prebuilt libvips and dependencies for use with sharp on macOS 64-bit ARM",
   "author": "Lovell Fuller <npm@lovell.info>",
   "homepage": "https://sharp.pixelplumbing.com",
