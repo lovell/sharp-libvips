@@ -205,7 +205,7 @@ mkdir ${DEPS}/png
 $CURL https://downloads.sourceforge.net/project/libpng/libpng16/${VERSION_PNG}/libpng-${VERSION_PNG}.tar.xz | tar xJC ${DEPS}/png --strip-components=1
 cd ${DEPS}/png
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
-  --disable-tools --without-binconfigs --disable-unversioned-libpng-config
+  --disable-tools --without-binconfigs --disable-unversioned-libpng-config --disable-riscv-rvv
 make install-strip dist_man_MANS=
 
 mkdir ${DEPS}/spng
