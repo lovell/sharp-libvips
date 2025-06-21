@@ -371,6 +371,8 @@ $CURL https://gist.githubusercontent.com/lovell/313a6901e9db1bf285f2a1f1180499e4
 $CURL https://github.com/libvips/build-win64-mxe/raw/v${VERSION_VIPS}/build/patches/vips-8-heifsave-disable-hbr-support.patch | patch -p1
 # [PATCH] Meson: improve reliability of function checks
 $CURL https://gist.github.com/kleisauke/85912d7fd8b779f2b60690de9b7c565a/raw/88ae86382f24b1aa8c7b8908edafa44d1e503b2b/libvips-improve-reliability-of-function-checks.patch | patch -p1
+# [PATCH] text: prevent use of rgba subpixel anti-aliasing
+$CURL https://github.com/libvips/libvips/commit/1a77049f56c88b75e8bdb48b33c5f1075275eed7.patch | patch -p1
 # Link libvips.so statically into libvips-cpp.so
 sed -i'.bak' "s/library('vips'/static_&/" libvips/meson.build
 sed -i'.bak' "/version: library_version/{N;d;}" libvips/meson.build
