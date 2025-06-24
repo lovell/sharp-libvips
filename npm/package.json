@@ -1,6 +1,6 @@
 {
   "name": "@img/sharp-libvips",
-  "version": "1.2.0-rc.2",
+  "version": "1.2.0-rc.3",
   "private": "true",
   "workspaces": [
     "dev",
