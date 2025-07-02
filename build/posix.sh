@@ -138,8 +138,7 @@ make install-strip
 mkdir ${DEPS}/glib
 $CURL https://download.gnome.org/sources/glib/$(without_patch $VERSION_GLIB)/glib-${VERSION_GLIB}.tar.xz | tar xJC ${DEPS}/glib --strip-components=1
 cd ${DEPS}/glib
-$CURL https://gist.github.com/kleisauke/284d685efa00908da99ea6afbaaf39ae/raw/936a6b8013d07d358c6944cc5b5f0e27db707ace/glib-without-gregex.patch | patch -p1
-$CURL https://gitlab.gnome.org/GNOME/glib/-/commit/5cc32c35f96bbafde6b6f0dc5011e6be2b69c49e.patch | patch -R -p1
+$CURL https://gist.github.com/kleisauke/284d685efa00908da99ea6afbaaf39ae/raw/12773e117bd557b83ba2a7410698db41813c3fda/glib-without-gregex.patch | patch -p1
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} --datadir=${TARGET}/share ${MESON} \
   --force-fallback-for=gvdb -Dintrospection=disabled -Dnls=disabled -Dlibmount=disabled -Dsysprof=disabled -Dlibelf=disabled \
   -Dtests=false -Dglib_assert=false -Dglib_checks=false -Dglib_debug=disabled ${DARWIN:+-Dbsymbolic_functions=false}
@@ -202,10 +201,10 @@ cmake -G"Unix Makefiles" \
 make install/strip
 
 mkdir ${DEPS}/png
-$CURL https://downloads.sourceforge.net/project/libpng/libpng16/${VERSION_PNG}/libpng-${VERSION_PNG}.tar.xz | tar xJC ${DEPS}/png --strip-components=1
+$CURL https://github.com/pnggroup/libpng/archive/v${VERSION_PNG}.tar.gz | tar xzC ${DEPS}/png --strip-components=1
 cd ${DEPS}/png
 ./configure --host=${CHOST} --prefix=${TARGET} --enable-static --disable-shared --disable-dependency-tracking \
-  --disable-tools --without-binconfigs --disable-unversioned-libpng-config --disable-riscv-rvv
+  --disable-tools --without-binconfigs --disable-unversioned-libpng-config
 make install-strip dist_man_MANS=
 
 mkdir ${DEPS}/spng
