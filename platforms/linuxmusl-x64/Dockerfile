@@ -42,6 +42,7 @@ RUN \
   curl https://sh.rustup.rs -sSf | sh -s -- -y \
     --no-modify-path \
     --profile minimal \
+    --default-toolchain nightly \
     && \
   cargo install cargo-c --locked && \
   pip3 install meson==1.7.2
@@ -51,6 +52,7 @@ ENV \
   PKG_CONFIG="pkg-config --static" \
   PLATFORM="linuxmusl-x64" \
   FLAGS="-march=nehalem" \
+  RUSTFLAGS="-Zlocation-detail=none -Zfmt-debug=none" \
   MESON="--cross-file=/root/meson.ini"
 
 COPY Toolchain.cmake /root/

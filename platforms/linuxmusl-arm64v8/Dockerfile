@@ -42,6 +42,7 @@ RUN \
     --no-modify-path \
     --profile minimal \
     --default-host aarch64-unknown-linux-musl \
+    --default-toolchain nightly \
     && \
   cargo install cargo-c --locked && \
   pip3 install meson==1.7.2
@@ -51,6 +52,7 @@ ENV \
   PKG_CONFIG="pkg-config --static" \
   PLATFORM="linuxmusl-arm64v8" \
   FLAGS="-march=armv8-a" \
+  RUSTFLAGS="-Zlocation-detail=none -Zfmt-debug=none" \
   MESON="--cross-file=/root/meson.ini"
 
 COPY Toolchain.cmake /root/

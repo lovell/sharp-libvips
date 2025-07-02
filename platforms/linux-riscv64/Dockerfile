@@ -35,8 +35,9 @@ RUN \
   curl https://sh.rustup.rs -sSf | sh -s -- -y \
     --no-modify-path \
     --profile minimal \
+    --target riscv64gc-unknown-linux-gnu \
+    --default-toolchain nightly \
     && \
-  rustup target add riscv64gc-unknown-linux-gnu && \
   cargo install cargo-c --locked && \
   pipx install meson==1.7.2
 
@@ -47,6 +48,7 @@ ENV \
   CHOST="riscv64-linux-gnu" \
   RUST_TARGET="riscv64gc-unknown-linux-gnu" \
   FLAGS="-march=rv64gc" \
+  RUSTFLAGS="-Zlocation-detail=none -Zfmt-debug=none" \
   WITHOUT_HIGHWAY="true" \
   MESON="--cross-file=/root/meson.ini"
 

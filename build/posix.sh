@@ -106,7 +106,8 @@ CURL="curl --silent --location --retry 3 --retry-max-time 30"
 
 if [ "$DARWIN" = true ]; then
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \
-    | sh -s -- -y --no-modify-path --profile minimal
+    | sh -s -- -y --no-modify-path --profile minimal --default-toolchain nightly
+  export RUSTFLAGS+=" -Zlocation-detail=none -Zfmt-debug=none"
   CFLAGS= cargo install cargo-c --locked
 fi
 
