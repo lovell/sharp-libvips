@@ -33,8 +33,9 @@ RUN \
   curl https://sh.rustup.rs -sSf | sh -s -- -y \
     --no-modify-path \
     --profile minimal \
+    --target powerpc64le-unknown-linux-gnu \
+    --default-toolchain nightly \
     && \
-  rustup target add powerpc64le-unknown-linux-gnu && \
   cargo install cargo-c --locked && \
   pip3 install meson==1.7.2 tomli
 
@@ -49,6 +50,7 @@ ENV \
   CHOST="powerpc64le-linux-gnu" \
   RUST_TARGET="powerpc64le-unknown-linux-gnu" \
   FLAGS="" \
+  RUSTFLAGS="-Zlocation-detail=none -Zfmt-debug=none" \
   MESON="--cross-file=/root/meson.ini"
 
 COPY Toolchain.cmake /root/

@@ -34,8 +34,9 @@ RUN \
   curl https://sh.rustup.rs -sSf | sh -s -- -y \
     --no-modify-path \
     --profile minimal \
+    --target s390x-unknown-linux-gnu \
+    --default-toolchain nightly \
     && \
-  rustup target add s390x-unknown-linux-gnu && \
   cargo install cargo-c --locked && \
   pip3 install meson==1.7.2 tomli
 
@@ -50,6 +51,7 @@ ENV \
   CHOST="s390x-linux-gnu" \
   RUST_TARGET="s390x-unknown-linux-gnu" \
   FLAGS="" \
+  RUSTFLAGS="-Zlocation-detail=none -Zfmt-debug=none" \
   # Highway supports IBMZ starting from IBM/Z14, which needs GCC 11 or
   # higher (i.e. Debian 12, glibc 2.36). Therefore, it should be disabled
   # for the time being.

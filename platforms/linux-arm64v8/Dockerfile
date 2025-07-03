@@ -48,6 +48,7 @@ RUN \
     --no-modify-path \
     --profile minimal \
     --default-host aarch64-unknown-linux-gnu \
+    --default-toolchain nightly \
     && \
   cargo install cargo-c --locked && \
   ln -s /usr/bin/cmake3 /usr/bin/cmake && \
@@ -58,6 +59,7 @@ ENV \
   PKG_CONFIG="pkg-config --static" \
   PLATFORM="linux-arm64v8" \
   FLAGS="-march=armv8-a" \
+  RUSTFLAGS="-Zlocation-detail=none -Zfmt-debug=none" \
   MESON="--cross-file=/root/meson.ini"
 
 COPY Toolchain.cmake /root/
