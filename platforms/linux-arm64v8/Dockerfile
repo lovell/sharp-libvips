@@ -44,6 +44,8 @@ RUN \
   ln -s /usr/bin/gcc10-strip /usr/bin/strip && \
   ln -s /usr/bin/gcc10-ranlib /usr/bin/ranlib && \
   ln -s /usr/bin/gcc10-readelf /usr/bin/readelf && \
+  ln -sf /usr/bin/gcc10-ld.bfd /usr/bin/gcc10-ld && \
+  rm /usr/bin/gcc10-ld.gold && \
   curl https://sh.rustup.rs -sSf | sh -s -- -y \
     --no-modify-path \
     --profile minimal \
@@ -58,8 +60,8 @@ RUN \
 ENV \
   PKG_CONFIG="pkg-config --static" \
   PLATFORM="linux-arm64v8" \
-  FLAGS="-march=armv8-a -fuse-ld=bfd" \
-  RUSTFLAGS="-Clink-arg=-fuse-ld=bfd -Zlocation-detail=none -Zfmt-debug=none" \
+  FLAGS="-march=armv8-a" \
+  RUSTFLAGS="-Zlocation-detail=none -Zfmt-debug=none" \
   MESON="--cross-file=/root/meson.ini"
 
 COPY Toolchain.cmake /root/
