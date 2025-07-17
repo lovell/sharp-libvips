@@ -279,6 +279,8 @@ $CURL https://gitlab.freedesktop.org/fontconfig/fontconfig/-/archive/${VERSION_F
 cd ${DEPS}/fontconfig
 # Disable install of gettext files
 sed -i'.bak' "/subdir('its')/d" meson.build
+# Silence FcInit warnings
+sed -i'.bak' "/using without calling FcInit/d" src/fcobjs.c
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   -Dcache-build=disabled -Ddoc=disabled -Dnls=disabled -Dtests=disabled -Dtools=disabled
 meson install -C _build --tag devel
