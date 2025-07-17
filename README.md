@@ -36,8 +36,8 @@ static "web" releases are [post-processed](build/win.sh) within a [container](pl
 Uses a macOS virtual machine hosted by GitHub to compile the shared libraries.
 The dylib files are compiled within the same build script as Linux.
 
-* x64 (native)
-* ARM64 (cross-compiled)
+* x64
+* ARM64
 
 Dependency paths are modified to use the relative `@rpath` with `install_name_tool`.
 
