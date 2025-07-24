@@ -1,6 +1,6 @@
 {
   "name": "@img/sharp-libvips-linux-ppc64",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Prebuilt libvips and dependencies for use with sharp on Linux (glibc) ppc64le",
   "author": "Lovell Fuller <npm@lovell.info>",
   "homepage": "https://sharp.pixelplumbing.com",
