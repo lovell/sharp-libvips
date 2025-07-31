@@ -1,19 +1,20 @@
-FROM debian:bullseye
+FROM debian:bookworm
 LABEL maintainer="Lovell Fuller <npm@lovell.info>"
 
-# Create Debian 11 (glibc 2.31) container suitable for cross-compiling Linux ppc64le binaries
+# Create Debian 12 (glibc 2.36) container suitable for cross-compiling Linux ppc64le binaries
 
 # Path settings
 ENV \
   RUSTUP_HOME="/usr/local/rustup" \
   CARGO_HOME="/usr/local/cargo" \
-  PATH="/usr/local/cargo/bin:$PATH"
+  PATH="/usr/local/cargo/bin:/root/.local/bin:$PATH"
 
 # Build dependencies
 RUN \
   apt-get update && \
   apt-get install -y curl && \
   dpkg --add-architecture ppc64el && \
+  apt-get update && \
   apt-get install -y \
     autoconf \
     autopoint \
@@ -26,9 +27,11 @@ RUN \
     libssl-dev \
     libtool \
     ninja-build \
-    pkg-config \
+    pipx \
+    pkgconf \
+    pkgconf:ppc64el \
     python3-packaging \
-    python3-pip \
+    python3-tomli \
     && \
   curl https://sh.rustup.rs -sSf | sh -s -- -y \
     --no-modify-path \
@@ -37,7 +40,7 @@ RUN \
     --default-toolchain nightly \
     && \
   cargo install cargo-c --locked && \
-  pip3 install meson==1.7.2 tomli
+  pipx install meson==1.7.2
 
 # Handy for debugging the compiled targets in Highway (hwy_list_targets)
 #RUN apt-get install -y qemu-user-static
