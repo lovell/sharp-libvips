@@ -30,7 +30,6 @@ RUN \
     pipx \
     pkgconf \
     pkgconf:s390x \
-    python3-tomli \
     && \
   curl https://sh.rustup.rs -sSf | sh -s -- -y \
     --no-modify-path \
