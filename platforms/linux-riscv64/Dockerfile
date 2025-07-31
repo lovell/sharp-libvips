@@ -30,7 +30,6 @@ RUN \
     pipx \
     pkgconf \
     pkgconf:riscv64 \
-    python3-tomli \
     && \
   curl https://sh.rustup.rs -sSf | sh -s -- -y \
     --no-modify-path \
