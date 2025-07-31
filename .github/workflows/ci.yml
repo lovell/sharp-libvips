@@ -58,7 +58,7 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           pipx install meson==1.7.2
-          brew install automake nasm python-packaging
+          brew install automake nasm
       - name: Build ${{ matrix.platform }}
         run: ./build.sh ${{ matrix.platform }}
       - name: Upload ${{ matrix.platform }} artifact
