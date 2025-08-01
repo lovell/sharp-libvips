@@ -54,9 +54,8 @@ ENV \
   RUST_TARGET="s390x-unknown-linux-gnu" \
   FLAGS="" \
   RUSTFLAGS="-Zlocation-detail=none -Zfmt-debug=none" \
-  # Highway supports IBMZ starting from IBM/Z14, which needs GCC 11 or
-  # higher (i.e. Debian 12, glibc 2.36). Therefore, it should be disabled
-  # for the time being.
+  # Highway requires IBM z14, which isn't the baseline in
+  # Debian yet. Therefore, it should remain disabled for now.
   #FLAGS="-march=z14 -mzvector" \
   WITHOUT_HIGHWAY="true" \
   MESON="--cross-file=/root/meson.ini"
