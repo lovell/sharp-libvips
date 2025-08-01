@@ -329,6 +329,8 @@ meson install -C _build --tag devel
 mkdir ${DEPS}/pango
 $CURL https://download.gnome.org/sources/pango/$(without_patch $VERSION_PANGO)/pango-${VERSION_PANGO}.tar.xz | tar xJC ${DEPS}/pango --strip-components=1
 cd ${DEPS}/pango
+# [PATCH] coretext: remove fallback for macOS 10.7 (EOL 2012) and earlier
+$CURL https://gitlab.gnome.org/GNOME/pango/-/merge_requests/878.patch | patch -p1
 # Disable utils and tools
 sed -i'.bak' "/subdir('utils')/{N;d;}" meson.build
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
