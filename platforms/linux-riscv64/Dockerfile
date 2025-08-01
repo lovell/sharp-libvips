@@ -48,6 +48,9 @@ ENV \
   RUST_TARGET="riscv64gc-unknown-linux-gnu" \
   FLAGS="-march=rv64gc" \
   RUSTFLAGS="-Zlocation-detail=none -Zfmt-debug=none" \
+  # Highway requires RVV version 1.0, which isn't the baseline
+  # in Debian yet. Therefore, it should remain disabled for now.
+  #FLAGS="-march=rv64gcv1p0 -menable-experimental-extensions" \
   WITHOUT_HIGHWAY="true" \
   MESON="--cross-file=/root/meson.ini"
 
