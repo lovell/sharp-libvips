@@ -330,6 +330,7 @@ mkdir ${DEPS}/pango
 $CURL https://download.gnome.org/sources/pango/$(without_patch $VERSION_PANGO)/pango-${VERSION_PANGO}.tar.xz | tar xJC ${DEPS}/pango --strip-components=1
 cd ${DEPS}/pango
 # Disable utils and tools
+$CURL https://gitlab.gnome.org/lovell/pango/-/commit/422b829f84771f965eaa1a5f74dca3a9ee342249.patch | patch -p1
 sed -i'.bak' "/subdir('utils')/{N;d;}" meson.build
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   -Ddocumentation=false -Dbuild-testsuite=false -Dbuild-examples=false -Dintrospection=disabled -Dfontconfig=enabled
