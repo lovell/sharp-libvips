@@ -36,7 +36,7 @@ version_latest "ffi" "$VERSION_FFI" "1611"
 version_latest "fontconfig" "$VERSION_FONTCONFIG" "827"
 version_latest "freetype" "$VERSION_FREETYPE" "854"
 version_latest "fribidi" "$VERSION_FRIBIDI" "fribidi/fribidi"
-#version_latest "glib" "$VERSION_GLIB" "10024" "unstable" # Latest uses (deprecated) GRegex https://gitlab.gnome.org/GNOME/glib/-/merge_requests/4481
+version_latest "glib" "$VERSION_GLIB" "10024" "unstable"
 version_latest "harfbuzz" "$VERSION_HARFBUZZ" "1299"
 version_latest "heif" "$VERSION_HEIF" "strukturag/libheif"
 version_latest "highway" "$VERSION_HWY" "205809"
