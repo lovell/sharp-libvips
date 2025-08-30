@@ -53,7 +53,7 @@ RUN \
     && \
   cargo install cargo-c --locked && \
   ln -s /usr/bin/cmake3 /usr/bin/cmake && \
-  pip3 install meson==1.7.2 ninja tomli
+  pip3 install meson ninja tomli
 
 # Compiler settings
 ENV \
