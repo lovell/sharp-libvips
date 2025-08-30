@@ -38,7 +38,7 @@ RUN \
     --default-toolchain nightly \
     && \
   cargo install cargo-c --locked && \
-  pipx install meson==1.7.2
+  pipx install meson
 
 # Handy for debugging the compiled targets in Highway (hwy_list_targets)
 #RUN apt-get install -y qemu-user-static

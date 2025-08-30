@@ -38,7 +38,7 @@ RUN \
     --default-toolchain nightly \
     && \
   cargo install cargo-c --locked && \
-  pip3 install meson==1.7.2 tomli
+  pip3 install meson tomli
 
 # Compiler settings
 ENV \

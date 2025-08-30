@@ -38,7 +38,7 @@ RUN \
     --default-toolchain nightly \
     && \
   cargo install cargo-c --locked && \
-  pipx install meson==1.7.2
+  pipx install meson
 
 # Compiler settings
 ENV \
