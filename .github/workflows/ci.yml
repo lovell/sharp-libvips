@@ -72,9 +72,14 @@ jobs:
   populate-and-publish-npm-workspace:
     permissions:
       contents: write
+      id-token: write
     needs: build
     runs-on: ubuntu-24.04
     steps:
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
       - name: Checkout
         uses: actions/checkout@v4
       - name: Download build artifacts
@@ -93,3 +98,6 @@ jobs:
           artifactContentType: application/x-xz
           prerelease: ${{ contains(github.ref, '-rc') }}
           makeLatest: ${{ !contains(github.ref, '-rc') }}
+      - name: Publish npm packages
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: cd npm && npm publish --workspaces --tag=${{ contains(github.ref, '-rc') && 'next' || 'latest' }} --dry-run
