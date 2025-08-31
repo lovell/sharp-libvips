@@ -1,6 +1,6 @@
 {
   "name": "@img/sharp-libvips-linux-riscv64",
-  "version": "1.2.2-rc.0",
+  "version": "1.2.2-rc.1",
   "description": "Prebuilt libvips and dependencies for use with sharp on Linux (glibc) RISC-V 64-bit",
   "author": "Lovell Fuller <npm@lovell.info>",
   "homepage": "https://sharp.pixelplumbing.com",
