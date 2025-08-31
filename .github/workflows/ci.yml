@@ -96,6 +96,7 @@ jobs:
         with:
           artifacts: npm-workspace.tar.xz
           artifactContentType: application/x-xz
+          bodyFile: versions.properties
           prerelease: ${{ contains(github.ref, '-rc') }}
           makeLatest: ${{ !contains(github.ref, '-rc') }}
       - name: Publish npm packages
