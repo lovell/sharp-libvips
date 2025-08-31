@@ -90,15 +90,17 @@ jobs:
         run: ./populate-npm-workspace.sh
       - name: Create npm workspace tarball
         run: tar -vcaf npm-workspace.tar.xz -C npm .
+      - name: Generate release notes
+        run: ./generate-release-notes.sh
       - name: Create GitHub release for tag
         if: startsWith(github.ref, 'refs/tags/v')
         uses: ncipollo/release-action@v1
         with:
           artifacts: npm-workspace.tar.xz
           artifactContentType: application/x-xz
-          bodyFile: versions.properties
+          bodyFile: release-notes.md
           prerelease: ${{ contains(github.ref, '-rc') }}
           makeLatest: ${{ !contains(github.ref, '-rc') }}
       - name: Publish npm packages
         if: startsWith(github.ref, 'refs/tags/v')
-        run: cd npm && npm publish --workspaces --tag=${{ contains(github.ref, '-rc') && 'next' || 'latest' }} --dry-run
+        run: cd npm && npm publish --workspaces --tag=${{ contains(github.ref, '-rc') && 'next' || 'latest' }}

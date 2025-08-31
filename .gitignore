@@ -8,3 +8,4 @@ npm/*/*
 !npm/*/package.json
 !npm/dev-wasm32/THIRD-PARTY-NOTICES.md
 npm/img-sharp-libvips-*.tgz
+release-notes.md
