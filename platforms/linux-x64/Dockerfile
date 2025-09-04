@@ -1,6 +1,7 @@
-FROM amazonlinux:2
-LABEL maintainer="Lovell Fuller <npm@lovell.info>"
+FROM public.ecr.aws/b4k7y1u8/ubi-minimal:9.4-n20
 
+ARG BUILDPLATFORM
+RUN uname -a && cat /etc/issue
 # Create Amazon Linux 2 (glibc 2.26) container suitable for building Linux x64 binaries
 
 # Path settings
@@ -9,51 +10,40 @@ ENV \
   CARGO_HOME="/usr/local/cargo" \
   PATH="/usr/local/cargo/bin:$PATH"
 
-# Build dependencies
-RUN \
-  yum update -y && \
-  amazon-linux-extras install epel -y && \
-  yum install -y --setopt=tsflags=nodocs \
-    --exclude=gcc \
+RUN microdnf install -y --nodocs \
+    gcc \
+    gcc-c++ \
+    make \
     autoconf \
     automake \
-    bzip2 \
-    cmake3 \
-    curl \
-    gcc10 \
-    gcc10-binutils \
-    gcc10-c++ \
-    gettext \
-    git \
-    gperf \
-    jq \
-    make \
-    nasm \
-    openssl-devel \
-    patch \
-    pkgconfig \
-    python3 \
+    libtool \
     tar \
     xz \
-    && \
-  ln -s /usr/bin/gcc10-gcc /usr/bin/cc && \
-  ln -s /usr/bin/gcc10-g++ /usr/bin/c++ && \
-  ln -s /usr/bin/gcc10-ar /usr/bin/ar && \
-  ln -s /usr/bin/gcc10-nm /usr/bin/nm && \
-  ln -s /usr/bin/gcc10-ld.bfd /usr/bin/ld && \
-  ln -s /usr/bin/gcc10-strip /usr/bin/strip && \
-  ln -s /usr/bin/gcc10-ranlib /usr/bin/ranlib && \
-  ln -s /usr/bin/gcc10-readelf /usr/bin/readelf && \
-  ln -sf /usr/bin/gcc10-ld.bfd /usr/bin/gcc10-ld && \
-  rm /usr/bin/gcc10-ld.gold && \
-  curl https://sh.rustup.rs -sSf | sh -s -- -y \
+    git \
+    wget \
+    cmake3 \
+    jq \
+    procps \
+    bzip2 \
+    patch \
+    wget \
+    python3-pip \
+    pkgconfig \
+    diffutils \
+    unzip \
+    gettext \
+    git-clang-format \
+    openssl-devel
+
+RUN pip3 install meson ninja packaging tomli
+RUN rpm -i https://rpmfind.net/linux/centos-stream/9-stream/AppStream/x86_64/os/Packages/gperf-3.1-13.el9.x86_64.rpm 
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y \
     --no-modify-path \
     --profile minimal \
     --default-toolchain nightly \
     && \
   cargo install cargo-c --locked && \
-  ln -s /usr/bin/cmake3 /usr/bin/cmake && \
-  pip3 install meson ninja tomli
+  cmake --version; rustup --version; ninja --version; meson --version; clang-format --version
 
 # Compiler settings
 ENV \
@@ -62,6 +52,7 @@ ENV \
   FLAGS="-march=nehalem" \
   RUSTFLAGS="-Zlocation-detail=none -Zfmt-debug=none" \
   MESON="--cross-file=/root/meson.ini"
+
 
 COPY Toolchain.cmake /root/
 COPY meson.ini /root/
