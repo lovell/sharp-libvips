@@ -84,6 +84,9 @@ elif [ "$DARWIN" = true ]; then
   export MAKEFLAGS="-j$(sysctl -n hw.logicalcpu)"
 fi
 
+# Expose target sysroot to CMake
+export TARGET_SYSROOT="${TARGET}"
+
 # Optimise Rust code for binary size
 export CARGO_PROFILE_RELEASE_DEBUG=false
 export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
