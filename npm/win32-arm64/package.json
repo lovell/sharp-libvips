@@ -1,5 +1,5 @@
 {
-  "name": "@img/sharp-libvips-win32-arm64",
+  "name": "@woss-io/sharp-libvips-win32-arm64",
   "version": "1.2.3",
   "description": "Prebuilt libvips and dependencies for use with sharp on Windows 64-bit ARM",
   "author": "Lovell Fuller <npm@lovell.info>",

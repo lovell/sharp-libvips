@@ -1,5 +1,5 @@
 {
-  "name": "@img/sharp-libvips",
+  "name": "@woss-io/sharp-libvips",
   "version": "1.2.3",
   "private": "true",
   "workspaces": [

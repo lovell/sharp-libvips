@@ -1,5 +1,5 @@
 {
-  "name": "@img/sharp-libvips-darwin-x64",
+  "name": "@woss-io/sharp-libvips-darwin-x64",
   "version": "1.2.3",
   "description": "Prebuilt libvips and dependencies for use with sharp on macOS x64",
   "author": "Lovell Fuller <npm@lovell.info>",

@@ -4,7 +4,7 @@ This software contains third-party libraries
 used under the terms of the following licences:
 
 | Library       | Used under the terms of                                                                                   |
-|---------------|-----------------------------------------------------------------------------------------------------------|
+| ------------- | --------------------------------------------------------------------------------------------------------- |
 | aom           | BSD 2-Clause + [Alliance for Open Media Patent License 1.0](https://aomedia.org/license/patent-license/)  |
 | cairo         | Mozilla Public License 2.0                                                                                |
 | cgif          | MIT Licence                                                                                               |
@@ -20,6 +20,8 @@ used under the terms of the following licences:
 | libexif       | LGPLv3                                                                                                    |
 | libffi        | MIT Licence                                                                                               |
 | libheif       | LGPLv3                                                                                                    |
+| libde265      | LGPLv3                                                                                                    |
+| x265          | GPLv2.0                                                                                                   |
 | libimagequant | [BSD 2-Clause](https://github.com/lovell/libimagequant/blob/main/COPYRIGHT)                               |
 | libnsgif      | MIT Licence                                                                                               |
 | libpng        | [libpng License](https://github.com/pnggroup/libpng/blob/master/LICENSE)                                  |
