@@ -41,7 +41,7 @@ version_latest "harfbuzz" "$VERSION_HARFBUZZ" "1299"
 version_latest "heif" "$VERSION_HEIF" "strukturag/libheif"
 version_latest "highway" "$VERSION_HWY" "205809"
 version_latest "lcms" "$VERSION_LCMS" "9815"
-version_latest "mozjpeg" "$VERSION_MOZJPEG" "mozilla/mozjpeg"
+#version_latest "mozjpeg" "$VERSION_MOZJPEG" "mozilla/mozjpeg" # use commit SHA until next tagged release
 version_latest "pango" "$VERSION_PANGO" "11783" "unstable"
 version_latest "pixman" "$VERSION_PIXMAN" "3648"
 version_latest "png" "$VERSION_PNG" "1705"
