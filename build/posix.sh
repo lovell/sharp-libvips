@@ -349,8 +349,6 @@ cd ${DEPS}/rsvg
 sed -i'.bak' "/image = /s/, \"gif\", \"webp\"//" rsvg/Cargo.toml
 # We build Cairo with `-Dzlib=disabled`, which implicitly disables the PDF/PostScript surface backends
 sed -i'.bak' "/cairo-rs = /s/, \"pdf\", \"ps\"//" {librsvg-c,rsvg}/Cargo.toml
-# Skip build of rsvg-convert
-sed -i'.bak' "/subdir('rsvg_convert')/d" meson.build
 # https://gitlab.gnome.org/GNOME/librsvg/-/merge_requests/1066#note_2356762
 sed -i'.bak' "/^if host_system in \['windows'/s/, 'linux'//" meson.build
 # Regenerate the lockfile after making the above changes
@@ -358,7 +356,7 @@ cargo update --workspace
 # Remove the --static flag from the PKG_CONFIG env since Rust does not
 # parse that correctly.
 PKG_CONFIG=${PKG_CONFIG/ --static/} meson setup _build --default-library=static --buildtype=plain --strip --prefix=${TARGET} ${MESON} \
-  -Dintrospection=disabled -Dpixbuf{,-loader}=disabled -Ddocs=disabled -Dvala=disabled -Dtests=false \
+  -Dintrospection=disabled -Dpixbuf{,-loader}=disabled -Drsvg-convert=disabled -Ddocs=disabled -Dvala=disabled -Dtests=false \
   ${RUST_TARGET:+-Dtriplet=$RUST_TARGET}
 meson install -C _build --tag devel
 
