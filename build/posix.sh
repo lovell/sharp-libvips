@@ -213,13 +213,6 @@ cd ${DEPS}/png
   --disable-tools --without-binconfigs --disable-unversioned-libpng-config
 make install-strip dist_man_MANS=
 
-mkdir ${DEPS}/spng
-$CURL https://github.com/randy408/libspng/archive/v${VERSION_SPNG}.tar.gz | tar xzC ${DEPS}/spng --strip-components=1
-cd ${DEPS}/spng
-CFLAGS="${CFLAGS} -O3 -DSPNG_SSE=4" meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
-  -Dstatic_zlib=true -Dbuild_examples=false
-meson install -C _build --tag devel
-
 mkdir ${DEPS}/imagequant
 $CURL https://github.com/lovell/libimagequant/archive/v${VERSION_IMAGEQUANT}.tar.gz | tar xzC ${DEPS}/imagequant --strip-components=1
 cd ${DEPS}/imagequant
@@ -470,7 +463,6 @@ printf "{\n\
   \"png\": \"${VERSION_PNG}\",\n\
   \"proxy-libintl\": \"${VERSION_PROXY_LIBINTL}\",\n\
   \"rsvg\": \"${VERSION_RSVG}\",\n\
-  \"spng\": \"${VERSION_SPNG}\",\n\
   \"tiff\": \"${VERSION_TIFF}\",\n\
   \"vips\": \"${VERSION_VIPS}\",\n\
   \"webp\": \"${VERSION_WEBP}\",\n\
