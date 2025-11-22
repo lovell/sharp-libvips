@@ -24,7 +24,6 @@ used under the terms of the following licences:
 | libnsgif      | MIT Licence                                                                                               |
 | libpng        | [libpng License](https://github.com/pnggroup/libpng/blob/master/LICENSE)                                  |
 | librsvg       | LGPLv3                                                                                                    |
-| libspng       | [BSD 2-Clause, libpng License](https://github.com/randy408/libspng/blob/master/LICENSE)                   |
 | libtiff       | [libtiff License](https://gitlab.com/libtiff/libtiff/blob/master/LICENSE.md) (BSD-like)                   |
 | libvips       | LGPLv3                                                                                                    |
 | libwebp       | New BSD License                                                                                           |
