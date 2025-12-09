@@ -170,7 +170,7 @@ mkdir ${DEPS}/lcms
 $CURL https://github.com/mm2/Little-CMS/releases/download/lcms${VERSION_LCMS}/lcms2-${VERSION_LCMS}.tar.gz | tar xzC ${DEPS}/lcms --strip-components=1
 cd ${DEPS}/lcms
 CFLAGS="${CFLAGS} -O3" meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
-  -Dtests=disabled 
+  -Dtests=disabled
 meson install -C _build --tag devel
 
 mkdir ${DEPS}/aom
