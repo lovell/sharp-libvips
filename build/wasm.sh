@@ -40,4 +40,5 @@ tar chzf \
   ../sharp-libvips-dev-wasm32.tar.gz \
   --directory="${DIR}/build/target" \
   --exclude="cmake/*" \
+  --hard-dereference \
   {include,lib,versions.json}
