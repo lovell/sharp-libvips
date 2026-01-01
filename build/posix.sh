@@ -286,10 +286,9 @@ meson install -C _build --tag devel
 mkdir ${DEPS}/harfbuzz
 $CURL https://github.com/harfbuzz/harfbuzz/archive/${VERSION_HARFBUZZ}.tar.gz | tar xzC ${DEPS}/harfbuzz --strip-components=1
 cd ${DEPS}/harfbuzz
-# Disable utils
-sed -i'.bak' "/subdir('util')/d" meson.build
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
-  -Dgobject=disabled -Dicu=disabled -Dtests=disabled -Dintrospection=disabled -Ddocs=disabled -Dbenchmark=disabled ${DARWIN:+-Dcoretext=enabled}
+  -Dgobject=disabled -Dicu=disabled -Dtests=disabled -Dintrospection=disabled -Ddocs=disabled -Dbenchmark=disabled -Dutilities=disabled \
+  ${DARWIN:+-Dcoretext=enabled}
 meson install -C _build --tag devel
 
 # pkg-config provided by Amazon Linux 2 doesn't support circular `Requires` dependencies.
