@@ -21,7 +21,8 @@ version_latest() {
   fi
   if [ "$VERSION_LATEST" != "$2" ]; then
     ALL_AT_VERSION_LATEST=false
-    echo "$1 version $2 has been superseded by $VERSION_LATEST"
+    VERSION_VAR=$(echo "VERSION_$1" | tr [:lower:] [:upper:])
+    sed -i "s/^$VERSION_VAR=.*/$VERSION_VAR=$VERSION_LATEST/" versions.properties
   fi
   sleep 1
 }

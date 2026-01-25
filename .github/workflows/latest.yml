@@ -1,0 +1,26 @@
+name: latest
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 6 * * *'
+permissions: {}
+jobs:
+  latest:
+    permissions:
+      contents: write
+      pull-requests: write
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - id: latest
+        run: |
+          ./check-latest-versions.sh
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "pr=true" >> $GITHUB_OUTPUT
+          fi
+      - uses: peter-evans/create-pull-request@v8
+        if: steps.latest.outputs.pr
+        with:
+          commit-message: 'Bump deps'
+          title: 'Bump deps'
+          delete-branch: true
