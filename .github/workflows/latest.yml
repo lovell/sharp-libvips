@@ -6,6 +6,7 @@ on:
 permissions: {}
 jobs:
   latest:
+    if: github.repository_owner == 'lovell'
     permissions:
       contents: write
       pull-requests: write
