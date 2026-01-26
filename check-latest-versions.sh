@@ -9,6 +9,7 @@ CURL="curl --silent --location --retry 3 --retry-max-time 30"
 
 # Check for newer versions
 ALL_AT_VERSION_LATEST=true
+UPDATES=()
 version_latest() {
   VERSION_SELECTOR="stable_versions"
   if [[ "$4" == *"unstable"* ]]; then
@@ -23,6 +24,7 @@ version_latest() {
     ALL_AT_VERSION_LATEST=false
     VERSION_VAR=$(echo "VERSION_$1" | tr [:lower:] [:upper:])
     sed -i "s/^$VERSION_VAR=.*/$VERSION_VAR=$VERSION_LATEST/" versions.properties
+    UPDATES+=("$1")
   fi
   sleep 1
 }
@@ -55,4 +57,6 @@ version_latest "webp" "$VERSION_WEBP" "1761"
 version_latest "xml2" "$VERSION_XML2" "1783"
 version_latest "zlib-ng" "$VERSION_ZLIB_NG" "115592"
 
-if [ "$ALL_AT_VERSION_LATEST" = "false" ]; then exit 1; fi
+if [ "$ALL_AT_VERSION_LATEST" = "false" ]; then
+  echo "Dependency updates: ${UPDATES[*]}"
+fi
