@@ -6,7 +6,7 @@ on:
 permissions: {}
 jobs:
   latest:
-    if: github.repository_owner == 'lovell'
+    if: github.event.repository.fork == false
     permissions:
       contents: write
       pull-requests: write
