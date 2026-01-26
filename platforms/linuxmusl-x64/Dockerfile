@@ -25,6 +25,7 @@ RUN \
     cmake \
     coreutils \
     curl \
+    curl-dev \
     findutils \
     git \
     gperf \

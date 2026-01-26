@@ -23,6 +23,7 @@ RUN \
     git \
     gperf \
     jq \
+    libcurl4-openssl-dev \
     libssl-dev \
     libtool \
     ninja-build \
