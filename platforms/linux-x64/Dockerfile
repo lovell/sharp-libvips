@@ -20,6 +20,7 @@ RUN \
     bzip2 \
     cmake3 \
     curl \
+    curl-devel \
     gcc10 \
     gcc10-binutils \
     gcc10-c++ \
