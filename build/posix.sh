@@ -358,14 +358,10 @@ CFLAGS="${CFLAGS} -O3" meson setup _build --default-library=static --buildtype=r
 meson install -C _build --tag devel
 
 mkdir ${DEPS}/uhdr
-$CURL https://github.com/google/libultrahdr/archive/v${VERSION_UHDR}.tar.gz | tar xzC ${DEPS}/uhdr --strip-components=1
+$CURL https://github.com/google/libultrahdr/archive/${VERSION_UHDR}.tar.gz | tar xzC ${DEPS}/uhdr --strip-components=1
 cd ${DEPS}/uhdr
-# [PATCH] improper use of clamp macro
-$CURL https://github.com/google/libultrahdr/commit/5ed39d67cd31d254e84ebf76b03d4b7bcc12e2f7.patch | patch -p1
-# [PATCH] Add ppc64le and s390x to recognized architectures
-$CURL https://github.com/google/libultrahdr/pull/376.patch | patch -p1
-# Avoid architecture-specific compile flags
-sed -i'.bak' '/add_compile_options(-[mf]/d' CMakeLists.txt
+# [PATCH] Remove platform and architecture detection logic
+$CURL https://github.com/google/libultrahdr/pull/383.patch | patch -p1
 # Ensure install targets are enabled when cross-compiling
 sed -i'.bak' 's/CMAKE_CROSSCOMPILING AND UHDR_ENABLE_INSTALL/FALSE/' CMakeLists.txt
 CFLAGS="${CFLAGS} -O3" CXXFLAGS="${CXXFLAGS} -O3" cmake -G"Unix Makefiles" \
