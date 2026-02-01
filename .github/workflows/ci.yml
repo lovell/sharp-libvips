@@ -22,7 +22,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
       - name: Check latest versions
-        run: ./check-latest-versions.sh
+        run: ./check-latest-versions.sh && git status --porcelain
   build:
     permissions:
       contents: read
