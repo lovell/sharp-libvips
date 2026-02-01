@@ -1,4 +1,4 @@
-name: latest
+name: Dependency updates
 on:
   workflow_dispatch:
   schedule:
@@ -23,5 +23,8 @@ jobs:
         if: steps.latest.outputs.pr
         with:
           commit-message: ${{ steps.latest.outputs.updates }}
+          sign-commits: true
+          draft: 'always-true'
           title: ${{ steps.latest.outputs.updates }}
+          body: ''
           delete-branch: true
