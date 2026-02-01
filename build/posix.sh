@@ -39,14 +39,13 @@ mkdir ${DEPS}
 mkdir ${TARGET}
 
 # Default optimisation level is for binary size (-Os)
-# Overriden to performance (-O3) for select dependencies that benefit
+# Overridden to performance (-O3) for select dependencies that benefit
 export FLAGS+=" -Os -fPIC"
 
-# Force "new" C++11 ABI compliance
 # Remove async exception unwind/backtrace tables
 # Allow linker to remove unused sections
 if [ "$LINUX" = true ]; then
-  export FLAGS+=" -D_GLIBCXX_USE_CXX11_ABI=1 -fno-asynchronous-unwind-tables -ffunction-sections -fdata-sections"
+  export FLAGS+=" -fno-asynchronous-unwind-tables -ffunction-sections -fdata-sections"
 fi
 
 # Common build paths and flags
@@ -291,13 +290,6 @@ meson setup _build --default-library=static --buildtype=release --strip --prefix
   ${DARWIN:+-Dcoretext=enabled}
 meson install -C _build --tag devel
 
-# pkg-config provided by Amazon Linux 2 doesn't support circular `Requires` dependencies.
-# https://bugs.freedesktop.org/show_bug.cgi?id=7331
-# https://gitlab.freedesktop.org/pkg-config/pkg-config/-/commit/6d6dd43e75e2bc82cfe6544f8631b1bef6e1cf45
-# TODO(kleisauke): Remove when Amazon Linux 2 reaches EOL.
-sed -i'.bak' "/^Requires:/s/ freetype2.*,//" ${TARGET}/lib/pkgconfig/harfbuzz.pc
-sed -i'.bak' "/^Libs:/s/$/ -lfreetype/" ${TARGET}/lib/pkgconfig/harfbuzz.pc
-
 build_freetype -Dharfbuzz=enabled
 
 mkdir ${DEPS}/pixman
@@ -444,6 +436,8 @@ cd ${TARGET}/lib
 if [ "$LINUX" = true ]; then
   # Check that we really linked with -z nodelete
   readelf -Wd ${VIPS_CPP_DEP} | grep -qF NODELETE || (echo "$VIPS_CPP_DEP was not linked with -z nodelete" && exit 1)
+  # Check that we really use the "new" C++11 ABI
+  readelf -Ws ${VIPS_CPP_DEP} | c++filt | grep -qF "::__cxx11::" || (echo "$VIPS_CPP_DEP mistakenly uses the C++03 ABI" && exit 1)
 fi
 copydeps ${VIPS_CPP_DEP} ${TARGET}/lib-filtered
 
