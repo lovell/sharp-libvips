@@ -22,7 +22,7 @@ version_latest() {
   fi
   if [ "$VERSION_LATEST" != "$2" ]; then
     ALL_AT_VERSION_LATEST=false
-    VERSION_VAR=$(echo "VERSION_$1" | tr [:lower:] [:upper:])
+    VERSION_VAR=$(echo "VERSION_$1" | tr [:lower:]- [:upper:]_)
     sed -i "s/^$VERSION_VAR=.*/$VERSION_VAR=$VERSION_LATEST/" versions.properties
     UPDATES+=("$1")
   fi
