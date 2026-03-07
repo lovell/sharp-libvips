@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
+## Copyright 2017 Lovell Fuller and others.
+## SPDX-License-Identifier: Apache-2.0
+
 # Dependency version numbers
 source ./versions.properties
 

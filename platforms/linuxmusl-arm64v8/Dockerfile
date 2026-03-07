@@ -1,6 +1,9 @@
 FROM --platform=linux/arm64 alpine:3.20
 LABEL maintainer="Lovell Fuller <npm@lovell.info>"
 
+## Copyright 2017 Lovell Fuller and others.
+## SPDX-License-Identifier: Apache-2.0
+
 # Create Alpine 3.20 (musl 1.2.5) container suitable for building musl-based Linux ARM64v8-A binaries
 
 # Path settings

@@ -1,6 +1,9 @@
 FROM debian/eol:buster
 LABEL maintainer="Lovell Fuller <npm@lovell.info>"
 
+## Copyright 2017 Lovell Fuller and others.
+## SPDX-License-Identifier: Apache-2.0
+
 # Create Debian 11 (glibc 2.31) container suitable for cross-compiling Linux ARMv6 binaries
 
 # Path settings

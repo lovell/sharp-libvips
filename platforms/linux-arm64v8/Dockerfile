@@ -1,6 +1,9 @@
 FROM --platform=linux/arm64 rockylinux:8
 LABEL maintainer="Lovell Fuller <npm@lovell.info>"
 
+## Copyright 2017 Lovell Fuller and others.
+## SPDX-License-Identifier: Apache-2.0
+
 # Create Rocky Linux 8 (glibc 2.28) container suitable for building Linux ARM64v8-A binaries
 
 # Path settings

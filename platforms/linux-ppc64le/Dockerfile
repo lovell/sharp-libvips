@@ -1,6 +1,9 @@
 FROM debian:bookworm
 LABEL maintainer="Lovell Fuller <npm@lovell.info>"
 
+## Copyright 2017 Lovell Fuller and others.
+## SPDX-License-Identifier: Apache-2.0
+
 # Create Debian 12 (glibc 2.36) container suitable for cross-compiling Linux ppc64le binaries
 
 # Path settings
