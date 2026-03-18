@@ -55,7 +55,7 @@ version_latest "proxy-libintl" "$VERSION_PROXY_LIBINTL" "frida/proxy-libintl"
 version_latest "rsvg" "$VERSION_RSVG" "5420" "unstable"
 version_latest "tiff" "$VERSION_TIFF" "1738"
 #version_latest "uhdr" "$VERSION_UHDR" "375187" # use commit SHA until next tagged release
-version_latest "vips" "$VERSION_VIPS" "5097"
+#version_latest "vips" "$VERSION_VIPS" "5097" # temporarily disabled to allow version 8.18.1 to roll in
 version_latest "webp" "$VERSION_WEBP" "1761"
 version_latest "xml2" "$VERSION_XML2" "1783"
 version_latest "zlib-ng" "$VERSION_ZLIB_NG" "115592"
