@@ -197,6 +197,8 @@ make install/strip
 mkdir ${DEPS}/jpeg
 $CURL https://github.com/mozilla/mozjpeg/archive/${VERSION_MOZJPEG}.tar.gz | tar xzC ${DEPS}/jpeg --strip-components=1
 cd ${DEPS}/jpeg
+# [PATCH] fix: use saturating arithmetic in SIMD FDCT to prevent overflow
+$CURL https://github.com/mozilla/mozjpeg/commit/f90668e0e4fb79c81e1f24a0ccc0e2090af761bf.patch | patch -p1
 # Use libjpeg-turbo behaviour by default
 sed -i'.bak' 's/JCP_MAX_COMPRESSION/JCP_FASTEST/' jcapimin.c
 cmake -G"Unix Makefiles" \
