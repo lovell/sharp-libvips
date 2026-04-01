@@ -21,10 +21,10 @@ case ${PLATFORM} in
     ARCH=arm64
     ;;
   *x64)
-    ARCH=w64
+    ARCH=x64
     ;;
   *ia32)
-    ARCH=w32
+    ARCH=x86
     ;;
 esac
 
