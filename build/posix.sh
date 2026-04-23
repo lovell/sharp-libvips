@@ -229,7 +229,6 @@ make install-strip bin_PROGRAMS= noinst_PROGRAMS= man_MANS=
 mkdir ${DEPS}/tiff
 $CURL https://gitlab.com/libtiff/libtiff/-/archive/${VERSION_TIFF}/libtiff-${VERSION_TIFF}.tar.gz | tar xzC ${DEPS}/tiff --strip-components=1
 cd ${DEPS}/tiff
-# Propagate -pthread into CFLAGS to ensure WebP support
 cmake -G"Unix Makefiles" \
   -DCMAKE_TOOLCHAIN_FILE=${ROOT}/Toolchain.cmake -DCMAKE_INSTALL_PREFIX=${TARGET} -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=MinSizeRel \
   -DBUILD_SHARED_LIBS=FALSE -DCMath_HAVE_LIBC_POW=1 \
