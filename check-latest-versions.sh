@@ -45,7 +45,7 @@ version_latest "fribidi" "$VERSION_FRIBIDI" "fribidi/fribidi"
 version_latest "glib" "$VERSION_GLIB" "10024" "unstable"
 version_latest "harfbuzz" "$VERSION_HARFBUZZ" "1299"
 #version_latest "heif" "$VERSION_HEIF" "strukturag/libheif" # use commit SHA until next tagged release
-version_latest "highway" "$VERSION_HWY" "205809"
+version_latest "highway" "$VERSION_HIGHWAY" "205809"
 version_latest "lcms" "$VERSION_LCMS" "9815"
 #version_latest "mozjpeg" "$VERSION_MOZJPEG" "mozilla/mozjpeg" # use commit SHA until next tagged release
 version_latest "pango" "$VERSION_PANGO" "11783" "unstable"
