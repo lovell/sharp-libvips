@@ -14,7 +14,7 @@ used under the terms of the following licenses:
 | fribidi       | LGPLv3                                                                                                    |
 | glib          | LGPLv3                                                                                                    |
 | harfbuzz      | MIT License                                                                                               |
-| highway       | Apache-2.0 License, BSD 3-Clause                                                                          |
+| highway       | BSD 3-Clause                                                                                              |
 | lcms          | MIT License                                                                                               |
 | libarchive    | BSD 2-Clause                                                                                              |
 | libexif       | LGPLv3                                                                                                    |
