@@ -28,7 +28,7 @@
     "./versions": "./versions.json"
   },
   "config": {
-    "glibc": ">=2.26"
+    "glibc": ">=2.28"
   },
   "os": [
     "linux"
