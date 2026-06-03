@@ -1,4 +1,4 @@
-FROM --platform=linux/arm64 rockylinux:8
+FROM --platform=linux/arm64/v8 rockylinux/rockylinux:8-ubi-init
 LABEL maintainer="Lovell Fuller <npm@lovell.info>"
 
 ## Copyright 2017 Lovell Fuller and others.

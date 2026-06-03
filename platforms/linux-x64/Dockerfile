@@ -1,4 +1,4 @@
-FROM rockylinux:8
+FROM rockylinux/rockylinux:8-ubi-init
 LABEL maintainer="Lovell Fuller <npm@lovell.info>"
 
 ## Copyright 2017 Lovell Fuller and others.
