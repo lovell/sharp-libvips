@@ -366,7 +366,7 @@ CFLAGS="${CFLAGS} -O3" CXXFLAGS="${CXXFLAGS} -O3" cmake -G"Unix Makefiles" \
 make install/strip
 
 mkdir ${DEPS}/vips
-$CURL https://github.com/libvips/libvips/releases/download/v${VERSION_VIPS}/vips-${VERSION_VIPS}.tar.xz | tar xJC ${DEPS}/vips --strip-components=1
+$CURL https://github.com/libvips/libvips/releases/download/v${VERSION_VIPS}/vips-$(without_prerelease $VERSION_VIPS).tar.xz | tar xJC ${DEPS}/vips --strip-components=1
 cd ${DEPS}/vips
 # Use version number in SONAME
 $CURL https://gist.githubusercontent.com/lovell/313a6901e9db1bf285f2a1f1180499e4/raw/3988223c7dfa4d22745d9392034b0117abef1446/libvips-cpp-soversion.patch | patch -p1
