@@ -47,6 +47,13 @@ generate_index() {
   done
 }
 
+generate_empty_node() {
+  PACKAGE="$1"
+  if [[ "$PACKAGE" == "darwin"* || "$PACKAGE" == "linux"* ]]; then
+    touch "npm/$PACKAGE/lib/empty.node"
+  fi
+}
+
 remove_unused() {
   PACKAGE="$1"
   if [[ "$PACKAGE" != "dev"* ]]; then
@@ -78,5 +85,6 @@ PACKAGES=$(jq -r '.workspaces[]' "npm/package.json")
 for package in $PACKAGES; do
   generate_readme "$package"
   generate_index "$package"
+  generate_empty_node "$package"
   remove_unused "$package"
 done
