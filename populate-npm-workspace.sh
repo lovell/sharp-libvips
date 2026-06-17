@@ -47,10 +47,10 @@ generate_index() {
   done
 }
 
-generate_empty_node() {
+generate_stub() {
   PACKAGE="$1"
   if [[ "$PACKAGE" == "darwin"* || "$PACKAGE" == "linux"* ]]; then
-    touch "npm/$PACKAGE/lib/empty.node"
+    touch "npm/$PACKAGE/lib/stub.node"
   fi
 }
 
@@ -85,6 +85,6 @@ PACKAGES=$(jq -r '.workspaces[]' "npm/package.json")
 for package in $PACKAGES; do
   generate_readme "$package"
   generate_index "$package"
-  generate_empty_node "$package"
+  generate_stub "$package"
   remove_unused "$package"
 done

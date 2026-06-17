@@ -22,7 +22,7 @@
     "versions.json"
   ],
   "exports": {
-    "./empty": "./lib/empty.node",
+    "./stub": "./lib/stub.node",
     "./lib": "./lib/index.js",
     "./package": "./package.json",
     "./versions": "./versions.json"
