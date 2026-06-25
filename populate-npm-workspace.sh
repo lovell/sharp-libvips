@@ -47,11 +47,19 @@ generate_index() {
   done
 }
 
-generate_stub() {
+without_prerelease() {
+  echo "${1%-[[:alnum:]]*}"
+}
+
+patch_pkg_exports() {
   PACKAGE="$1"
-  if [[ "$PACKAGE" == "darwin"* || "$PACKAGE" == "linux"* ]]; then
-    touch "npm/$PACKAGE/lib/stub.node"
+  pushd "npm/$PACKAGE"
+  if [[ "$PACKAGE" == "darwin"* ]]; then
+    npm pkg set "exports[./binary]"="./lib/libvips-cpp.$(without_prerelease $VERSION_VIPS).dylib"
+  elif [[ "$PACKAGE" == "linux"* ]]; then
+    npm pkg set "exports[./binary]"="./lib/libvips-cpp.so.$(without_prerelease $VERSION_VIPS)"
   fi
+  popd
 }
 
 remove_unused() {
@@ -85,6 +93,6 @@ PACKAGES=$(jq -r '.workspaces[]' "npm/package.json")
 for package in $PACKAGES; do
   generate_readme "$package"
   generate_index "$package"
-  generate_stub "$package"
+  patch_pkg_exports "$package"
   remove_unused "$package"
 done
