@@ -354,7 +354,7 @@ CFLAGS="${CFLAGS} -O3" meson setup _build --default-library=static --buildtype=r
 meson install -C _build --tag devel
 
 mkdir ${DEPS}/uhdr
-$CURL https://github.com/google/libultrahdr/archive/${VERSION_UHDR}.tar.gz | tar xzC ${DEPS}/uhdr --strip-components=1
+$CURL https://github.com/google/libultrahdr/archive/v${VERSION_UHDR}.tar.gz | tar xzC ${DEPS}/uhdr --strip-components=1
 cd ${DEPS}/uhdr
 # [PATCH] Remove platform and architecture detection logic
 $CURL https://patch-diff.githubusercontent.com/raw/google/libultrahdr/pull/383.patch | patch -p1

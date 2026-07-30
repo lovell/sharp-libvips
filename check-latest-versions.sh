@@ -54,7 +54,7 @@ version_latest "png" "$VERSION_PNG" "1705"
 version_latest "proxy-libintl" "$VERSION_PROXY_LIBINTL" "frida/proxy-libintl"
 version_latest "rsvg" "$VERSION_RSVG" "5420" "unstable"
 version_latest "tiff" "$VERSION_TIFF" "1738"
-#version_latest "uhdr" "$VERSION_UHDR" "375187" # use commit SHA until next tagged release
+version_latest "uhdr" "$VERSION_UHDR" "375187"
 version_latest "webp" "$VERSION_WEBP" "1761"
 version_latest "xml2" "$VERSION_XML2" "1783"
 version_latest "zlib-ng" "$VERSION_ZLIB_NG" "115592"
