@@ -10,6 +10,7 @@
     "linux-arm",
     "linux-arm64",
     "linuxmusl-arm64",
+    "linux-loong64",
     "linuxmusl-x64",
     "linux-ppc64",
     "linux-riscv64",

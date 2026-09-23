@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Workaround for https://github.com/mesonbuild/meson/issues/5402
+for arg in "$@"; do
+  if [[ "$arg" == "--version" ]]; then
+    exec pkgconf --version
+    exit 0
+  fi
+done
+
+exec pkgconf "$@"
+exit $?

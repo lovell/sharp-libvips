@@ -42,6 +42,8 @@ jobs:
           - os: 'ubuntu-24.04'
             platform: 'linuxmusl-x64'
           - os: 'ubuntu-24.04'
+            platform: 'linux-loong64'
+          - os: 'ubuntu-24.04'
             platform: 'linux-ppc64le'
           - os: 'ubuntu-24.04'
             platform: 'linux-riscv64'
