@@ -281,6 +281,8 @@ cd ${DEPS}/fontconfig
 sed -i'.bak' "/subdir('its')/d" meson.build
 # Silence FcInit warnings
 sed -i'.bak' "/using without calling FcInit/d" src/fcobjs.c
+# Prevent creation of versioned cache symlinks
+sed -i'.bak' "s/cachemincompat/cacheversion/" fontconfig/meson.build
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
   -Dcache-build=disabled -Ddoc=disabled -Dnls=disabled -Dtests=disabled -Dtools=disabled
 meson install -C _build --tag devel
