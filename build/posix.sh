@@ -339,6 +339,8 @@ sed -i'.bak' "/cairo-rs = /s/, \"pdf\", \"ps\"//" {librsvg-c,rsvg}/Cargo.toml
 sed -i'.bak' "/^if host_system in \['windows'/s/, 'linux'//" meson.build
 # Regenerate the lockfile after making the above changes
 cargo update --workspace
+# [PATCH] Ensure embedded image memory limits are enforced
+$CURL https://github.com/GNOME/librsvg/commit/9106011db93d701728ac2c9da50c9ab2c1bb5dc6.patch | patch -p1
 # Remove the --static flag from the PKG_CONFIG env since Rust does not
 # parse that correctly.
 PKG_CONFIG=${PKG_CONFIG/ --static/} meson setup _build --default-library=static --buildtype=plain --strip --prefix=${TARGET} ${MESON} \
