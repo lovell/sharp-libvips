@@ -1,7 +1,7 @@
 FROM debian:trixie
-LABEL maintainer="Lovell Fuller <npm@lovell.info>"
+LABEL org.opencontainers.image.authors="Lovell Fuller <npm@lovell.info>"
 
-## Copyright 2017 Lovell Fuller and others.
+## SPDX-FileCopyrightText: 2017 Lovell Fuller and others
 ## SPDX-License-Identifier: Apache-2.0
 
 # Create Debian 13 (glibc 2.41) container suitable for cross-compiling Linux RISC-V 64-bit binaries
