@@ -1,0 +1,20 @@
+name: Question
+description: Ask a question about @img/sharp-libvips-* npm packages
+labels:
+  - question
+body:
+  - type: checkboxes
+    attributes:
+      label: Humans asking relevant questions in their own voice
+      options:
+        - label: I am a human writing in my own words
+          required: true
+        - label: I am asking a question about one or more npm packages that have the `@img/sharp-libvips-*` prefix
+          required: true
+        - label: I understand that if the use of automated or LLM-based tooling is detected, this issue will be closed and the account may be blocked
+          required: true
+  - type: textarea
+    attributes:
+      label: Your question
+    validations:
+      required: true
