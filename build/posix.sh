@@ -86,6 +86,11 @@ elif [ "$DARWIN" = true ]; then
   export MAKEFLAGS="-j$(sysctl -n hw.logicalcpu)"
 fi
 
+# Ensure reproducible builds
+# https://reproducible-builds.org/docs/source-date-epoch/
+SOURCE_DATE_EPOCH="$(git -c safe.directory=${PACKAGE} -C ${PACKAGE} log -1 --pretty=%ct)" && \
+  export SOURCE_DATE_EPOCH
+
 # Expose target sysroot to CMake
 export TARGET_SYSROOT="${TARGET}"
 
