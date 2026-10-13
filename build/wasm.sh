@@ -5,7 +5,7 @@ set -e
 ## SPDX-License-Identifier: Apache-2.0
 
 source ./versions.properties
-VERSION_WASM_VIPS="${1:-HEAD}"
+VERSION_WASM_VIPS="${1:-master}"
 
 DIR="wasm-vips-${VERSION_WASM_VIPS}"
 TAG="wasm-vips:${VERSION_WASM_VIPS}"
@@ -13,10 +13,9 @@ TAG="wasm-vips:${VERSION_WASM_VIPS}"
 echo "Using ${TAG} to build libvips ${VERSION_VIPS}"
 cd "${0%/*}"
 
-# Download specific version of wasm-vips
+# Clone a specific version of wasm-vips
 if [ ! -d "$DIR" ]; then
-  mkdir "${DIR}"
-  curl -Ls https://github.com/kleisauke/wasm-vips/archive/${VERSION_WASM_VIPS}.tar.gz | tar xzC "${DIR}" --strip-components=1
+  git clone -b ${VERSION_WASM_VIPS} --depth 1 https://github.com/kleisauke/wasm-vips.git "${DIR}"
 fi
 
 # Check libvips versions match
