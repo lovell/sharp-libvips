@@ -12,8 +12,8 @@ ENV \
   CARGO_HOME="/usr/local/cargo" \
   PATH="/usr/local/cargo/bin:/root/.local/bin:$PATH"
 
-# Musl defaults to static libs but we need them to be dynamic for host toolchain.
-# The toolchain will produce static libs by default.
+# musl targets should dynamically link libc by default
+# https://github.com/rust-lang/rust/issues/59302
 ENV \
   RUSTFLAGS="-Ctarget-feature=-crt-static"
 
@@ -55,7 +55,7 @@ ENV \
   PKG_CONFIG="pkg-config --static" \
   PLATFORM="linuxmusl-x64" \
   FLAGS="-march=nehalem" \
-  RUSTFLAGS="-Zlocation-detail=none -Zfmt-debug=none" \
+  RUSTFLAGS="$RUSTFLAGS -Zlocation-detail=none -Zfmt-debug=none" \
   MESON="--cross-file=/root/meson.ini"
 
 COPY Toolchain.cmake /root/
