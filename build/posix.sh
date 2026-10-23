@@ -102,9 +102,9 @@ export CARGO_PROFILE_RELEASE_LTO=true
 export CARGO_PROFILE_RELEASE_OPT_LEVEL=z
 export CARGO_PROFILE_RELEASE_PANIC=abort
 
-# Ensure Cargo build path prefixes are removed from the resulting binaries
+# Ensure Rust build path prefixes are removed from the resulting binaries
 # https://reproducible-builds.org/docs/build-path/
-export RUSTFLAGS+=" --remap-path-prefix=$CARGO_HOME/registry/="
+export CARGO_PROFILE_RELEASE_TRIM_PATHS=all
 
 # We don't want to use any native libraries, so unset PKG_CONFIG_PATH
 unset PKG_CONFIG_PATH
