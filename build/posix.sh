@@ -65,6 +65,9 @@ export LDFLAGS="-L${TARGET}/lib"
 # On Linux, we need to create a relocatable library
 # Note: this is handled for macOS using the `install_name_tool` (see below)
 if [ "$LINUX" = true ]; then
+  if [ $PLATFORM == "linuxmusl-x64" ]; then
+    export LDFLAGS+=" -Wl,-z,pack-relative-relocs"
+  fi
   export LDFLAGS+=" -Wl,--gc-sections -Wl,-rpath=\$ORIGIN/"
 fi
 
