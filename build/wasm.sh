@@ -5,7 +5,7 @@ set -e
 ## SPDX-License-Identifier: Apache-2.0
 
 source ./versions.properties
-VERSION_WASM_VIPS="${1:-master}"
+VERSION_WASM_VIPS="${1:-vips-8.19}"
 
 DIR="wasm-vips-${VERSION_WASM_VIPS}"
 TAG="wasm-vips:${VERSION_WASM_VIPS}"
