@@ -34,6 +34,7 @@ version_latest() {
 
 version_latest "aom" "$VERSION_AOM" "17628"
 version_latest "archive" "$VERSION_ARCHIVE" "libarchive/libarchive"
+version_latest "brotli" "$VERSION_BROTLI" "google/brotli"
 version_latest "cairo" "$VERSION_CAIRO" "247"
 version_latest "cgif" "$VERSION_CGIF" "dloebl/cgif"
 version_latest "exif" "$VERSION_EXIF" "libexif/libexif"
@@ -46,6 +47,7 @@ version_latest "glib" "$VERSION_GLIB" "10024" "unstable"
 version_latest "harfbuzz" "$VERSION_HARFBUZZ" "1299"
 version_latest "heif" "$VERSION_HEIF" "strukturag/libheif"
 version_latest "highway" "$VERSION_HIGHWAY" "205809"
+version_latest "jxl" "$VERSION_JXL" "libjxl/libjxl"
 version_latest "lcms" "$VERSION_LCMS" "9815"
 #version_latest "mozjpeg" "$VERSION_MOZJPEG" "mozilla/mozjpeg" # use commit SHA until next tagged release
 version_latest "pango" "$VERSION_PANGO" "11783" "unstable"

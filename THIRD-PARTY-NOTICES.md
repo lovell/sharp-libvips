@@ -6,6 +6,7 @@ used under the terms of the following licenses:
 | Library       | Used under the terms of                                                                                   |
 |---------------|-----------------------------------------------------------------------------------------------------------|
 | aom           | BSD 2-Clause + [Alliance for Open Media Patent License 1.0](https://aomedia.org/license/patent-license/)  |
+| brotli        | MIT License                                                                                               |
 | cairo         | Mozilla Public License 1.1                                                                                |
 | cgif          | MIT License                                                                                               |
 | expat         | MIT License                                                                                               |
@@ -21,6 +22,7 @@ used under the terms of the following licenses:
 | libffi        | MIT License                                                                                               |
 | libheif       | LGPLv3                                                                                                    |
 | libimagequant | [BSD 2-Clause](https://github.com/lovell/libimagequant/blob/main/COPYRIGHT)                               |
+| libjxl        | BSD 3-Clause                                                                                              |
 | libnsgif      | MIT License                                                                                               |
 | libpng        | [libpng License](https://github.com/pnggroup/libpng/blob/master/LICENSE)                                  |
 | librsvg       | LGPLv3                                                                                                    |
