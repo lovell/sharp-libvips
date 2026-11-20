@@ -292,7 +292,8 @@ sed -i'.bak' "/using without calling FcInit/d" src/fcobjs.c
 # Prevent creation of versioned cache symlinks
 sed -i'.bak' "s/cachemincompat/cacheversion/" fontconfig/meson.build
 meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON} \
-  -Dcache-build=disabled -Ddoc=disabled -Dnls=disabled -Dtests=disabled -Dtools=disabled
+  -Dcache-build=disabled -Ddoc=disabled -Dnls=disabled -Dtests=disabled -Dtools=disabled \
+  ${DARWIN:+-Ddefault-fonts-dirs=/System/Library/Fonts,/Library/Fonts,~/Library/Fonts}
 meson install -C _build --tag devel
 
 mkdir ${DEPS}/harfbuzz
