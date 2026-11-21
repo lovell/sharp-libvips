@@ -224,6 +224,7 @@ make install-strip dist_man_MANS=
 mkdir ${DEPS}/imagequant
 $CURL https://github.com/lovell/libimagequant/archive/v${VERSION_IMAGEQUANT}.tar.gz | tar xzC ${DEPS}/imagequant --strip-components=1
 cd ${DEPS}/imagequant
+$CURL https://patch-diff.githubusercontent.com/raw/lovell/libimagequant/pull/1.patch | patch -p1
 CFLAGS="${CFLAGS} -O3" meson setup _build --default-library=static --buildtype=release --strip --prefix=${TARGET} ${MESON}
 meson install -C _build --tag devel
 
